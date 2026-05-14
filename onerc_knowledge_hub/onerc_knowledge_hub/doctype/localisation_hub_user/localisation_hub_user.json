@@ -28,6 +28,7 @@
   "primary_language",
   "other_languages",
   "status",
+  "rejection_reason",
   "is_steering_group",
   "section_break_gkas",
   "bio",
@@ -246,6 +247,13 @@
    "hidden": 1,
    "read_only": 1,
    "no_copy": 1
+  },
+  {
+   "fieldname": "rejection_reason",
+   "fieldtype": "Small Text",
+   "label": "Rejection Reason",
+   "depends_on": "eval:doc.status=='Rejected'",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-user",

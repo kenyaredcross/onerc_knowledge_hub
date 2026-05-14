@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useFrappePostCall, useFrappeGetCall } from "frappe-react-sdk";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import {
   Users,
   Check,
@@ -54,71 +54,173 @@ export default function UsersManagement() {
   }, [statusFilter]);
 
   const handleApprove = async (userName: string) => {
-    if (!confirm("Are you sure you want to approve this user? This will create a user account and send an activation email.")) {
-      return;
-    }
-
-    setActionLoading(userName);
-    try {
-      const result = await approveUser({ name: userName });
-      toast.success(result?.message || "User approved successfully! Activation email sent.");
-      fetchUsers();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to approve user");
-    } finally {
-      setActionLoading(null);
-    }
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <div>
+          <p className="font-semibold text-gray-900">Approve User?</p>
+          <p className="text-sm text-gray-600 mt-1">
+            This will create a user account and send an activation email.
+          </p>
+        </div>
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id);
+              setActionLoading(userName);
+              try {
+                const result = await approveUser({ name: userName });
+                toast.success(result?.message || "User approved successfully! Activation email sent.");
+                fetchUsers();
+              } catch (error: any) {
+                toast.error(error.message || "Failed to approve user");
+              } finally {
+                setActionLoading(null);
+              }
+            }}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors"
+          >
+            Approve
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const handleReject = async (userName: string) => {
-    if (!confirm("Are you sure you want to reject this user application?")) {
-      return;
-    }
+    let rejectionReason = "";
 
-    setActionLoading(userName);
-    try {
-      const result = await rejectUser({ name: userName });
-      toast.success(result?.message || "User application rejected");
-      fetchUsers();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to reject user");
-    } finally {
-      setActionLoading(null);
-    }
+    toast((t) => (
+      <div className="flex flex-col gap-3 min-w-[320px]">
+        <div>
+          <p className="font-semibold text-gray-900">Reject User Application?</p>
+          <p className="text-sm text-gray-600 mt-1">
+            Please provide a reason for rejection.
+          </p>
+        </div>
+        <textarea
+          placeholder="Enter rejection reason..."
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-sm resize-none"
+          rows={3}
+          onChange={(e) => {
+            rejectionReason = e.target.value;
+          }}
+        />
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              if (!rejectionReason.trim()) {
+                toast.error("Please provide a rejection reason");
+                return;
+              }
+              toast.dismiss(t.id);
+              setActionLoading(userName);
+              try {
+                const result = await rejectUser({ name: userName, reason: rejectionReason });
+                toast.success(result?.message || "User application rejected");
+                fetchUsers();
+              } catch (error: any) {
+                toast.error(error.message || "Failed to reject user");
+              } finally {
+                setActionLoading(null);
+              }
+            }}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors"
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const handleResendActivation = async (userName: string, email: string) => {
-    if (!confirm(`Resend activation email to ${email}?`)) {
-      return;
-    }
-
-    setActionLoading(userName);
-    try {
-      const result = await resendActivationEmail({ localisation_hub_user: userName });
-      toast.success(result?.message || "Activation email sent successfully!");
-      fetchUsers();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to send activation email");
-    } finally {
-      setActionLoading(null);
-    }
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <div>
+          <p className="font-semibold text-gray-900">Resend Activation Email?</p>
+          <p className="text-sm text-gray-600 mt-1">
+            Send activation email to <span className="font-medium">{email}</span>
+          </p>
+        </div>
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id);
+              setActionLoading(userName);
+              try {
+                const result = await resendActivationEmail({ localisation_hub_user: userName });
+                toast.success(result?.message || "Activation email sent successfully!");
+                fetchUsers();
+              } catch (error: any) {
+                toast.error(error.message || "Failed to send activation email");
+              } finally {
+                setActionLoading(null);
+              }
+            }}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const handlePasswordReset = async (userName: string, email: string) => {
-    if (!confirm(`Send password reset email to ${email}?`)) {
-      return;
-    }
-
-    setActionLoading(userName);
-    try {
-      const result = await sendPasswordResetEmail({ localisation_hub_user: userName });
-      toast.success(result?.message || "Password reset email sent successfully!");
-      fetchUsers();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to send password reset email");
-    } finally {
-      setActionLoading(null);
-    }
+    toast((t) => (
+      <div className="flex flex-col gap-3">
+        <div>
+          <p className="font-semibold text-gray-900">Send Password Reset?</p>
+          <p className="text-sm text-gray-600 mt-1">
+            Send password reset email to <span className="font-medium">{email}</span>
+          </p>
+        </div>
+        <div className="flex gap-2 justify-end">
+          <button
+            onClick={() => toast.dismiss(t.id)}
+            className="px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={async () => {
+              toast.dismiss(t.id);
+              setActionLoading(userName);
+              try {
+                const result = await sendPasswordResetEmail({ localisation_hub_user: userName });
+                toast.success(result?.message || "Password reset email sent successfully!");
+                fetchUsers();
+              } catch (error: any) {
+                toast.error(error.message || "Failed to send password reset email");
+              } finally {
+                setActionLoading(null);
+              }
+            }}
+            className="px-3 py-1.5 text-sm font-medium text-white bg-dash-navy rounded-lg hover:bg-blue-900 transition-colors"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    ), { duration: Infinity });
   };
 
   const filteredUsers = Array.isArray(users) ? users.filter((user) => {
@@ -320,6 +422,12 @@ export default function UsersManagement() {
                       {user.status === "Approved" && (
                         <div className="text-xs text-gray-500 mt-1">
                           {user.user_enabled ? "✓ Activated" : "⏳ Pending activation"}
+                        </div>
+                      )}
+                      {user.status === "Rejected" && user.rejection_reason && (
+                        <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs">
+                          <p className="font-medium text-red-900 mb-1">Rejection Reason:</p>
+                          <p className="text-red-700">{user.rejection_reason}</p>
                         </div>
                       )}
                     </td>
