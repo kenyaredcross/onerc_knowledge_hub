@@ -1,24 +1,34 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:title",
  "creation": "2026-05-14 12:35:36.144274",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "cover_image",
+  "national_society",
   "pillar",
-  "type",
-  "summary",
-  "description",
+  "cover_image",
   "views_count",
-  "national_society"
+  "column_break_nsfk",
+  "type",
+  "external_platform_name",
+  "external_url",
+  "category",
+  "date_posted",
+  "section_break_yahw",
+  "summary",
+  "description"
  ],
  "fields": [
   {
    "fieldname": "title",
    "fieldtype": "Data",
-   "label": "Title"
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "cover_image",
@@ -29,13 +39,13 @@
    "fieldname": "pillar",
    "fieldtype": "Link",
    "label": "Pillar",
-   "options": "Localization Pillar Link"
+   "options": "Localization Pillar"
   },
   {
    "fieldname": "type",
    "fieldtype": "Select",
    "label": "Type",
-   "options": "\nExternal platform\nExternal url"
+   "options": "\nExternal Platform\nExternal URL"
   },
   {
    "fieldname": "summary",
@@ -54,17 +64,53 @@
   },
   {
    "fieldname": "national_society",
+   "fieldtype": "Link",
+   "label": "National Society",
+   "options": "National Society"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Category"
+  },
+  {
+   "default": "Today",
+   "fieldname": "date_posted",
+   "fieldtype": "Date",
+   "label": "Date Posted"
+  },
+  {
+   "fieldname": "external_url",
    "fieldtype": "Data",
-   "label": "National Society"
+   "label": "External URL",
+   "mandatory_depends_on": "eval:doc.type==\"External url\"",
+   "options": "URL"
+  },
+  {
+   "depends_on": "eval:doc.type==\"External platform\"",
+   "fieldname": "external_platform_name",
+   "fieldtype": "Data",
+   "label": "Name of External Platform",
+   "mandatory_depends_on": "eval:doc.type==\"External platform\""
+  },
+  {
+   "fieldname": "column_break_nsfk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_yahw",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-14 13:06:01.668510",
+ "modified": "2026-05-14 16:33:22.501277",
  "modified_by": "Administrator",
  "module": "Onerc Knowledge Hub",
  "name": "Learning Hub",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
