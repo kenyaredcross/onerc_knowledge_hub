@@ -155,12 +155,7 @@ def set_password_and_activate(token, new_password):
 	localisation_hub_user = verification.get("localisation_hub_user")
 
 	# Get the Localisation Hub User details
-	lhu = frappe.db.get_value(
-		"Localisation Hub User",
-		localisation_hub_user,
-		["name", "user_id", "status"],
-		as_dict=True,
-	)
+	lhu = frappe.get_doc("Localisation Hub User", localisation_hub_user)
 
 	if not lhu:
 		frappe.throw(frappe._("Localisation Hub User not found"))
@@ -187,6 +182,9 @@ def set_password_and_activate(token, new_password):
 		"activation_token_expiry": None
 	})
 	frappe.db.commit()
+
+	# Send Raven invitation email
+	send_raven_invitation_email(lhu, user)
 
 	return {"activated": True, "user": user.name}
 
@@ -357,6 +355,93 @@ def send_activation_email(lhu):
 	except Exception as e:
 		frappe.log_error(f"Failed to send activation email to {lhu.prefered_contact_email}: {str(e)}")
 		return False
+
+
+def send_raven_invitation_email(lhu, user):
+	"""Send Raven invitation email to newly activated user."""
+	try:
+		# Get Raven URL
+		raven_url = frappe.utils.get_url("/raven")
+
+		# Email subject and message
+		subject = "Welcome to the Africa Localisation Hub - Join Our Community on Raven"
+
+		message = f"""
+		<div style="font-family: 'Google Sans', system-ui, sans-serif; max-width: 600px; margin: 0 auto;">
+			<div style="background: linear-gradient(135deg, #011E41 0%, #1e3a8a 100%); padding: 32px; text-align: center;">
+				<div style="display: inline-flex; align-items: center; gap: 12px; background: white; padding: 16px 24px; border-radius: 4px;">
+					<div style="width: 48px; height: 48px; background: #ee2435; color: white; font-weight: bold; font-size: 28px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">+</div>
+					<div style="text-align: left;">
+						<div style="font-weight: 600; font-size: 18px; color: #111827;">Localisation Hub</div>
+					</div>
+				</div>
+			</div>
+
+			<div style="background: white; padding: 40px; border: 1px solid #e5e7eb;">
+				<h1 style="font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 16px 0;">Welcome, {lhu.first_name}!</h1>
+
+				<p style="color: #4b5563; line-height: 1.6; margin: 0 0 24px 0;">
+					Your account has been successfully activated. You are now part of the Africa Localisation Hub community!
+				</p>
+
+				<div style="background: #f3f4f6; border-left: 4px solid #ee2435; padding: 16px; margin: 0 0 24px 0;">
+					<p style="color: #111827; font-weight: 600; margin: 0 0 8px 0;">🎉 Next Step: Join Us on Raven</p>
+					<p style="color: #4b5563; line-height: 1.6; margin: 0;">
+						Connect with fellow members, participate in discussions, and stay updated with real-time collaboration on Raven - our community communication platform.
+					</p>
+				</div>
+
+				<div style="text-align: center; margin: 32px 0;">
+					<a href="{raven_url}" style="display: inline-block; padding: 16px 32px; background-color: #ee2435; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+						Join Raven Now
+					</a>
+				</div>
+
+				<p style="color: #6b7280; font-size: 14px; line-height: 1.6; margin: 24px 0 0 0;">
+					Or copy and paste this link into your browser:<br>
+					<a href="{raven_url}" style="color: #ee2435; word-break: break-all;">{raven_url}</a>
+				</p>
+
+				<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;">
+
+				<div style="color: #6b7280; font-size: 14px; line-height: 1.6;">
+					<p style="margin: 0 0 8px 0;"><strong style="color: #111827;">What is Raven?</strong></p>
+					<p style="margin: 0 0 16px 0;">
+						Raven is our community chat and collaboration platform where you can:
+					</p>
+					<ul style="margin: 0 0 16px 0; padding-left: 20px;">
+						<li style="margin-bottom: 8px;">Connect with other Localisation Hub members</li>
+						<li style="margin-bottom: 8px;">Join topic-specific channels and discussions</li>
+						<li style="margin-bottom: 8px;">Share knowledge and collaborate on projects</li>
+						<li style="margin-bottom: 8px;">Stay updated with announcements and events</li>
+					</ul>
+				</div>
+			</div>
+
+			<div style="background: #f9fafb; padding: 24px; text-align: center; border: 1px solid #e5e7eb; border-top: none;">
+				<p style="color: #6b7280; font-size: 12px; margin: 0 0 8px 0;">
+					© 2026 The Africa Localisation Hub
+				</p>
+				<p style="color: #9ca3af; font-size: 12px; margin: 0;">
+					Need help? Contact our support team
+				</p>
+			</div>
+		</div>
+		"""
+
+		frappe.sendmail(
+			recipients=[lhu.prefered_contact_email],
+			subject=subject,
+			message=message,
+			delayed=False
+		)
+
+		return True
+
+	except Exception as e:
+		frappe.log_error(f"Failed to send Raven invitation email to {lhu.prefered_contact_email}: {str(e)}")
+		return False
+
 
 #Reject a Localisation Hub User application
 @frappe.whitelist()
