@@ -16,6 +16,7 @@ import {
   Users,
   HelpCircle,
   LogOut,
+  MessageSquare,
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
 
@@ -26,6 +27,7 @@ const navItems = [
   { path: "/knowledge", label: "Knowledge Hub", icon: BookOpen },
   { path: "/national-societies", label: "National Societies", icon: Globe2 },
   { path: "/pillars", label: "Pillars", icon: Layers },
+  { path: "/raven", label: "Connect", icon: MessageSquare, external: true },
 ];
 
 const createItems = [
@@ -109,19 +111,16 @@ export default function DashboardLayout() {
           <div className="space-y-0.5">
             {navItems.map((item) => {
               const active = isActive(item);
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  title={collapsed ? item.label : undefined}
-                  className={[
-                    "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
-                    active
-                      ? "bg-dash-red/20 text-white"
-                      : "text-white/60 hover:bg-white/8 hover:text-white",
-                    collapsed ? "justify-center px-0" : "",
-                  ].join(" ")}
-                >
+              const className = [
+                "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
+                active
+                  ? "bg-dash-red/20 text-white"
+                  : "text-white/60 hover:bg-white/8 hover:text-white",
+                collapsed ? "justify-center px-0" : "",
+              ].join(" ");
+
+              const content = (
+                <>
                   {active && (
                     <span className="absolute left-0 h-6 w-0.5 rounded-r bg-dash-red" />
                   )}
@@ -138,6 +137,34 @@ export default function DashboardLayout() {
                   {active && !collapsed && (
                     <span className="ml-auto h-1.5 w-1.5 rounded-full bg-dash-red" />
                   )}
+                </>
+              );
+
+              // External links open in new tab
+              if (item.external) {
+                return (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={collapsed ? item.label : undefined}
+                    className={className}
+                  >
+                    {content}
+                  </a>
+                );
+              }
+
+              // Internal navigation
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  title={collapsed ? item.label : undefined}
+                  className={className}
+                >
+                  {content}
                 </Link>
               );
             })}

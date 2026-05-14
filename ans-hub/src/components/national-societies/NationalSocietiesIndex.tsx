@@ -73,18 +73,23 @@ function Skeleton({ className = "" }: { className?: string }) {
 
 function CardSkeleton() {
   return (
-    <div className="flex items-start gap-5 bg-white rounded border border-gray-200 p-5 border-l-4">
-      <div className="flex-shrink-0">
-        <Skeleton className="h-14 w-14 rounded" />
+    <div className="flex flex-col bg-white rounded border border-gray-200 border-t-4 overflow-hidden">
+      <div className="flex justify-center items-center pt-6 pb-4">
+        <Skeleton className="h-20 w-20 rounded" />
       </div>
-      <div className="flex-1 space-y-2">
-        <Skeleton className="h-4 w-2/3" />
-        <Skeleton className="h-3 w-1/3" />
-        <Skeleton className="h-3 w-full" />
-        <Skeleton className="h-3 w-5/6" />
-        <div className="flex gap-2 pt-1">
-          <Skeleton className="h-5 w-24 rounded" />
+      <div className="px-5 pb-5 space-y-3">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-3/4 mx-auto" />
+          <Skeleton className="h-3 w-1/2 mx-auto" />
+        </div>
+        <Skeleton className="h-12 w-full" />
+        <div className="flex gap-3 justify-center">
+          <Skeleton className="h-5 w-16 rounded" />
+          <Skeleton className="h-5 w-16 rounded" />
+        </div>
+        <div className="flex gap-2 justify-center">
           <Skeleton className="h-5 w-20 rounded" />
+          <Skeleton className="h-5 w-24 rounded" />
         </div>
       </div>
     </div>
@@ -278,8 +283,8 @@ export default function NationalSocietiesIndex() {
 
             {/* Loading skeletons */}
             {isLoading && (
-              <div className="space-y-3">
-                {[...Array(5)].map((_, i) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
                   <CardSkeleton key={i} />
                 ))}
               </div>
@@ -287,27 +292,27 @@ export default function NationalSocietiesIndex() {
 
             {/* Society Cards */}
             {!isLoading && !error && (
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filtered.map((ns) => (
                   <Link
                     key={ns.name}
                     to={`/national-societies/${encodeURIComponent(ns.name)}`}
                     className={[
-                      "group flex items-start gap-5 bg-white rounded border border-gray-200 p-5 transition-all hover:shadow-md hover:border-dash-red/30",
-                      societyBorderL(ns.pillars),
+                      "group flex flex-col bg-white rounded border border-gray-200 transition-all hover:shadow-md hover:border-dash-red/30 overflow-hidden",
+                      societyBorderL(ns.pillars).replace('border-l-4', 'border-t-4'),
                     ].join(" ")}
                   >
                     {/* Logo / avatar */}
-                    <div className="flex-shrink-0 flex flex-col items-center gap-1.5">
+                    <div className="flex justify-center items-center pt-6 pb-4">
                       {ns.logo ? (
                         <img
                           src={ns.logo}
                           alt={ns.abbreviation}
-                          className="h-14 w-14 rounded object-contain border border-gray-100 bg-white p-1"
+                          className="h-20 w-20 rounded object-contain border border-gray-100 bg-white p-2"
                         />
                       ) : (
                         <div
-                          className={`h-14 w-14 rounded bg-dash-navy flex items-center justify-center text-white font-bold text-xl`}
+                          className={`h-20 w-20 rounded bg-dash-navy flex items-center justify-center text-white font-bold text-2xl`}
                         >
                           {(ns.abbreviation || ns.national_society_name).charAt(0)}
                         </div>
@@ -315,48 +320,45 @@ export default function NationalSocietiesIndex() {
                     </div>
 
                     {/* Body */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h2 className="text-base font-bold text-gray-900 group-hover:text-dash-red transition-colors leading-snug">
-                            {ns.national_society_name}
-                          </h2>
-                          <p className="text-xs text-gray-500 mt-0.5">
-                            {[ns.abbreviation, ns.region_name, ns.country]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </p>
-                        </div>
-                        <ArrowUpRight className="h-4 w-4 text-gray-300 group-hover:text-dash-red transition-colors shrink-0 mt-1" />
+                    <div className="flex-1 px-5 pb-5">
+                      <div className="text-center mb-3">
+                        <h2 className="text-base font-bold text-gray-900 group-hover:text-dash-red transition-colors leading-snug">
+                          {ns.national_society_name}
+                        </h2>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {[ns.abbreviation, ns.region_name, ns.country]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
                       </div>
 
                       {/* Mission / about excerpt */}
                       {(ns.mission_statement || ns.about) && (
-                        <p className="text-sm text-gray-600 line-clamp-2 mt-2">
+                        <p className="text-sm text-gray-600 line-clamp-3 mb-3 text-center">
                           {ns.mission_statement ||
-                            ns.about?.replace(/<[^>]*>/g, "").slice(0, 200)}
+                            ns.about?.replace(/<[^>]*>/g, "").slice(0, 150)}
                         </p>
                       )}
 
                       {/* Stats row */}
-                      <div className="mt-3 flex flex-wrap gap-4 text-xs text-gray-500">
+                      <div className="mb-3 flex justify-center gap-4 text-xs text-gray-500">
                         {ns.active_branches != null && (
                           <span className="flex items-center gap-1.5">
                             <GitBranch className="h-3.5 w-3.5" />
-                            {ns.active_branches} branches
+                            {ns.active_branches}
                           </span>
                         )}
                         {ns.active_vonteers != null && (
                           <span className="flex items-center gap-1.5">
                             <Users className="h-3.5 w-3.5" />
-                            {ns.active_vonteers.toLocaleString()} volunteers
+                            {ns.active_vonteers.toLocaleString()}
                           </span>
                         )}
                       </div>
 
                       {/* Pillar badges */}
                       {ns.pillars.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="mb-3 flex flex-wrap gap-2 justify-center">
                           {ns.pillars.map((p) => (
                             <span
                               key={p}
@@ -370,16 +372,21 @@ export default function NationalSocietiesIndex() {
 
                       {/* Updated date */}
                       {ns.organization_size_update_date && (
-                        <div className="mt-3 pt-3 border-t border-gray-100 flex items-center gap-2">
+                        <div className="pt-3 border-t border-gray-100 flex items-center justify-center gap-2">
                           <Clock3 className="h-3.5 w-3.5 text-gray-400 shrink-0" />
                           <span className="text-xs text-gray-500">
-                            Organisation size updated{" "}
+                            Updated{" "}
                             <span className="font-medium text-gray-700">
                               {ns.organization_size_update_date}
                             </span>
                           </span>
                         </div>
                       )}
+
+                      {/* Arrow indicator */}
+                      <div className="mt-3 flex justify-center">
+                        <ArrowUpRight className="h-4 w-4 text-gray-300 group-hover:text-dash-red transition-colors" />
+                      </div>
                     </div>
                   </Link>
                 ))}

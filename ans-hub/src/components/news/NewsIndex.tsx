@@ -1,11 +1,27 @@
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useFrappeGetCall } from "frappe-react-sdk";
-import { Newspaper, TrendingUp, Activity, ArrowUpRight, ChevronRight, BookOpen, Filter, Star } from "lucide-react";
+import { Newspaper, TrendingUp, Activity, ArrowUpRight, ChevronRight, BookOpen, Filter, Star, ChevronLeft } from "lucide-react";
 import { pillarColor, publications } from "../../lib/site-data";
 import { mapArticleToNewsItem, type Article } from "../../lib/utils";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 export default function NewsIndex() {
+  // Carousel setup
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start" },
+    [Autoplay({ delay: 5000, stopOnInteraction: false })]
+  );
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
   // Fetch articles from API
   const { data: articlesData, isLoading, error } = useFrappeGetCall<{ message: Article[] }>(
     "onerc_core.api.article.get_articles",
@@ -23,9 +39,15 @@ export default function NewsIndex() {
     if (!articlesData?.message) return [];
     return articlesData.message.map(article => ({
       ...mapArticleToNewsItem(article),
-      cover_image: article.cover_image
+      cover_image: article.cover_image,
+      is_featured: article.is_featured
     }));
   }, [articlesData]);
+
+  // Get featured stories for carousel
+  const featuredStories = useMemo(() => {
+    return news.filter(n => n.is_featured).slice(0, 5);
+  }, [news]);
 
   // Category to color mapping
   const categoryColorMap: Record<string, string> = {
@@ -46,6 +68,94 @@ export default function NewsIndex() {
   }, [categoriesData, news]);
   return (
     <div className="min-h-full bg-gray-50">
+      {/* Featured Stories Carousel */}
+      {!isLoading && featuredStories.length > 0 && (
+        <div className="bg-white border-b border-gray-200">
+          <div className="mx-auto max-w-7xl px-6 py-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <Star className="h-5 w-5 text-dash-red fill-current" />
+                Featured Stories
+              </h2>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={scrollPrev}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                  aria-label="Previous slide"
+                >
+                  <ChevronLeft className="h-5 w-5 text-gray-700" />
+                </button>
+                <button
+                  onClick={scrollNext}
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight className="h-5 w-5 text-gray-700" />
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-hidden" ref={emblaRef}>
+              <div className="flex gap-4">
+                {featuredStories.map((story) => (
+                  <div key={story.slug} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0">
+                    <Link
+                      to={`/news/${story.slug}`}
+                      className="block group"
+                    >
+                      <div className="relative h-64 rounded-lg overflow-hidden mb-3">
+                        {story.cover_image ? (
+                          <img
+                            src={story.cover_image}
+                            alt={story.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <>
+                            <div className={`absolute inset-0 ${pillarColor[story.color]}`} />
+                            <div
+                              className="absolute inset-0 opacity-10"
+                              style={{
+                                backgroundImage: "radial-gradient(circle at 30% 50%, white 2px, transparent 2px)",
+                                backgroundSize: "24px 24px",
+                              }}
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-white/20 text-6xl font-bold">{story.tag.toUpperCase()}</div>
+                            </div>
+                          </>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={`px-2 py-1 rounded text-xs font-medium text-white ${pillarColor[story.color]}`}>
+                              {story.tag}
+                            </span>
+                            <span className="flex items-center gap-1 text-xs text-white">
+                              <Star className="h-3 w-3 fill-current" />
+                              Featured
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-bold text-white mb-1 line-clamp-2 group-hover:underline">
+                            {story.title}
+                          </h3>
+                          <p className="text-sm text-white/90 line-clamp-2">{story.excerpt}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <span>{story.place}</span>
+                        <span>·</span>
+                        <span>{story.date}</span>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* LinkedIn-style container */}
       <div className="mx-auto max-w-7xl px-6 py-6">
         <div className="grid gap-6 lg:grid-cols-12">
