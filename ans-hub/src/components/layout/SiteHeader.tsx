@@ -1,5 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
+import { useFrappeAuth } from "frappe-react-sdk";
+import { LogOut } from "lucide-react";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
 
 export function SiteHeader() {
   const location = useLocation();
@@ -14,8 +18,7 @@ export function SiteHeader() {
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
           <div className="leading-tight">
-            <div className="font-semibold text-base text-gray-900">Localisation Alliance</div>
-            <div className="text-[11px] uppercase tracking-widest text-gray-500">IFRC Network</div>
+            <div className="font-semibold text-base text-gray-900">Localisation Hub</div>
           </div>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
@@ -76,16 +79,24 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
+  const navigate = useNavigate();
+  const { currentUser } = useFrappeAuth();
+  const { logout } = useContext(UserContext);
+
+  const handleSignOut = async () => {
+    await logout();
+  };
+
   return (
     <footer className="border-t border-gray-200 bg-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
-            <div className="font-semibold text-base text-gray-900">The Localisation Alliance</div>
+            <div className="font-semibold text-base text-gray-900">The Localisation Hub</div>
           </div>
           <p className="mt-4 max-w-md text-sm text-gray-600">
-            A peer-to-peer learning platform supporting African National Societies on the journey toward self-reliance — under the IFRC Network and MOFA II programme.
+            A peer-to-peer learning platform supporting African National Societies on the journey toward self-reliance
           </p>
         </div>
         <div>
@@ -109,8 +120,16 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-gray-200">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-gray-600 md:flex-row">
-          <div>© 2026 The Localisation Alliance · IFRC Network</div>
-          <div>MOFA II Programme · Peer-to-Peer Learning Platform</div>
+          <div>© 2026 The Localisation Hub</div>
+          {currentUser && (
+            <button
+              onClick={handleSignOut}
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-red-500 transition-colors"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span>Sign out</span>
+            </button>
+          )}
         </div>
       </div>
     </footer>

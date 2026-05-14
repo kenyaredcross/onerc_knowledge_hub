@@ -116,7 +116,7 @@ export default function AboutPage() {
       <header className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="font-display text-lg font-semibold tracking-tight">
-            Localisation Alliance
+            Localisation Hub
           </Link>
           <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
             <Link to="/" className="hover:text-foreground">Home</Link>
@@ -145,7 +145,7 @@ export default function AboutPage() {
             A journey toward National Society <em className="not-italic text-accent">self-reliance.</em>
           </h1>
           <p className="mt-8 max-w-2xl text-lg text-white/85 md:text-xl">
-            The Localisation Alliance brings together African National Societies committed to
+            The Localisation Hub brings together African National Societies committed to
             stronger, locally led humanitarian and development systems — through aligned
             leadership, shared vision, and coordinated action.
           </p>
@@ -422,8 +422,8 @@ export default function AboutPage() {
 
       <footer className="border-t border-border bg-secondary/40">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground md:flex-row">
-          <p>© {new Date().getFullYear()} The Localisation Alliance</p>
-          <p>Hosted by the Kenya Red Cross Society · Secretariat: NLRC & IFRC</p>
+          <p>© {new Date().getFullYear()} The Localisation Hub</p>
+          <p>Hosted by the Kenya Red Cross Society · Secretariat: NLRC</p>
         </div>
       </footer>
     </main>

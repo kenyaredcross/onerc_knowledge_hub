@@ -6,18 +6,16 @@ import {
   Calendar,
   BookOpen,
   Layers,
-  Info,
+  Globe2,
   ChevronLeft,
   ChevronRight,
   Bell,
   Search,
   Menu,
   X,
-  PlusCircle,
-  FileText,
-  Image,
   Users,
   HelpCircle,
+  LogOut,
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
 
@@ -26,6 +24,7 @@ const navItems = [
   { path: "/news", label: "News & Stories", icon: Newspaper },
   { path: "/events", label: "Events", icon: Calendar },
   { path: "/knowledge", label: "Knowledge Hub", icon: BookOpen },
+  { path: "/national-societies", label: "National Societies", icon: Globe2 },
   { path: "/pillars", label: "Pillars", icon: Layers },
 ];
 
@@ -42,7 +41,7 @@ const managementItems = [
 export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { userData } = useContext(UserContext);
+  const { userData, logout } = useContext(UserContext);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -65,6 +64,11 @@ export default function DashboardLayout() {
   const userInitials = userData
     ? `${userData.first_name?.[0] || ""}${userData.last_name?.[0] || ""}`.toUpperCase()
     : "LA";
+
+  // Handle logout
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <div className="flex h-screen bg-dash-bg overflow-hidden">
@@ -93,10 +97,7 @@ export default function DashboardLayout() {
           {!collapsed && (
             <div className="overflow-hidden">
               <div className="text-sm font-semibold text-white leading-tight whitespace-nowrap">
-                Localisation Alliance
-              </div>
-              <div className="text-[10px] uppercase tracking-widest text-white/50 whitespace-nowrap">
-                ANS Hub · IFRC
+                Localisation Hub
               </div>
             </div>
           )}
@@ -189,7 +190,7 @@ export default function DashboardLayout() {
           <div className="space-y-0.5">
             {!collapsed && (
               <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-white/40">
-                Management
+                Management.
               </div>
             )}
             {managementItems.map((item) => {
@@ -246,9 +247,13 @@ export default function DashboardLayout() {
         {/* Footer */}
         {!collapsed && (
           <div className="px-4 pb-4 shrink-0">
-            <div className="rounded-lg bg-white/5 p-3 text-[11px] text-white/40 leading-relaxed">
-              MOFA II Programme · Peer-to-Peer<br />Learning Platform
-            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full rounded-lg bg-white/5 p-3 text-[11px] text-white/60 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-2"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span>Sign out</span>
+            </button>
           </div>
         )}
       </aside>

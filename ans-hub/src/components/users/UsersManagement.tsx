@@ -16,6 +16,8 @@ import {
   UserCheck,
   UserX,
   RefreshCw,
+  Send,
+  KeyRound,
 } from "lucide-react";
 
 export default function UsersManagement() {
@@ -27,6 +29,8 @@ export default function UsersManagement() {
   const { call: getAllUsers } = useFrappePostCall("onerc_knowledge_hub.api.register.get_all_hub_users");
   const { call: approveUser } = useFrappePostCall("onerc_knowledge_hub.api.register.approve_localisation_hub_user");
   const { call: rejectUser } = useFrappePostCall("onerc_knowledge_hub.api.register.reject_localisation_hub_user");
+  const { call: resendActivationEmail } = useFrappePostCall("onerc_knowledge_hub.api.user_management.resend_activation_email");
+  const { call: sendPasswordResetEmail } = useFrappePostCall("onerc_knowledge_hub.api.user_management.send_password_reset_email");
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -73,6 +77,34 @@ export default function UsersManagement() {
       fetchUsers();
     } catch (error: any) {
       toast.error(error.message || "Failed to reject user");
+    }
+  };
+
+  const handleResendActivation = async (userName: string, email: string) => {
+    if (!confirm(`Resend activation email to ${email}?`)) {
+      return;
+    }
+
+    try {
+      const result = await resendActivationEmail({ localisation_hub_user: userName });
+      toast.success(result?.message || "Activation email sent successfully!");
+      fetchUsers();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to send activation email");
+    }
+  };
+
+  const handlePasswordReset = async (userName: string, email: string) => {
+    if (!confirm(`Send password reset email to ${email}?`)) {
+      return;
+    }
+
+    try {
+      const result = await sendPasswordResetEmail({ localisation_hub_user: userName });
+      toast.success(result?.message || "Password reset email sent successfully!");
+      fetchUsers();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to send password reset email");
     }
   };
 
@@ -305,8 +337,25 @@ export default function UsersManagement() {
                             </button>
                           </>
                         )}
-                        {user.status === "Approved" && (
-                          <span className="text-xs text-gray-500">No actions available</span>
+                        {user.status === "Approved" && !user.user_enabled && (
+                          <button
+                            onClick={() => handleResendActivation(user.name, user.prefered_contact_email)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 transition-colors"
+                            title="Resend activation email"
+                          >
+                            <Send className="h-3.5 w-3.5" />
+                            Resend Activation
+                          </button>
+                        )}
+                        {user.status === "Approved" && user.user_enabled && (
+                          <button
+                            onClick={() => handlePasswordReset(user.name, user.prefered_contact_email)}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-500 text-white text-sm font-medium rounded-lg hover:bg-purple-600 transition-colors"
+                            title="Send password reset email"
+                          >
+                            <KeyRound className="h-3.5 w-3.5" />
+                            Reset Password
+                          </button>
                         )}
                         {user.status === "Rejected" && (
                           <span className="text-xs text-gray-500">Application rejected</span>

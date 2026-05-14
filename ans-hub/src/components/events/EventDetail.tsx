@@ -61,7 +61,7 @@ export default function EventDetail() {
                 Register for this event
               </h3>
               <p className="text-xs text-gray-500 mb-4">
-                Open to members of the Localisation Alliance network. Sign in to register or contact the secretariat.
+                Open to members of the Localisation Hub network. Sign in to register or contact the secretariat.
               </p>
               <button className="rounded-md bg-dash-red px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90">
                 Register now

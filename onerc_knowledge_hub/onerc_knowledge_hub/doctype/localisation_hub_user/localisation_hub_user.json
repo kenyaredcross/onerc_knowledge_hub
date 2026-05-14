@@ -37,6 +37,9 @@
   "column_break_40",
   "prefered_contact_email",
   "user_id",
+  "section_break_activation",
+  "activation_token",
+  "activation_token_expiry",
   "section_break_thni",
   "social_media"
  ],
@@ -220,6 +223,29 @@
    "fieldtype": "Link",
    "label": "Gender",
    "options": "Gender"
+  },
+  {
+   "fieldname": "section_break_activation",
+   "fieldtype": "Section Break",
+   "label": "Activation Token (Internal Use Only)",
+   "collapsible": 1,
+   "hidden": 1
+  },
+  {
+   "fieldname": "activation_token",
+   "fieldtype": "Data",
+   "label": "Activation Token Hash",
+   "hidden": 1,
+   "read_only": 1,
+   "no_copy": 1
+  },
+  {
+   "fieldname": "activation_token_expiry",
+   "fieldtype": "Datetime",
+   "label": "Activation Token Expiry",
+   "hidden": 1,
+   "read_only": 1,
+   "no_copy": 1
   }
  ],
  "icon": "fa fa-user",

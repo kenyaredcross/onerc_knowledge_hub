@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useFrappeGetCall } from "frappe-react-sdk";
 
 /**
@@ -21,34 +22,22 @@ interface AuthProps {
 }
 
 export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
-  const [isSignIn, setIsSignIn] = useState(false);
+  const [isSignIn, setIsSignIn] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
   // Fetch national societies
   const { data: nationalSocieties, isLoading: loadingSocieties } = useFrappeGetCall(
-    "onerc_knowledge_hub.api.national_society.get_national_societies"
+    "onerc_knowledge_hub.api.register.get_national_societies"
   );
 
   // Fetch languages
   const { data: languages, isLoading: loadingLanguages } = useFrappeGetCall(
-    "frappe.client.get_list",
-    {
-      doctype: "Language",
-      fields: ["name", "language_name"],
-      limit_page_length: 0,
-      order_by: "language_name asc"
-    }
+    "onerc_knowledge_hub.api.register.get_languages"
   );
 
   // Fetch designations (positions)
   const { data: designations, isLoading: loadingDesignations } = useFrappeGetCall(
-    "frappe.client.get_list",
-    {
-      doctype: "Designation",
-      fields: ["name"],
-      limit_page_length: 0,
-      order_by: "name asc"
-    }
+    "onerc_knowledge_hub.api.register.get_designations"
   );
 
   // Sign-up form state
@@ -74,7 +63,12 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
     // Font loading is handled globally in index.html
   }, []);
 
-  const toggleForm = () => {
+  const toggleForm = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+
+    if (isAnimating) return; // Prevent multiple clicks during animation
+
     setIsAnimating(true);
     setTimeout(() => setIsAnimating(false), 1100);
     setIsSignIn((prev) => !prev);
@@ -283,12 +277,12 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
 
               <div className="ma-field">
                 <label className="ma-label">
-                  Email
+                  Email or Username
                 </label>
                 <input
                   className="ma-input"
-                  type="email"
-                  placeholder="you@somewhere.com"
+                  type="text"
+                  placeholder="you@somewhere.com or username"
                   value={signInData.email}
                   onChange={(e) =>
                     setSignInData({ ...signInData, email: e.target.value })
@@ -313,9 +307,9 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
 
               <div className="ma-row">
-                <a className="ma-link" role="button" tabIndex={0}>
+                <Link to="/forgot-password" className="ma-link">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
 
               <button className="ma-button" type="submit">
@@ -436,13 +430,18 @@ const css = `
   .ma-main {
     position: relative;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1400px;
     height: 720px;
     background-color: #ffffff;
     border: 1px solid var(--ma-rule);
     box-shadow: var(--ma-shadow-soft);
     overflow: hidden;
     z-index: 5;
+    transition: max-width 1.1s cubic-bezier(0.7, 0, 0.3, 1);
+  }
+
+  .ma-main.is-signin {
+    max-width: 1000px;
   }
 
   /* form containers */
@@ -467,6 +466,21 @@ const css = `
     display: flex;
     flex-direction: column;
     width: 100%;
+  }
+
+  /* Two-column grid for signup form */
+  .ma-a .ma-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 24px;
+  }
+
+  .ma-a .ma-eyebrow,
+  .ma-a .ma-title,
+  .ma-a .ma-sub,
+  .ma-a .ma-button,
+  .ma-a .ma-link {
+    grid-column: 1 / -1;
   }
 
   .ma-eyebrow {
@@ -508,6 +522,11 @@ const css = `
     margin: 0 0 clamp(24px, 4vw, 36px);
     max-width: 360px;
     line-height: 1.5;
+  }
+
+  /* Full width subtitle for signup form */
+  .ma-a .ma-sub {
+    max-width: 100%;
   }
 
   .ma-field { position: relative; margin-bottom: 18px; }
@@ -767,10 +786,22 @@ const css = `
     .ma-switch { padding: 48px 30px; }
     .ma-switch-desc { font-size: 12.5px; }
     .ma-mark--bl, .ma-mark--br { display: none; }
+
+    /* Reduce gap on smaller tablets */
+    .ma-a .ma-form {
+      gap: 0 16px;
+    }
   }
 
   /* mobile */
   @media (max-width: 760px) {
+    /* Revert to single column on mobile */
+    .ma-a .ma-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
     .ma-root {
       padding: 0;
       align-items: stretch;

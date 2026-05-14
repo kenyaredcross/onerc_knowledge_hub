@@ -27,8 +27,8 @@ export default function NewsIndex() {
                     A
                   </div>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1">Alliance Network</h3>
-                <p className="text-sm text-gray-600 mb-4">Localisation Alliance · Africa</p>
+                <h3 className="font-bold text-gray-900 mb-1">Hub Network</h3>
+                <p className="text-sm text-gray-600 mb-4">Localisation Hub · Africa</p>
 
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <div className="flex items-center justify-between text-sm">

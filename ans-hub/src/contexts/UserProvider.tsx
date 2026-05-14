@@ -32,10 +32,6 @@ export const UserProvider = ({ children }) => {
       console.error("Failed to disable push notifications", error);
     }
 
-    const signInUrl = `/login?redirect-to=${encodeURIComponent(
-      location.pathname + location.search,
-    )}`;
-
     return logout()
       .then(() => {
         return mutate(
@@ -50,12 +46,15 @@ export const UserProvider = ({ children }) => {
         );
       })
       .then(() => {
-        navigate(signInUrl);
+        // Use window.location.href to force full page reload after logout
+        window.location.href = "/ans-hub/login";
       })
       .catch((error) => {
         toast.error("Failed to logout", {
           description: error.message || "An unexpected error occurred",
         });
+        // Still redirect on error
+        window.location.href = "/ans-hub/login";
       });
   };
 

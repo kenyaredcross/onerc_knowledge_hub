@@ -1,22 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { useFrappePostCall } from "frappe-react-sdk";
 import { toast } from "react-toastify";
 import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle, ShieldCheck } from "lucide-react";
 
-export default function SetPassword() {
+export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const token = searchParams.get("token"); // The secure activation token from the email link
+  const token = searchParams.get("token");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  const [userEmail, setUserEmail] = useState("");
 
-  const { call: activateAccount } = useFrappePostCall(
-    "onerc_knowledge_hub.api.register.set_password_and_activate"
+  const { call: validateToken } = useFrappePostCall(
+    "onerc_knowledge_hub.api.register.validate_reset_token"
+  );
+  const { call: resetPassword } = useFrappePostCall(
+    "onerc_knowledge_hub.api.register.reset_password_with_token"
   );
 
   // Password validation
@@ -30,11 +35,37 @@ export default function SetPassword() {
   const isPasswordValid = passwordRequirements.every((req) => req.test(password));
   const doPasswordsMatch = password === confirmPassword && password.length > 0;
 
+  // Validate token on component mount
+  useEffect(() => {
+    const checkToken = async () => {
+      if (!token) {
+        setTokenValid(false);
+        return;
+      }
+
+      try {
+        const result = await validateToken({ token });
+        if (result?.valid) {
+          setTokenValid(true);
+          setUserEmail(result.email || "");
+        } else {
+          setTokenValid(false);
+          toast.error(result?.message || "Invalid or expired reset link");
+        }
+      } catch (error: any) {
+        setTokenValid(false);
+        toast.error("Invalid or expired reset link");
+      }
+    };
+
+    checkToken();
+  }, [token]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!token) {
-      toast.error("Invalid activation link. Please check your email.");
+      toast.error("Invalid reset link");
       return;
     }
 
@@ -50,21 +81,93 @@ export default function SetPassword() {
 
     setIsLoading(true);
     try {
-      await activateAccount({
-        token: token,
+      await resetPassword({
+        token,
         new_password: password,
       });
 
-      toast.success("Account activated successfully! Redirecting to login...");
+      toast.success("Password reset successfully! Redirecting to login...");
       setTimeout(() => {
         navigate("/ans-hub/login");
       }, 2000);
     } catch (error: any) {
-      toast.error(error.message || "Failed to activate account. The link may have expired.");
+      toast.error(error.message || "Failed to reset password. The link may have expired.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  // Show error state if token is invalid
+  if (tokenValid === false) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-6">
+              <div className="flex items-center gap-3">
+                <div className="flex h-12 w-12 items-center justify-center rounded bg-dash-red font-bold text-white text-xl">
+                  +
+                </div>
+                <div className="text-left">
+                  <div className="font-semibold text-lg text-gray-900">Localisation Hub</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Error Card */}
+          <div className="bg-white rounded border border-gray-200 shadow-sm p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="h-16 w-16 rounded-full bg-red-50 flex items-center justify-center">
+                <AlertCircle className="h-8 w-8 text-red-600" />
+              </div>
+            </div>
+
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">
+              Invalid Reset Link
+            </h1>
+
+            <p className="text-gray-600 mb-6">
+              This password reset link is invalid or has expired. Reset links are only valid for 1 hour.
+            </p>
+
+            <div className="space-y-3">
+              <Link
+                to="/ans-hub/forgot-password"
+                className="block w-full py-3 px-4 bg-dash-red text-white rounded font-medium hover:bg-red-600 transition-all"
+              >
+                Request New Reset Link
+              </Link>
+              <Link
+                to="/ans-hub/login"
+                className="block w-full py-3 px-4 border border-gray-300 text-gray-700 rounded font-medium hover:bg-gray-50 transition-all"
+              >
+                Back to Sign In
+              </Link>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="mt-8 text-center text-xs text-gray-500">
+            © 2026 The Localisation Hub
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state while validating token
+  if (tokenValid === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
+        <div className="text-center">
+          <div className="h-12 w-12 border-4 border-dash-red border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Validating reset link...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-6">
@@ -82,10 +185,10 @@ export default function SetPassword() {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Activate Your Account
+            Set New Password
           </h1>
           <p className="text-gray-600">
-            Your account has been approved! Set your password to get started.
+            Create a strong password for your account.
           </p>
         </div>
 
@@ -184,12 +287,12 @@ export default function SetPassword() {
               {isLoading ? (
                 <>
                   <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Activating...</span>
+                  <span>Resetting Password...</span>
                 </>
               ) : (
                 <>
                   <ShieldCheck className="h-5 w-5" />
-                  <span>Activate Account</span>
+                  <span>Reset Password</span>
                 </>
               )}
             </button>
@@ -198,13 +301,13 @@ export default function SetPassword() {
 
         {/* Footer */}
         <div className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{" "}
+          Remember your password?{" "}
           <Link to="/ans-hub/login" className="text-dash-red font-medium hover:underline">
             Sign in
           </Link>
         </div>
 
-        {/* IFRC Footer */}
+        {/* Footer */}
         <div className="mt-8 text-center text-xs text-gray-500">
           © 2026 The Localisation Hub
         </div>
