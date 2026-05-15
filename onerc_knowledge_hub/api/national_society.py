@@ -12,7 +12,7 @@ def get_national_societies():
 	return societies
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_national_societies_list():
 	"""
 	Get all National Societies for the listing page.

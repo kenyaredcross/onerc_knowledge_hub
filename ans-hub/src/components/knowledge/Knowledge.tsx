@@ -47,6 +47,7 @@ const resourceStyles: Record<string, string> = {
 
 export default function Knowledge() {
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [activeResourceType, setActiveResourceType] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [viewMode, setViewMode] = useState<"card" | "list">("card");
 
@@ -70,12 +71,21 @@ export default function Knowledge() {
     [categoriesData],
   );
 
+  const resourceTypes = ["Publication", "Report", "Tools & Templates"];
+
   const stats = useMemo(
     () => [
       {
-        label: "Resources",
+        label: "All Resources",
         value: entries.length.toString(),
         icon: FileText,
+      },
+      {
+        label: "Publications",
+        value: entries
+          .filter((e) => e.resource_type === "Publication")
+          .length.toString(),
+        icon: BookOpen,
       },
       {
         label: "Templates",
@@ -83,13 +93,6 @@ export default function Knowledge() {
           .filter((e) => e.resource_type === "Tools & Templates")
           .length.toString(),
         icon: FolderOpen,
-      },
-      {
-        label: "Reports",
-        value: entries
-          .filter((e) => e.resource_type === "Report")
-          .length.toString(),
-        icon: BookOpen,
       },
       {
         label: "Downloads",
@@ -107,14 +110,17 @@ export default function Knowledge() {
       const matchesCategory =
         activeCategory === "All" || e.category === activeCategory;
 
+      const matchesResourceType =
+        activeResourceType === "All" || e.resource_type === activeResourceType;
+
       const matchesSearch =
         searchQuery === "" ||
         e.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         e.summary?.toLowerCase().includes(searchQuery.toLowerCase());
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesResourceType && matchesSearch;
     });
-  }, [entries, activeCategory, searchQuery]);
+  }, [entries, activeCategory, activeResourceType, searchQuery]);
 
   if (entriesLoading) {
     return (
@@ -185,6 +191,41 @@ export default function Knowledge() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
+        {/* Resource Type Filter */}
+        <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div className="flex items-center gap-2 mb-4 text-sm font-semibold text-gray-700">
+            <Filter className="h-4 w-4 text-dash-red" />
+            Resource Type
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setActiveResourceType("All")}
+              className={`rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wide transition-all ${
+                activeResourceType === "All"
+                  ? "bg-dash-red text-white shadow-lg shadow-dash-red/10"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              All Resources
+            </button>
+
+            {resourceTypes.map((type) => (
+              <button
+                key={type}
+                onClick={() => setActiveResourceType(type)}
+                className={`rounded-xl px-4 py-2 text-xs font-bold uppercase tracking-wide transition-all ${
+                  activeResourceType === type
+                    ? "bg-dash-red text-white shadow-lg shadow-dash-red/10"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Category Filter */}
         <div className="mb-8 flex flex-col gap-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
@@ -403,6 +444,7 @@ export default function Knowledge() {
               <button
                 onClick={() => {
                   setActiveCategory("All");
+                  setActiveResourceType("All");
                   setSearchQuery("");
                 }}
                 className="mt-6 rounded-2xl bg-dash-navy px-5 py-3 text-sm font-bold text-white transition-all hover:scale-105 hover:bg-dash-red"
