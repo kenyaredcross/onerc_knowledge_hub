@@ -11,6 +11,7 @@
   "pillar",
   "cover_image",
   "views_count",
+  "posted_by",
   "column_break_nsfk",
   "type",
   "external_platform_name",
@@ -37,9 +38,9 @@
   },
   {
    "fieldname": "pillar",
-   "fieldtype": "Link",
+   "fieldtype": "Table MultiSelect",
    "label": "Pillar",
-   "options": "Localization Pillar"
+   "options": "Localization Pillar Link"
   },
   {
    "fieldname": "type",
@@ -63,16 +64,18 @@
    "label": "View Count"
   },
   {
+   "fetch_from": "posted_by.national_society",
    "fieldname": "national_society",
    "fieldtype": "Link",
    "label": "National Society",
-   "options": "National Society"
+   "options": "National Society",
+   "read_only": 1
   },
   {
    "fieldname": "category",
-   "fieldtype": "Link",
+   "fieldtype": "Table MultiSelect",
    "label": "Category",
-   "options": "Category"
+   "options": "Category Link"
   },
   {
    "default": "Today",
@@ -101,12 +104,18 @@
   {
    "fieldname": "section_break_yahw",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "posted_by",
+   "fieldtype": "Link",
+   "label": "Posted By",
+   "options": "Localisation Hub User"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-14 16:33:22.501277",
+ "modified": "2026-05-15 09:23:10.287945",
  "modified_by": "Administrator",
  "module": "Onerc Knowledge Hub",
  "name": "Learning Hub",
