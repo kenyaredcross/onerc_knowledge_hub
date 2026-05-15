@@ -3071,6 +3071,10 @@ video {
   --tw-shadow-color: rgb(1 30 65 / 0.1);
   --tw-shadow: var(--tw-shadow-colored);
 }
+.shadow-dash-red\/10 {
+  --tw-shadow-color: rgb(238 36 53 / 0.1);
+  --tw-shadow: var(--tw-shadow-colored);
+}
 .shadow-emerald-100 {
   --tw-shadow-color: #d1fae5;
   --tw-shadow: var(--tw-shadow-colored);

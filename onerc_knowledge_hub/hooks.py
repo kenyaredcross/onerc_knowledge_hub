@@ -59,11 +59,13 @@ add_to_apps_screen = [
 # ----------
 
 # application home page (will override Website Settings)
-# home_page = "login"
+home_page = "index"
 
 # website user home page (by Role)
 # role_home_page = {
-# 	"Role": "home_page"
+# 	"Guest": "ans-hub",
+# 	"System Manager": "ans-hub",
+# 	"All": "ans-hub"
 # }
 
 # Generators
@@ -261,4 +263,7 @@ add_to_apps_screen = [
 
 website_route_rules = [
 	{"from_route": "/ans-hub/<path:app_path>", "to_route": "ans-hub"},
+	{"from_route": "/login", "to_route": "login.html"},
+	{"from_route": "/home", "to_route": "home.html"},
+	{"from_route": "/", "to_route": "index.html"},
 ]
