@@ -16,7 +16,7 @@ app_license = "agpl-3.0"
 add_to_apps_screen = [
 	{
 		"name": "onerc_knowledge_hub",
-		"logo": "/assets/onerc_knowledge_hub/logo.png",
+		"logo": "/assets/onerc_knowledge_hub/logo.jpg",
 		"title": "Onerc Knowledge Hub",
 		"route": "/onerc_knowledge_hub",
 		"has_permission": "onerc_knowledge_hub.api.permission.has_app_permission",
