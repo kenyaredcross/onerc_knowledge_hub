@@ -9,6 +9,7 @@
   "identity_section",
   "national_society_name",
   "abbreviation",
+  "type",
   "logo",
   "column_break_shct",
   "country",
@@ -135,6 +136,16 @@
    "in_standard_filter": 1,
    "label": "Abbreviation",
    "unique": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "Member\nNon-member\nConsortium Partner",
+   "default": "Member"
   },
   {
    "fieldname": "section_break_viwn",

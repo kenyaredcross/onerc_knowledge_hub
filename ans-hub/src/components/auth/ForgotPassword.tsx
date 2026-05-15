@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFrappePostCall } from "frappe-react-sdk";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { Mail, ArrowLeft, CheckCircle2 } from "lucide-react";
 
 export default function ForgotPassword() {

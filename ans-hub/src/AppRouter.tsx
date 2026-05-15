@@ -16,6 +16,7 @@ import Knowledge from "./components/knowledge/Knowledge.tsx";
 import KnowledgeDetail from "./components/knowledge/KnowledgeDetail.tsx";
 import NewKnowledge from "./components/knowledge/NewKnowledge.tsx";
 import DashboardLayout from "./components/layout/DashboardLayout.tsx";
+import LearningHub from "./components/learning/LearningHub.tsx";
 import NationalSocietiesIndex from "./components/national-societies/NationalSocietiesIndex.tsx";
 import NationalSocietyDetail from "./components/national-societies/NationalSocietyDetail.tsx";
 import NewsDetail from "./components/news/NewsDetail.tsx";
@@ -30,18 +31,18 @@ const AppRouter = () => {
     <Routes>
       <Route element={<App />}>
         {/* Standalone routes (no sidebar) */}
+        <Route path="/" element={<AboutPage />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/set-password" element={<SetPassword />} />
         <Route path="/pending-approval" element={<PendingApprovalPage />} />
         <Route path="/403" element={<ErrorPage403 />} />
-        <Route path="/about" element={<AboutPage />} />
 
         {/* Dashboard routes (with sidebar layout) - Protected */}
         <Route element={<ProtectedRoute />}>
           <Route element={<DashboardLayout />}>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/news" element={<NewsIndex />} />
             <Route path="/news/:slug" element={<NewsDetail />} />
             <Route path="/events" element={<EventsIndex />} />
@@ -49,6 +50,7 @@ const AppRouter = () => {
             <Route path="/knowledge" element={<Knowledge />} />
             <Route path="/knowledge/:slug" element={<KnowledgeDetail />} />
             <Route path="/knowledge/new" element={<NewKnowledge />} />
+            <Route path="/learning" element={<LearningHub />} />
             <Route
               path="/national-societies"
               element={<NationalSocietiesIndex />}

@@ -73,7 +73,7 @@ function Skeleton({ className = "" }: { className?: string }) {
 
 function CardSkeleton() {
   return (
-    <div className="flex flex-col bg-white rounded border border-gray-200 border-t-4 overflow-hidden">
+    <div className="flex flex-col bg-white rounded border border-gray-200 overflow-hidden">
       <div className="flex justify-center items-center pt-6 pb-4">
         <Skeleton className="h-20 w-20 rounded" />
       </div>
@@ -297,10 +297,7 @@ export default function NationalSocietiesIndex() {
                   <Link
                     key={ns.name}
                     to={`/national-societies/${encodeURIComponent(ns.name)}`}
-                    className={[
-                      "group flex flex-col bg-white rounded border border-gray-200 transition-all hover:shadow-md hover:border-dash-red/30 overflow-hidden",
-                      societyBorderL(ns.pillars).replace('border-l-4', 'border-t-4'),
-                    ].join(" ")}
+                    className="group flex flex-col bg-white rounded border border-gray-200 transition-all hover:shadow-md hover:border-dash-red/30 overflow-hidden"
                   >
                     {/* Logo / avatar */}
                     <div className="flex justify-center items-center pt-6 pb-4">

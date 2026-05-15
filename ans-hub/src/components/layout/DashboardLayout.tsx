@@ -17,6 +17,7 @@ import {
   HelpCircle,
   LogOut,
   MessageSquare,
+  GraduationCap,
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
 
@@ -25,6 +26,7 @@ const navItems = [
   { path: "/news", label: "News & Stories", icon: Newspaper },
   { path: "/events", label: "Events", icon: Calendar },
   { path: "/knowledge", label: "Knowledge Hub", icon: BookOpen },
+  { path: "/learning", label: "Learning Hub", icon: GraduationCap },
   { path: "/national-societies", label: "National Societies", icon: Globe2 },
   { path: "/pillars", label: "Pillars", icon: Layers },
   { path: "/raven", label: "Connect", icon: MessageSquare, external: true },

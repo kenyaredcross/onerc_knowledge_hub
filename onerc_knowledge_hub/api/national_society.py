@@ -24,6 +24,7 @@ def get_national_societies_list():
 			"name",
 			"national_society_name",
 			"abbreviation",
+			"type",
 			"logo",
 			"banner_image",
 			"country",
@@ -73,10 +74,28 @@ def get_national_society_detail(name):
 		order_by="idx asc",
 	)
 
+	# Process social media links to include icon images
+	social_media_list = []
+	for row in (doc.social_media or []):
+		platform = row.get("social_media_site", "") if isinstance(row, dict) else getattr(row, "social_media_site", "")
+		url = row.get("url", "") if isinstance(row, dict) else getattr(row, "url", "")
+
+		# Fetch the icon image from Social Media Sites DocType
+		icon_image = None
+		if platform:
+			icon_image = frappe.db.get_value("Social Media Sites", platform, "social_media_icon")
+
+		social_media_list.append({
+			"platform": platform,
+			"icon": icon_image or "",
+			"url": url,
+		})
+
 	data = {
 		"name": doc.name,
 		"national_society_name": doc.national_society_name,
 		"abbreviation": doc.abbreviation,
+		"type": getattr(doc, "type", "Member"),  # default to Member if not set
 		"logo": doc.logo,
 		"banner_image": doc.banner_image,
 		"country": doc.country,
@@ -94,13 +113,7 @@ def get_national_society_detail(name):
 		"active_branches": doc.active_branches,
 		"organization_size_update_date": str(doc.organization_size_update_date) if doc.organization_size_update_date else None,
 		"pillars": [p["pillar"] for p in pillars],
-		"social_media": [
-			{
-				"platform": row.get("platform", "") if isinstance(row, dict) else getattr(row, "platform", ""),
-				"url": row.get("url", "") if isinstance(row, dict) else getattr(row, "url", ""),
-			}
-			for row in (doc.social_media or [])
-		],
+		"social_media": social_media_list,
 	}
 
 	return data

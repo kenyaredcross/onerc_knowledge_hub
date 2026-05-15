@@ -1,6 +1,41 @@
 import frappe
 
 @frappe.whitelist(allow_guest=True)
+def get_steering_group_members():
+	"""
+	Get all Localisation Hub Users who are marked as steering group members.
+	"""
+	members = frappe.get_all(
+		"Localisation Hub User",
+		filters={
+			"is_steering_group": 1,
+			"status": "Approved"
+		},
+		fields=[
+			"name",
+			"full_name",
+			"first_name",
+			"last_name",
+			"position",
+			"national_society",
+			"image",
+			"bio"
+		],
+		order_by="creation asc"
+	)
+
+	# Get position and national society names
+	for member in members:
+		if member.get("position"):
+			member["position_name"] = frappe.db.get_value("Designation", member["position"], "designation_name")
+
+		if member.get("national_society"):
+			member["national_society_name"] = frappe.db.get_value("National Society", member["national_society"], "national_society_name")
+
+	return members
+
+
+@frappe.whitelist(allow_guest=True)
 def get_user_details() -> dict:
     name = frappe.session.user
     user = frappe.get_doc("User", name)
