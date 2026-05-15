@@ -1,24 +1,19 @@
-import { useFrappeCreateDoc, useFrappeGetCall } from "frappe-react-sdk";
+import { useFrappePostCall } from "frappe-react-sdk";
 import {
-    ArrowLeft,
-    BookOpen,
-    Check,
-    FileText,
-    Globe,
-    Loader2,
-    Save,
-    Upload,
+  ArrowLeft,
+  BookOpen,
+  Check,
+  FileText,
+  Info,
+  Loader2,
+  Save,
+  TrendingUp,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-interface CategoryEntry {
-  name: string;
-}
-
-interface LanguageEntry {
-  name: string;
-}
+import { FileUploadField } from "../fields/FileUploadField";
+import { LinkField } from "../fields/LinkField";
+import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
 
 export default function NewKnowledge() {
   const navigate = useNavigate();
@@ -31,64 +26,51 @@ export default function NewKnowledge() {
     tools_subcategory: "",
     summary: "",
     description: "",
-    external_url: "",
     file_attachment: "",
+    external_url: "",
+    contributing_ns: [],
+    uploaded_by: "Administrator",
     report_impact: "Yes",
     metric_type: "",
+    status: "Draft",
+    is_highlighted: 0,
+    highlight_order: 0,
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const { createDoc } = useFrappeCreateDoc();
-
-  const { data: categoriesData } = useFrappeGetCall(
-    "onerc_knowledge_hub.api.knowledge_hub.get_knowledge_hub_categories",
-    {},
-  );
-
-  const { data: languagesData } = useFrappeGetCall(
-    "frappe.client.get_list",
-    {
-      doctype: "Language",
-      fields: ["name"],
-      limit_page_length: 200,
-    },
-  );
-
-  const categories: CategoryEntry[] = useMemo(
-    () => categoriesData?.message || [],
-    [categoriesData],
-  );
-
-  const languages: LanguageEntry[] = useMemo(
-    () => languagesData?.message || [],
-    [languagesData],
-  );
-
-  const updateField = (field: string, value: string) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const updateField = (field: string, value: any) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
+
+  const {
+    call: createKnowledgeHub,
+    loading: isSubmitting,
+    error,
+  } = useFrappePostCall(
+    "onerc_knowledge_hub.api.knowledge_hub.create_knowledge_hub",
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      setIsSubmitting(true);
-
-      const doc = await createDoc("Knowledge Hub", {
-        ...form,
-        status: "Draft",
-      });
-
-      navigate(`/knowledge/${doc.name}`);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsSubmitting(false);
+      const response = await createKnowledgeHub({ ...form });
+      const createdDoc = response?.message;
+      if (createdDoc?.name) {
+        navigate(`/knowledge/${createdDoc.name}`);
+      } else {
+        navigate("/knowledge");
+      }
+    } catch (err) {
+      console.error(err);
     }
+  };
+
+  const linkFieldClasses = {
+    buttonClassName:
+      "h-14 rounded-2xl border-gray-200 bg-gray-50 text-gray-900",
+    dropdownClassName: "rounded-2xl border border-gray-200 shadow-2xl",
+    inputClassName: "h-12 text-sm",
+    optionClassName: "rounded-xl",
+    activeOptionClassName: "bg-dash-red/10 text-dash-red",
   };
 
   return (
@@ -109,21 +91,9 @@ export default function NewKnowledge() {
                 <BookOpen className="h-3.5 w-3.5" />
                 Create Resource
               </div>
-
               <h1 className="font-display text-4xl font-bold tracking-tight text-gray-900">
                 Add New Knowledge Resource
               </h1>
-
-              <p className="mt-4 text-base leading-relaxed text-gray-600">
-                Upload publications, reports, templates, and other shared
-                learning resources for the network.
-              </p>
-            </div>
-
-            <div className="hidden rounded-3xl border border-gray-200 bg-white p-5 shadow-sm lg:block">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-dash-navy/10">
-                <FileText className="h-8 w-8 text-dash-navy" />
-              </div>
             </div>
           </div>
         </div>
@@ -132,94 +102,79 @@ export default function NewKnowledge() {
       <div className="mx-auto max-w-5xl px-6 py-10">
         <form onSubmit={handleSubmit} className="space-y-8">
           <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900">
-                Resource Details
-              </h2>
-
-              <p className="mt-2 text-sm text-gray-600">
-                Provide the main information about this knowledge resource.
-              </p>
+            <div className="mb-8 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-600">
+                <Info className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Overview</h2>
+                <p className="text-sm text-gray-600">
+                  Primary resource classification
+                </p>
+              </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Title
+                  Title <span className="text-red-500">*</span>
                 </label>
-
                 <input
                   type="text"
                   required
                   value={form.title}
                   onChange={(e) => updateField("title", e.target.value)}
-                  placeholder="Enter resource title"
-                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm text-gray-900 transition-all placeholder:text-gray-400 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                />
+              </div>
+
+              <div>
+                <LinkField
+                  doctype="Category"
+                  label="Category"
+                  required
+                  value={form.category}
+                  onChange={(val) => updateField("category", val)}
+                  {...linkFieldClasses}
+                />
+              </div>
+
+              <div>
+                <LinkField
+                  doctype="Language"
+                  label="Language"
+                  required
+                  value={form.language}
+                  onChange={(val) => updateField("language", val)}
+                  {...linkFieldClasses}
                 />
               </div>
 
               <div>
                 <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Category
+                  Resource Type <span className="text-red-500">*</span>
                 </label>
-
-                <select
-                  required
-                  value={form.category}
-                  onChange={(e) => updateField("category", e.target.value)}
-                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm text-gray-900 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
-                >
-                  <option value="">Select category</option>
-
-                  {categories.map((cat) => (
-                    <option key={cat.name} value={cat.name}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Language
-                </label>
-
-                <select
-                  required
-                  value={form.language}
-                  onChange={(e) => updateField("language", e.target.value)}
-                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm text-gray-900 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
-                >
-                  <option value="">Select language</option>
-
-                  {languages.map((lang) => (
-                    <option key={lang.name} value={lang.name}>
-                      {lang.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Resource Type
-                </label>
-
                 <select
                   required
                   value={form.resource_type}
-                  onChange={(e) =>
-                    updateField("resource_type", e.target.value)
-                  }
-                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm text-gray-900 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                  onChange={(e) => updateField("resource_type", e.target.value)}
+                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm focus:outline-none focus:ring-4 focus:ring-dash-red/10"
                 >
                   <option value="">Select type</option>
                   <option value="Publication">Publication</option>
                   <option value="Report">Report</option>
-                  <option value="Tools & Templates">
-                    Tools & Templates
-                  </option>
+                  <option value="Tools & Templates">Tools & Templates</option>
                 </select>
+              </div>
+
+              <div className="md:col-span-1">
+                <MultiSelectLinkField
+                  doctype="National Society Detail"
+                  label="Contributing NS"
+                  value={form.contributing_ns}
+                  onChange={(val) => updateField("contributing_ns", val)}
+                  {...linkFieldClasses}
+                />
               </div>
 
               {form.resource_type === "Tools & Templates" && (
@@ -227,13 +182,12 @@ export default function NewKnowledge() {
                   <label className="mb-2 block text-sm font-bold text-gray-800">
                     Tools Subcategory
                   </label>
-
                   <select
                     value={form.tools_subcategory}
                     onChange={(e) =>
                       updateField("tools_subcategory", e.target.value)
                     }
-                    className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm text-gray-900 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm"
                   >
                     <option value="">Select subcategory</option>
                     <option value="Strategy Templates">
@@ -256,13 +210,11 @@ export default function NewKnowledge() {
                 <label className="mb-2 block text-sm font-bold text-gray-800">
                   Summary
                 </label>
-
                 <textarea
-                  rows={4}
+                  rows={3}
                   value={form.summary}
                   onChange={(e) => updateField("summary", e.target.value)}
-                  placeholder="Short overview of the resource"
-                  className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm text-gray-900 transition-all placeholder:text-gray-400 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                  className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm"
                 />
               </div>
 
@@ -270,158 +222,149 @@ export default function NewKnowledge() {
                 <label className="mb-2 block text-sm font-bold text-gray-800">
                   Full Description
                 </label>
-
                 <textarea
-                  rows={8}
+                  rows={6}
                   value={form.description}
                   onChange={(e) => updateField("description", e.target.value)}
-                  placeholder="Detailed description of the resource"
-                  className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm text-gray-900 transition-all placeholder:text-gray-400 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                  className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm"
                 />
               </div>
             </div>
           </div>
 
           <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-            <div className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900">
-                Resource Access
-              </h2>
-
-              <p className="mt-2 text-sm text-gray-600">
-                Add either an uploaded file or an external resource link.
-              </p>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800">
-                  File Attachment
-                </label>
-
-                <div className="rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50 p-8 text-center">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm">
-                    <Upload className="h-7 w-7 text-dash-navy" />
-                  </div>
-
-                  <p className="mt-4 text-sm font-medium text-gray-700">
-                    Upload via Frappe Attach field integration
-                  </p>
-
-                  <p className="mt-1 text-xs text-gray-500">
-                    PDF, Word, Excel and other supported documents
-                  </p>
-
-                  <input
-                    type="text"
-                    value={form.file_attachment}
-                    onChange={(e) =>
-                      updateField("file_attachment", e.target.value)
-                    }
-                    placeholder="/files/document.pdf"
-                    className="mt-5 h-12 w-full rounded-2xl border border-gray-200 bg-white px-4 text-sm text-gray-900 focus:border-dash-red focus:outline-none focus:ring-4 focus:ring-dash-red/10"
-                  />
-                </div>
+            <div className="mb-8 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <FileText className="h-5 w-5" />
               </div>
-
+              <h2 className="text-xl font-bold text-gray-900">
+                Content & Access
+              </h2>
+            </div>
+            <div className="grid gap-6 md:grid-cols-1">
+              <div>
+                <FileUploadField
+                  label="File Attachment"
+                  value={form.file_attachment}
+                  doctype="Knowledge Hub"
+                  accept=".pdf,.png,.jpg,.jpeg"
+                  onChange={(url) => updateField("file_attachment", url ?? "")}
+                />
+                <p className="text-[11px] text-gray-500 ml-2 mt-1">
+                  Only PDF, PNG, JPG, JPEG files allowed.
+                </p>
+              </div>
               <div>
                 <label className="mb-2 block text-sm font-bold text-gray-800">
                   External URL
                 </label>
-
-                <div className="rounded-3xl border border-gray-200 bg-gray-50 p-6">
-                  <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm">
-                    <Globe className="h-7 w-7 text-dash-navy" />
-                  </div>
-
-                  <input
-                    type="url"
-                    value={form.external_url}
-                    onChange={(e) =>
-                      updateField("external_url", e.target.value)
-                    }
-                    placeholder="https://example.com/resource"
-                    className="h-14 w-full rounded-2xl border border-gray-200 bg-white px-5 text-sm text-gray-900 focus:border-dash-red focus:outline-none focus:ring-4 focus:ring-dash-red/10"
-                  />
-                </div>
+                <input
+                  type="url"
+                  value={form.external_url}
+                  onChange={(e) => updateField("external_url", e.target.value)}
+                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm"
+                />
               </div>
             </div>
           </div>
 
           <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-            <div className="mb-8">
+            <div className="mb-8 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <TrendingUp className="h-5 w-5" />
+              </div>
               <h2 className="text-xl font-bold text-gray-900">
                 Impact Reporting
               </h2>
             </div>
-
             <div className="grid gap-6 md:grid-cols-2">
               <div>
                 <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Report Impact
+                  Do you want to report Impact?
                 </label>
-
                 <select
                   value={form.report_impact}
-                  onChange={(e) =>
-                    updateField("report_impact", e.target.value)
-                  }
-                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm text-gray-900 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                  onChange={(e) => updateField("report_impact", e.target.value)}
+                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm"
                 >
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
                 </select>
               </div>
-
-              <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Metric Type
-                </label>
-
-                <input
-                  type="text"
-                  value={form.metric_type}
-                  onChange={(e) => updateField("metric_type", e.target.value)}
-                  placeholder="Enter metric type"
-                  className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm text-gray-900 transition-all placeholder:text-gray-400 focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
-                />
-              </div>
+              {form.report_impact === "Yes" && (
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-gray-800">
+                    Metric Type
+                  </label>
+                  <input
+                    type="text"
+                    value={form.metric_type}
+                    onChange={(e) => updateField("metric_type", e.target.value)}
+                    className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm"
+                  />
+                </div>
+              )}
             </div>
           </div>
+
+          {error && (
+            <div className="rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-sm text-red-700 shadow-sm">
+              <div className="mb-2 flex items-center gap-2 font-bold uppercase tracking-tight">
+                <Info className="h-4 w-4" />
+                Submission Error
+              </div>
+              <ul className="list-inside list-disc space-y-1.5">
+                {(() => {
+                  const errorObj = error as any;
+                  if (errorObj?._server_messages) {
+                    try {
+                      const messages = JSON.parse(errorObj._server_messages);
+                      return messages.map((msg: string, i: number) => {
+                        const parsedMsg = JSON.parse(msg);
+                        return (
+                          <li key={i}>
+                            {parsedMsg.message || "Unknown error"}
+                          </li>
+                        );
+                      });
+                    } catch {
+                      return <li>{errorObj._server_messages}</li>;
+                    }
+                  }
+                  if (errorObj?.exception) {
+                    return <li>{errorObj.exception.split("\n")[0]}</li>;
+                  }
+                  return <li>{errorObj?.message || String(error)}</li>;
+                })()}
+              </ul>
+            </div>
+          )}
 
           <div className="flex flex-col gap-4 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-100">
                 <Check className="h-5 w-5 text-emerald-700" />
               </div>
-
               <div>
                 <h3 className="text-sm font-bold text-gray-900">
-                  Ready to publish
+                  Final Review
                 </h3>
-
-                <p className="mt-1 text-xs leading-relaxed text-gray-600">
-                  Your resource will initially be saved as a draft.
+                <p className="mt-1 text-xs text-gray-600">
+                  Ensure all required fields marked with * are filled.
                 </p>
               </div>
             </div>
-
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-dash-red px-8 text-sm font-black uppercase tracking-wider text-white transition-all hover:scale-[1.02] hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-dash-red px-8 text-sm font-black uppercase tracking-wider text-white transition-all hover:bg-red-700 disabled:opacity-60"
             >
               {isSubmitting ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Saving...
-                </>
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  Save Resource
-                </>
+                <Save className="h-4 w-4" />
               )}
+              Save Resource
             </button>
           </div>
         </form>
