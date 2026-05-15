@@ -1,32 +1,29 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "hash",
- "creation": "2026-05-13 15:38:01.879156",
+ "creation": "2026-05-15 09:21:41.446277",
  "doctype": "DocType",
+ "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "national_society"
+  "category"
  ],
  "fields": [
   {
-   "fieldname": "national_society",
+   "fieldname": "category",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "National Society",
-   "options": "National Society",
-   "reqd": 1
+   "label": "Category",
+   "options": "Category"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-05-15 11:28:25.487056",
+ "modified": "2026-05-15 09:22:14.972044",
  "modified_by": "Administrator",
  "module": "Onerc Knowledge Hub",
- "name": "National Society Detail",
- "naming_rule": "Random",
+ "name": "Category Link",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

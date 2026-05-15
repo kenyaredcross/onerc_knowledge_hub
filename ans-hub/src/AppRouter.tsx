@@ -49,8 +49,8 @@ const AppRouter = () => {
             <Route path="/events/:slug" element={<EventDetail />} />
             <Route path="/knowledge" element={<Knowledge />} />
             <Route path="/knowledge/:slug" element={<KnowledgeDetail />} />
-            <Route path="/knowledge/new" element={<NewKnowledge />} />
             <Route path="/learning" element={<LearningHub />} />
+            <Route path="/create/knowledge" element={<NewKnowledge />} />
             <Route
               path="/national-societies"
               element={<NationalSocietiesIndex />}

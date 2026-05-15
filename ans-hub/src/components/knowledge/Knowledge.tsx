@@ -254,7 +254,7 @@ export default function Knowledge() {
             </div>
 
             <Link
-              to="/knowledge/new"
+              to="/create/knowledge"
               className="inline-flex items-center gap-2 rounded-xl bg-dash-red px-4 py-2 text-xs font-black uppercase tracking-wider text-white transition-all hover:scale-105 hover:bg-red-700"
             >
               Add New
