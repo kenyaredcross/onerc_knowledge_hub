@@ -1,7 +1,7 @@
 import { useFrappeAuth, useFrappePostCall } from "frappe-react-sdk";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import Auth from "./Auth";
 
 export default function LoginForm() {
@@ -12,7 +12,7 @@ export default function LoginForm() {
   // Redirect if already logged in
   useEffect(() => {
     if (currentUser) {
-      navigate("/");
+      navigate("/home");
     }
   }, [currentUser, navigate]);
   const { call: registerUser } = useFrappePostCall("onerc_knowledge_hub.api.register.register_localisation_hub_user");
@@ -29,7 +29,7 @@ export default function LoginForm() {
       });
       toast.success("Welcome back! Logged in successfully");
       // Use window.location.href to force full page reload after login
-      window.location.href = "/ans-hub";
+      window.location.href = "/ans-hub/home";
     } catch (error: any) {
       toast.error(error.message || "Invalid login credentials. Please try again.");
     } finally {

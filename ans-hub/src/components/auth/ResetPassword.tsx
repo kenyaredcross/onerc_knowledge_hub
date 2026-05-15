@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { useFrappePostCall } from "frappe-react-sdk";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle, ShieldCheck } from "lucide-react";
 
 export default function ResetPassword() {
@@ -86,9 +86,9 @@ export default function ResetPassword() {
         new_password: password,
       });
 
-      toast.success("Password reset successfully! Redirecting to login...");
+      toast.success("Password reset successfully! You can now sign in.");
       setTimeout(() => {
-        navigate("/ans-hub/login");
+        window.location.href = "/ans-hub/login";
       }, 2000);
     } catch (error: any) {
       toast.error(error.message || "Failed to reset password. The link may have expired.");

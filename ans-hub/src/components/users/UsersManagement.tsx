@@ -167,7 +167,9 @@ export default function UsersManagement() {
               setActionLoading(userName);
               try {
                 const result = await resendActivationEmail({ localisation_hub_user: userName });
-                toast.success(result?.message || "Activation email sent successfully!");
+                // Handle frappe-react-sdk response wrapping
+                const message = typeof result?.message === 'object' ? result?.message?.message : result?.message;
+                toast.success(message || "Activation email sent successfully!");
                 fetchUsers();
               } catch (error: any) {
                 toast.error(error.message || "Failed to send activation email");
@@ -206,7 +208,9 @@ export default function UsersManagement() {
               setActionLoading(userName);
               try {
                 const result = await sendPasswordResetEmail({ localisation_hub_user: userName });
-                toast.success(result?.message || "Password reset email sent successfully!");
+                // Handle frappe-react-sdk response wrapping
+                const message = typeof result?.message === 'object' ? result?.message?.message : result?.message;
+                toast.success(message || "Password reset email sent successfully!");
                 fetchUsers();
               } catch (error: any) {
                 toast.error(error.message || "Failed to send password reset email");

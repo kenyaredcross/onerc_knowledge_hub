@@ -11,10 +11,8 @@ import {
   Phone,
   Activity,
   AlertTriangle,
-  ArrowUpRight,
   CheckCircle2,
-  Newspaper,
-  Calendar,
+  Share2,
 } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -39,7 +37,7 @@ interface NSSociety {
   active_branches: number | null;
   organization_size_update_date: string | null;
   pillars: string[];
-  social_media: Array<{ platform: string; url: string }>;
+  social_media: Array<{ platform: string; icon: string; url: string }>;
 }
 
 // ── Pillar helpers ──────────────────────────────────────────────────────────
@@ -61,6 +59,35 @@ function pillarBg(p: string) {
 }
 function pillarBadge(p: string) {
   return `${PILLAR_BG[p] ?? "bg-gray-100"} ${PILLAR_TEXT[p] ?? "text-gray-700"}`;
+}
+
+// ── Social Media helpers ────────────────────────────────────────────────────
+function getSocialColor(platform: string) {
+  if (!platform) return "bg-gray-600 text-white hover:bg-gray-700";
+
+  const platformLower = platform.toLowerCase();
+  if (platformLower.includes("facebook")) return "bg-blue-600 text-white hover:bg-blue-700";
+  if (platformLower.includes("twitter") || platformLower.includes("x")) return "bg-sky-500 text-white hover:bg-sky-600";
+  if (platformLower.includes("instagram")) return "bg-gradient-to-br from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700";
+  if (platformLower.includes("linkedin")) return "bg-blue-700 text-white hover:bg-blue-800";
+  if (platformLower.includes("youtube")) return "bg-red-600 text-white hover:bg-red-700";
+  if (platformLower.includes("tiktok")) return "bg-black text-white hover:bg-gray-900";
+  if (platformLower.includes("whatsapp")) return "bg-green-600 text-white hover:bg-green-700";
+  return "bg-gray-600 text-white hover:bg-gray-700";
+}
+
+function getPlatformInitial(platform: string) {
+  if (!platform) return "🔗";
+
+  const platformLower = platform.toLowerCase();
+  if (platformLower.includes("facebook")) return "f";
+  if (platformLower.includes("twitter") || platformLower.includes("x")) return "𝕏";
+  if (platformLower.includes("instagram")) return "ig";
+  if (platformLower.includes("linkedin")) return "in";
+  if (platformLower.includes("youtube")) return "yt";
+  if (platformLower.includes("tiktok")) return "tk";
+  if (platformLower.includes("whatsapp")) return "wa";
+  return platform.charAt(0).toUpperCase() || "🔗";
 }
 
 // ── Skeleton block ──────────────────────────────────────────────────────────
@@ -180,20 +207,18 @@ export default function NationalSocietyDetail() {
                     alt={society.national_society_name}
                     className="h-24 w-full object-cover"
                   />
-                ) : (
-                  <div
-                    className={`h-24 bg-dash-navy relative overflow-hidden`}
-                  >
-                    <div
-                      className="absolute inset-0 opacity-10"
-                      style={{
-                        backgroundImage:
-                          "radial-gradient(circle at 30% 50%, white 2px, transparent 2px)",
-                        backgroundSize: "24px 24px",
-                      }}
+                ) : society.logo ? (
+                  <div className="h-24 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                    <img
+                      src={society.logo}
+                      alt={society.abbreviation}
+                      className="h-16 w-16 object-contain opacity-20"
                     />
-                    <div className="absolute bottom-3 right-4 text-white/20 text-4xl font-bold">
-                      {(society.abbreviation || society.national_society_name).toUpperCase()}
+                  </div>
+                ) : (
+                  <div className="h-24 bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
+                    <div className="absolute bottom-3 right-4 text-gray-300 text-4xl font-bold">
+                      {(society.abbreviation || society.national_society_name).charAt(0)}
                     </div>
                   </div>
                 )}
@@ -291,6 +316,44 @@ export default function NationalSocietyDetail() {
                         <span>Visit website</span>
                       </a>
                     )}
+                  </div>
+                </div>
+              )}
+
+              {/* Social Media */}
+              {society.social_media && society.social_media.length > 0 && (
+                <div className="bg-white rounded border border-gray-200 p-4">
+                  <h3 className="font-bold text-gray-900 mb-3 text-sm flex items-center gap-2">
+                    <Share2 className="h-4 w-4" />
+                    Connect With Us
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {society.social_media.map((social, idx) => {
+                      if (!social.url) return null;
+                      const colorClass = getSocialColor(social.platform);
+                      const initial = getPlatformInitial(social.platform);
+                      const displayName = social.platform || "Social Media";
+                      return (
+                        <a
+                          key={idx}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`flex items-center justify-center h-12 w-12 rounded-lg transition-all ${social.icon ? 'bg-white border border-gray-200 hover:border-dash-red/40 p-1' : colorClass}`}
+                          title={displayName}
+                        >
+                          {social.icon ? (
+                            <img
+                              src={social.icon}
+                              alt={displayName}
+                              className="h-full w-full object-contain"
+                            />
+                          ) : (
+                            <span className="font-semibold text-xs">{initial}</span>
+                          )}
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -457,24 +520,34 @@ export default function NationalSocietyDetail() {
               {society.social_media.length > 0 && (
                 <div className="bg-white rounded border border-gray-200 p-5">
                   <div className="flex items-center gap-2 mb-4">
-                    <Newspaper className="h-4 w-4 text-dash-red" />
+                    <Share2 className="h-4 w-4 text-dash-red" />
                     <h2 className="font-bold text-gray-900">Social Media</h2>
                   </div>
                   <div className="flex flex-wrap gap-3">
-                    {society.social_media.map((sm, i) => (
-                      sm.url && (
+                    {society.social_media.map((sm, i) => {
+                      if (!sm.url) return null;
+                      const displayName = sm.platform || "Visit Profile";
+                      return (
                         <a
                           key={i}
                           href={sm.url.startsWith("http") ? sm.url : `https://${sm.url}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2 rounded border border-gray-200 text-sm text-gray-700 hover:border-dash-red/40 hover:text-dash-red transition-all"
+                          className="flex items-center gap-2.5 px-4 py-2 rounded border border-gray-200 text-sm text-gray-700 hover:border-dash-red/40 hover:text-dash-red transition-all"
                         >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                          {sm.platform || sm.url}
+                          {sm.icon ? (
+                            <img
+                              src={sm.icon}
+                              alt={displayName}
+                              className="h-6 w-6 object-contain"
+                            />
+                          ) : (
+                            <ExternalLink className="h-4 w-4" />
+                          )}
+                          {displayName}
                         </a>
-                      )
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}

@@ -1,14 +1,9 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2 } from "lucide-react";
+import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2, User } from "lucide-react";
+import { useFrappeAuth, useFrappeGetCall } from "frappe-react-sdk";
+import { useMemo } from "react";
 
-const members = [
-  "Uganda RC", "Zambia RC", "Ethiopia RC", "Mali RC", "Sudan RC",
-  "South Sudan RC", "Ivory Coast RC", "CAR RC", "Liberia RC", "Nigeria RC",
-];
-const partners = [
-  "IFRC", "Netherlands RC", "Norway RC", "Switzerland RC",
-  "French RC", "Swedish RC", "Kenya RC",
-];
+// Removed hardcoded partners array - now fetched from database
 
 const mandates = [
   { title: "Grand Bargain", note: "& IFRC NSD Compact" },
@@ -16,14 +11,7 @@ const mandates = [
   { title: "Pan-African Conference", note: "PAC 2013 & 2017 commitments" },
 ];
 
-const steeringGroup = [
-  { role: "Chair", title: "President", ns: "Uganda Red Cross Society" },
-  { role: "Member", title: "Deputy Secretary General", ns: "Ethiopian Red Cross Society" },
-  { role: "Member", title: "Secretary General", ns: "Mali Red Cross Society" },
-  { role: "Member", title: "Secretary General", ns: "Zambia Red Cross Society" },
-  { role: "Member", title: "Deputy Secretary General", ns: "South Sudan Red Cross Society" },
-  { role: "Member", title: "DSG, Programs", ns: "Kenya Red Cross Society" },
-];
+// Removed hardcoded steering group - now fetched from database
 
 const pillars = [
   {
@@ -110,6 +98,58 @@ function PillarSwatch({ color }: { color: typeof pillars[number]["color"] }) {
 }
 
 export default function AboutPage() {
+  const { currentUser } = useFrappeAuth();
+
+  // Fetch National Societies from database
+  const { data: nationalSocietiesData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.national_society.get_national_societies_list",
+    {}
+  );
+
+  // Fetch Steering Group members from database
+  const { data: steeringGroupData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.user.get_steering_group_members",
+    {}
+  );
+
+  // Filter societies by type
+  const members = useMemo(() => {
+    const societies = nationalSocietiesData?.message || [];
+    return societies
+      .filter((s: any) => s.type === "Member" || !s.type) // Default to Member if type not set
+      .map((s: any) => s.national_society_name);
+  }, [nationalSocietiesData]);
+
+  const nonMembers = useMemo(() => {
+    const societies = nationalSocietiesData?.message || [];
+    return societies
+      .filter((s: any) => s.type === "Non-member")
+      .map((s: any) => s.national_society_name);
+  }, [nationalSocietiesData]);
+
+  const partners = useMemo(() => {
+    const societies = nationalSocietiesData?.message || [];
+    return societies
+      .filter((s: any) => s.type === "Consortium Partner")
+      .map((s: any) => s.national_society_name);
+  }, [nationalSocietiesData]);
+
+  // Process steering group members
+  const steeringGroup = useMemo(() => {
+    const members = steeringGroupData?.message || [];
+    return members.map((member: any) => ({
+      name: member.full_name,
+      title: member.position_name || "Member",
+      ns: member.national_society_name || "",
+      image: member.image,
+      bio: member.bio
+    }));
+  }, [steeringGroupData]);
+
+  // Calculate dynamic statistics
+  const memberCount = members.length;
+  const partnerCount = partners.length;
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* Nav */}
@@ -118,10 +158,42 @@ export default function AboutPage() {
           <Link to="/" className="font-display text-lg font-semibold tracking-tight">
             Localisation Hub
           </Link>
-          <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
-            <Link to="/" className="hover:text-foreground">Home</Link>
-            <Link to="/about" className="text-foreground font-medium">About</Link>
-          </nav>
+          <div className="flex items-center gap-6">
+            <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
+              <Link to="/home" className="text-foreground font-medium">Home</Link>
+            </nav>
+            <div className="flex items-center gap-3">
+              {currentUser ? (
+                <>
+                  <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground">
+                    <User className="h-4 w-4" />
+                    <span>{currentUser}</span>
+                  </div>
+                  <Link
+                    to="/home"
+                    className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    Go to Dashboard
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="px-4 py-2 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/login?signup=true"
+                    className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
@@ -131,7 +203,7 @@ export default function AboutPage() {
         style={{
           backgroundImage: 'url(/assets/onerc_knowledge_hub/profile-cover.jpeg)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center 20%',
         }}
       >
         {/* Dark shadow overlay */}
@@ -165,36 +237,56 @@ export default function AboutPage() {
         <div className="grid gap-12 md:grid-cols-[1fr_2fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-accent">Membership</p>
-            <h2 className="mt-3 text-4xl font-semibold md:text-5xl">10 National Societies. 7 Partners. One Alliance.</h2>
+            <h2 className="mt-3 text-4xl font-semibold md:text-5xl">
+              {memberCount} National Societies. {partnerCount} Partners. One Alliance.
+            </h2>
             <p className="mt-5 text-muted-foreground">
               Aligned leadership and coordinated action accelerating localisation across the continent.
             </p>
           </div>
           <div className="space-y-8">
-            <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                African National Societies
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {members.map((m) => (
-                  <span key={m} className="rounded-full border border-border bg-card px-4 py-2 text-sm font-medium shadow-sm">
-                    {m}
-                  </span>
-                ))}
+            {members.length > 0 && (
+              <div>
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  African National Societies
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {members.map((m: string) => (
+                    <span key={m} className="rounded-full border border-border bg-card px-4 py-2 text-sm font-medium shadow-sm">
+                      {m}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div>
-              <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                Consortium Partners
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {partners.map((p) => (
-                  <span key={p} className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-                    {p}
-                  </span>
-                ))}
+            )}
+            {partners.length > 0 && (
+              <div>
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  Consortium Partners
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {partners.map((p: string) => (
+                    <span key={p} className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
+                      {p}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+            {nonMembers.length > 0 && (
+              <div>
+                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                  Non-member Societies
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {nonMembers.map((nm: string) => (
+                    <span key={nm} className="rounded-full border border-border bg-muted px-4 py-2 text-sm font-medium">
+                      {nm}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -212,33 +304,58 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
-            {steeringGroup.map((s, i) => (
+          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {steeringGroup.map((s: any, i: number) => (
               <div
-                key={s.ns}
-                className={`relative rounded-2xl border border-border bg-card p-6 shadow-sm transition hover:shadow-[var(--shadow-elegant)] ${
-                  i === 0 ? "md:col-span-3 bg-primary text-primary-foreground border-primary" : ""
-                }`}
+                key={s.name || i}
+                className="group relative overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:shadow-md hover:border-primary/50"
               >
-                <div className="flex items-center justify-between">
-                  <span className={`text-xs font-semibold uppercase tracking-widest ${i === 0 ? "text-accent" : "text-muted-foreground"}`}>
-                    {s.role}
-                  </span>
-                  {i === 0 && <span className="rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">Chair</span>}
+                <div className="p-4">
+                  {/* Header with avatar placeholder */}
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="flex-shrink-0">
+                      {s.image ? (
+                        <img
+                          src={s.image}
+                          alt={s.name}
+                          className="h-12 w-12 rounded-full object-cover ring-2 ring-border"
+                        />
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center ring-2 ring-border">
+                          <span className="text-base font-bold text-primary">
+                            {s.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-display text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                        {s.name}
+                      </h3>
+                      <p className="text-xs font-medium text-primary mt-0.5">
+                        {s.title}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* National Society */}
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
+                    <Building2 className="h-3.5 w-3.5 flex-shrink-0" />
+                    <span className="truncate">{s.ns}</span>
+                  </div>
+
+                  {/* Bio */}
+                  {s.bio && (
+                    <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      {s.bio}
+                    </p>
+                  )}
+
+                  {/* Decorative element */}
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <p className="mt-4 font-display text-xl font-semibold">{s.title}</p>
-                <p className={`mt-1 text-sm ${i === 0 ? "text-primary-foreground/80" : "text-muted-foreground"}`}>{s.ns}</p>
               </div>
             ))}
-          </div>
-
-          <div className="mt-8 rounded-2xl border border-dashed border-border bg-background p-6">
-            <p className="text-sm">
-              <span className="font-semibold">Secretariat support</span> is provided by the{" "}
-              <span className="text-foreground">Netherlands Red Cross Society (NLRC)</span> and the{" "}
-              <span className="text-foreground">IFRC</span> — ensuring transparency, accountability,
-              and collective decision-making.
-            </p>
           </div>
         </div>
       </section>
@@ -315,10 +432,6 @@ export default function AboutPage() {
               );
             })}
           </div>
-
-          <p className="mt-8 text-sm text-muted-foreground">
-            Note: Resource Mobilisation includes <span className="text-foreground font-medium">Workplace First Aid</span> initiatives supported by the Netherlands Red Cross.
-          </p>
         </div>
       </section>
 
@@ -413,7 +526,7 @@ export default function AboutPage() {
           More than a project — a movement toward locally led humanitarian action.
         </h2>
         <Link
-          to="/"
+          to="/home"
           className="mt-10 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-elegant)] transition hover:opacity-90"
         >
           Explore the platform <ArrowRight className="h-4 w-4" />

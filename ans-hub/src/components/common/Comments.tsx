@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useFrappeGetCall, useFrappePostCall, useFrappeAuth } from "frappe-react-sdk";
 import { MessageCircle, Send, User } from "lucide-react";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 interface Comment {
   name: string;

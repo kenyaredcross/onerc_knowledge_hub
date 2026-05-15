@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import { useFrappePostCall } from "frappe-react-sdk";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle, ShieldCheck } from "lucide-react";
 
 export default function SetPassword() {
@@ -55,9 +55,9 @@ export default function SetPassword() {
         new_password: password,
       });
 
-      toast.success("Account activated successfully! Redirecting to login...");
+      toast.success("Account activated successfully! You can now sign in.");
       setTimeout(() => {
-        navigate("../login");
+        window.location.href = "/ans-hub/login";
       }, 2000);
     } catch (error: any) {
       const errorMessage = error.message || error.exception || "Failed to activate account";
@@ -65,7 +65,7 @@ export default function SetPassword() {
       if (errorMessage.includes("Invalid or expired")) {
         toast.error("This activation link has expired or is invalid. Please contact support for a new activation link.");
         setTimeout(() => {
-          navigate("../login");
+          window.location.href = "/ans-hub/login";
         }, 3000);
       } else {
         toast.error(errorMessage);

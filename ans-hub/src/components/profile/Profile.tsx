@@ -17,7 +17,7 @@ import {
   Shield,
 } from "lucide-react";
 import { useFrappeUpdateDoc } from "frappe-react-sdk";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 export default function Profile() {
   const { userData, isLoading: userLoading } = useContext(UserContext);
