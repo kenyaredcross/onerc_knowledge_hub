@@ -37,7 +37,7 @@ frappe.ui.form.on("Learning Hub", {
             frappe.call({
                 method: "frappe.client.get_value",
                 args: {
-                    doctype: "Localization Hub User",
+                    doctype: "Localisation Hub User",
                     filters: {
                         user: frappe.session.user
                     },
