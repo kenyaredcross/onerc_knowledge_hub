@@ -100,8 +100,14 @@ function PillarSwatch({ color }: { color: typeof pillars[number]["color"] }) {
 export default function AboutPage() {
   const { currentUser } = useFrappeAuth();
 
-  // Fetch National Societies from database
-  const { data: nationalSocietiesData } = useFrappeGetCall(
+  // Fetch only Member National Societies from database
+  const { data: memberSocietiesData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.national_society.get_member_societies",
+    {}
+  );
+
+  // Fetch all National Societies for partners and non-members
+  const { data: allSocietiesData } = useFrappeGetCall(
     "onerc_knowledge_hub.api.national_society.get_national_societies_list",
     {}
   );
@@ -112,31 +118,33 @@ export default function AboutPage() {
     {}
   );
 
-  // Filter societies by type
+  // Get member societies
   const members = useMemo(() => {
-    const societies = nationalSocietiesData?.message || [];
-    return societies
-      .filter((s: any) => s.type === "Member" || !s.type) // Default to Member if type not set
-      .map((s: any) => s.national_society_name);
-  }, [nationalSocietiesData]);
+    const societies = memberSocietiesData?.message || [];
+    return societies.map((s: any) => s.national_society_name);
+  }, [memberSocietiesData]);
 
+  // Filter partners and non-members from all societies
   const nonMembers = useMemo(() => {
-    const societies = nationalSocietiesData?.message || [];
+    const societies = allSocietiesData?.message || [];
     return societies
       .filter((s: any) => s.type === "Non-member")
       .map((s: any) => s.national_society_name);
-  }, [nationalSocietiesData]);
+  }, [allSocietiesData]);
 
   const partners = useMemo(() => {
-    const societies = nationalSocietiesData?.message || [];
+    const societies = allSocietiesData?.message || [];
     return societies
       .filter((s: any) => s.type === "Consortium Partner")
       .map((s: any) => s.national_society_name);
-  }, [nationalSocietiesData]);
+  }, [allSocietiesData]);
 
   // Process steering group members
   const steeringGroup = useMemo(() => {
-    const members = steeringGroupData?.message || [];
+    // Handle both wrapped and unwrapped API responses
+    const members = steeringGroupData?.message || steeringGroupData || [];
+    console.log('Steering Group Data:', steeringGroupData);
+    console.log('Processed Members:', members);
     return members.map((member: any) => ({
       name: member.full_name,
       title: member.position_name || "Member",
