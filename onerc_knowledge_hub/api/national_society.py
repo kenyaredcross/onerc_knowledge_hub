@@ -12,7 +12,7 @@ def get_national_societies():
 	return societies
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_national_societies_list():
 	"""
 	Get all National Societies for the listing page.
@@ -53,6 +53,30 @@ def get_national_societies_list():
 			order_by="idx asc",
 		)
 		society["pillars"] = [p["pillar"] for p in pillars]
+
+	return societies
+
+
+@frappe.whitelist(allow_guest=True)
+def get_member_societies():
+	"""
+	Get only Member National Societies for the About/landing page.
+	Returns just the basic fields needed for display.
+	"""
+	societies = frappe.get_all(
+		"National Society",
+		filters=[
+			["type", "in", ["Member", ""]]  # Include both "Member" and empty (default to Member)
+		],
+		fields=[
+			"name",
+			"national_society_name",
+			"abbreviation",
+			"type",
+			"country",
+		],
+		order_by="national_society_name asc",
+	)
 
 	return societies
 

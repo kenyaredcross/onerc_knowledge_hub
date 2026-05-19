@@ -75,10 +75,17 @@ export default function UsersManagement() {
               setActionLoading(userName);
               try {
                 const result = await approveUser({ name: userName });
-                toast.success(result?.message || "User approved successfully! Activation email sent.");
+                // Handle nested message structure: { message: { message: "..." } }
+                const successMessage = typeof result === 'string'
+                  ? result
+                  : result?.message?.message || result?.message || "User approved successfully! Activation email sent.";
+                toast.success(successMessage);
                 fetchUsers();
               } catch (error: any) {
-                toast.error(error.message || "Failed to approve user");
+                const errorMessage = typeof error === 'string'
+                  ? error
+                  : error?.message?.message || error?.message || error?.exc || "Failed to approve user";
+                toast.error(errorMessage);
               } finally {
                 setActionLoading(null);
               }
@@ -128,10 +135,17 @@ export default function UsersManagement() {
               setActionLoading(userName);
               try {
                 const result = await rejectUser({ name: userName, reason: rejectionReason });
-                toast.success(result?.message || "User application rejected");
+                // Handle nested message structure: { message: { message: "..." } }
+                const successMessage = typeof result === 'string'
+                  ? result
+                  : result?.message?.message || result?.message || "User application rejected";
+                toast.success(successMessage);
                 fetchUsers();
               } catch (error: any) {
-                toast.error(error.message || "Failed to reject user");
+                const errorMessage = typeof error === 'string'
+                  ? error
+                  : error?.message?.message || error?.message || error?.exc || "Failed to reject user";
+                toast.error(errorMessage);
               } finally {
                 setActionLoading(null);
               }

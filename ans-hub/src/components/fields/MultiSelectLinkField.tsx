@@ -14,6 +14,7 @@ interface AutoCompleteOption {
 
 interface MultiSelectLinkFieldProps {
   doctype: string;
+  targetDoctype?: string; // Optional: directly specify the target doctype to search
   value?: string[];
   onChange: (values: string[]) => void;
   placeholder?: string;
@@ -34,6 +35,7 @@ interface MultiSelectLinkFieldProps {
 
 export const MultiSelectLinkField = ({
   doctype: parentDoctype,
+  targetDoctype: providedTargetDoctype,
   value = [],
   onChange,
   placeholder,
@@ -56,7 +58,9 @@ export const MultiSelectLinkField = ({
   const [debouncedSearch, setDebouncedSearch] = React.useState("");
   const [options, setOptions] = React.useState<AutoCompleteOption[]>([]);
   const [loading, setLoading] = React.useState(false);
-  const [targetDoctype, setTargetDoctype] = React.useState<string | null>(null);
+  const [targetDoctype, setTargetDoctype] = React.useState<string | null>(
+    providedTargetDoctype || null
+  );
   const [highlightedIndex, setHighlightedIndex] = React.useState(0);
   const [dropdownPosition, setDropdownPosition] = React.useState<
     "top" | "bottom"
@@ -76,6 +80,8 @@ export const MultiSelectLinkField = ({
       },
       fieldname: "options",
     },
+    // Skip fetching metadata if targetDoctype is already provided
+    { skip: !!providedTargetDoctype }
   );
 
   const { call: searchLink } = useFrappePostCall(
@@ -83,10 +89,10 @@ export const MultiSelectLinkField = ({
   );
 
   React.useEffect(() => {
-    if (metaData?.message?.options) {
+    if (!providedTargetDoctype && metaData?.message?.options) {
       setTargetDoctype(metaData.message.options);
     }
-  }, [metaData]);
+  }, [metaData, providedTargetDoctype]);
 
   const calculatePosition = React.useCallback(() => {
     if (!buttonRef.current || !open) return;

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useFrappeGetCall } from "frappe-react-sdk";
+import { Link } from "react-router-dom";
 import {
   GraduationCap,
   Search,
@@ -12,6 +13,7 @@ import {
   List,
   Loader2,
   AlertTriangle,
+  Plus,
 } from "lucide-react";
 import { pillarColor } from "../../lib/site-data";
 
@@ -241,6 +243,13 @@ export default function LearningHub() {
                     className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-dash-red/30 focus:border-dash-red transition"
                   />
                 </div>
+                <Link
+                  to="/create/learning"
+                  className="flex items-center gap-2 px-4 py-2 bg-dash-red text-white rounded-md text-sm font-semibold hover:bg-dash-red/90 transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                  New
+                </Link>
                 <div className="flex gap-1 border border-gray-200 rounded-md overflow-hidden">
                   <button
                     onClick={() => setViewMode("grid")}

@@ -9,7 +9,6 @@ def get_steering_group_members():
 		"Localisation Hub User",
 		filters={
 			"is_steering_group": 1,
-			"status": "Approved"
 		},
 		fields=[
 			"name",

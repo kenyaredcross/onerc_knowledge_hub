@@ -144,8 +144,7 @@
    "default": "0",
    "fieldname": "is_steering_group",
    "fieldtype": "Check",
-   "label": "Is Steering Group",
-   "permlevel": 1
+   "label": "Is Steering Group"
   },
   {
    "fieldname": "position",
