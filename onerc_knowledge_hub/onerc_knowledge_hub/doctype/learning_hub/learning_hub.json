@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:title",
+ "autoname": "Learning Hub-.national_society.-.title.-.####",
  "creation": "2026-05-14 12:35:36.144274",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -14,8 +14,8 @@
   "posted_by",
   "column_break_nsfk",
   "type",
-  "external_platform_name",
   "external_url",
+  "external_platform",
   "category",
   "date_posted",
   "section_break_yahw",
@@ -60,12 +60,10 @@
    "label": "Description"
   },
   {
-   "fetch_from": "posted_by.national_society",
    "fieldname": "national_society",
    "fieldtype": "Link",
    "label": "National Society",
-   "options": "National Society",
-   "read_only": 1
+   "options": "National Society"
   },
   {
    "fieldname": "category",
@@ -80,18 +78,11 @@
    "label": "Date Posted"
   },
   {
+   "depends_on": "eval:doc.type==\"External URL\"",
    "fieldname": "external_url",
    "fieldtype": "Data",
    "label": "External URL",
-   "mandatory_depends_on": "eval:doc.type==\"External url\"",
    "options": "URL"
-  },
-  {
-   "depends_on": "eval:doc.type==\"External platform\"",
-   "fieldname": "external_platform_name",
-   "fieldtype": "Data",
-   "label": "Name of External Platform",
-   "mandatory_depends_on": "eval:doc.type==\"External platform\""
   },
   {
    "fieldname": "column_break_nsfk",
@@ -113,16 +104,22 @@
    "label": "View Count",
    "non_negative": 1,
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.type==\"External Platform\"",
+   "fieldname": "external_platform",
+   "fieldtype": "Data",
+   "label": "External Platform"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-18 00:08:54.749662",
+ "modified": "2026-05-19 22:08:18.977318",
  "modified_by": "Administrator",
  "module": "Onerc Knowledge Hub",
  "name": "Learning Hub",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
