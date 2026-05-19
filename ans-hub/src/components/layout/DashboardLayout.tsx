@@ -35,6 +35,7 @@ const navItems = [
 
 const createItems = [
   { path: "/create/knowledge", label: "Knowledge", icon: BookOpen },
+  { path: "/create/learning", label: "Learning", icon: GraduationCap },
   { path: "/create/news", label: "News & Stories", icon: Newspaper },
 ];
 
@@ -337,12 +338,6 @@ export default function DashboardLayout() {
               <Search className="h-3.5 w-3.5 shrink-0" />
               <span>Search…</span>
             </div>
-
-            {/* Notification bell */}
-            <button className="relative flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100">
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-dash-red" />
-            </button>
 
             {/* Avatar */}
             <button

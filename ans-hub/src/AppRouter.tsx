@@ -14,9 +14,11 @@ import EventsIndex from "./components/events/EventsIndex.tsx";
 import FAQs from "./components/faqs/FAQs.tsx";
 import Knowledge from "./components/knowledge/Knowledge.tsx";
 import KnowledgeDetail from "./components/knowledge/KnowledgeDetail.tsx";
+import KnowledgeFiltered from "./components/knowledge/KnowledgeFiltered.tsx";
 import NewKnowledge from "./components/knowledge/NewKnowledge.tsx";
 import DashboardLayout from "./components/layout/DashboardLayout.tsx";
 import LearningHub from "./components/learning/LearningHub.tsx";
+import NewLearning from "./components/learning/NewLearning.tsx";
 import NationalSocietiesIndex from "./components/national-societies/NationalSocietiesIndex.tsx";
 import NationalSocietyDetail from "./components/national-societies/NationalSocietyDetail.tsx";
 import NewsDetail from "./components/news/NewsDetail.tsx";
@@ -48,9 +50,11 @@ const AppRouter = () => {
             <Route path="/events" element={<EventsIndex />} />
             <Route path="/events/:slug" element={<EventDetail />} />
             <Route path="/knowledge" element={<Knowledge />} />
+            <Route path="/knowledge/filter/:type" element={<KnowledgeFiltered />} />
             <Route path="/knowledge/:slug" element={<KnowledgeDetail />} />
             <Route path="/learning" element={<LearningHub />} />
             <Route path="/create/knowledge" element={<NewKnowledge />} />
+            <Route path="/create/learning" element={<NewLearning />} />
             <Route
               path="/national-societies"
               element={<NationalSocietiesIndex />}
