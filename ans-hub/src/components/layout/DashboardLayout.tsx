@@ -23,7 +23,7 @@ import {
 import { UserContext } from "../../contexts/UserContext";
 
 const navItems = [
-  { path: "/", label: "Overview", icon: LayoutDashboard, exact: true },
+  { path: "/home", label: "Overview", icon: LayoutDashboard, exact: true },
   { path: "/news", label: "News & Stories", icon: Newspaper },
   { path: "/events", label: "Events", icon: Calendar },
   { path: "/knowledge", label: "Knowledge Hub", icon: BookOpen },
@@ -97,7 +97,10 @@ export default function DashboardLayout() {
         ].join(" ")}
       >
         {/* Brand */}
-        <div className="flex h-14 items-center gap-3 px-4 border-b border-white/10 shrink-0">
+        <Link
+          to="/"
+          className="flex h-14 items-center gap-3 px-4 border-b border-white/10 shrink-0 hover:bg-white/5 transition-colors"
+        >
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-dash-red font-bold text-white text-sm">
             +
           </div>
@@ -108,7 +111,7 @@ export default function DashboardLayout() {
               </div>
             </div>
           )}
-        </div>
+        </Link>
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-4">

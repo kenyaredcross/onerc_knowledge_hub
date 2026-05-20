@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useFrappePostCall, useFrappeGetCall } from "frappe-react-sdk";
+import { useFrappePostCall, useFrappeGetCall, useFrappeCreateDoc } from "frappe-react-sdk";
 import toast from "react-hot-toast";
 import {
   Users,
@@ -18,7 +18,9 @@ import {
   RefreshCw,
   Send,
   KeyRound,
+  UserPlus,
 } from "lucide-react";
+import { LinkField } from "../fields/LinkField";
 
 export default function UsersManagement() {
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -26,12 +28,31 @@ export default function UsersManagement() {
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: "",
+    middle_name: "",
+    last_name: "",
+    salutation: "",
+    gender: "",
+    company_email: "",
+    prefered_contact_email: "",
+    phone_number: "",
+    national_society: "",
+    position: "",
+    personnel_type: "",
+    primary_language: "",
+    bio: "",
+    is_steering_group: 0,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { call: getAllUsers } = useFrappePostCall("onerc_knowledge_hub.api.register.get_all_hub_users");
   const { call: approveUser } = useFrappePostCall("onerc_knowledge_hub.api.register.approve_localisation_hub_user");
   const { call: rejectUser } = useFrappePostCall("onerc_knowledge_hub.api.register.reject_localisation_hub_user");
   const { call: resendActivationEmail } = useFrappePostCall("onerc_knowledge_hub.api.user_management.resend_activation_email");
   const { call: sendPasswordResetEmail } = useFrappePostCall("onerc_knowledge_hub.api.user_management.send_password_reset_email");
+  const { createDoc } = useFrappeCreateDoc();
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -241,6 +262,69 @@ export default function UsersManagement() {
     ), { duration: Infinity });
   };
 
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const doc: any = {
+        doctype: "Localisation Hub User",
+        first_name: formData.first_name,
+        company_email: formData.company_email,
+        national_society: formData.national_society,
+        status: "Approved", // Auto-approve admin-created users
+      };
+
+      // Add optional fields
+      if (formData.middle_name) doc.middle_name = formData.middle_name;
+      if (formData.last_name) doc.last_name = formData.last_name;
+      if (formData.salutation) doc.salutation = formData.salutation;
+      if (formData.gender) doc.gender = formData.gender;
+      if (formData.prefered_contact_email) doc.prefered_contact_email = formData.prefered_contact_email;
+      if (formData.phone_number) doc.phone_number = formData.phone_number;
+      if (formData.position) doc.position = formData.position;
+      if (formData.personnel_type) doc.personnel_type = formData.personnel_type;
+      if (formData.primary_language) doc.primary_language = formData.primary_language;
+      if (formData.bio) doc.bio = formData.bio;
+      if (formData.is_steering_group) doc.is_steering_group = formData.is_steering_group;
+
+      await createDoc("Localisation Hub User", doc);
+
+      toast.success("User created successfully!");
+
+      // Reset form and close
+      setFormData({
+        first_name: "",
+        middle_name: "",
+        last_name: "",
+        salutation: "",
+        gender: "",
+        company_email: "",
+        prefered_contact_email: "",
+        phone_number: "",
+        national_society: "",
+        position: "",
+        personnel_type: "",
+        primary_language: "",
+        bio: "",
+        is_steering_group: 0,
+      });
+      setShowCreateForm(false);
+
+      // Refresh users list
+      fetchUsers();
+    } catch (error: any) {
+      console.error("Error creating user:", error);
+      toast.error(error.message || "Failed to create user");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const updateFormField = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const filteredUsers = Array.isArray(users) ? users.filter((user) => {
     const searchLower = searchQuery.toLowerCase();
     return (
@@ -284,13 +368,22 @@ export default function UsersManagement() {
             <p className="text-sm text-gray-500">Review and approve user registrations</p>
           </div>
         </div>
-        <button
-          onClick={fetchUsers}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Refresh
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-dash-red text-white rounded-lg hover:bg-red-700 transition-colors shadow-sm font-medium"
+          >
+            <UserPlus className="h-4 w-4" />
+            Create New User
+          </button>
+          <button
+            onClick={fetchUsers}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -548,6 +641,223 @@ export default function UsersManagement() {
           </div>
         )}
       </div>
+
+      {/* Create User Modal */}
+      {showCreateForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
+            {/* Modal Header */}
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-dash-red text-white">
+                  <UserPlus className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Create New User</h2>
+                  <p className="text-sm text-gray-500">Add a new Localisation Hub user</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowCreateForm(false)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleCreateUser} className="p-6 space-y-6">
+              {/* Personal Information */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Personal Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <LinkField
+                    doctype="Salutation"
+                    label="Salutation"
+                    value={formData.salutation}
+                    onChange={(val) => updateFormField("salutation", val)}
+                    buttonClassName="h-12 rounded-xl border-gray-200 bg-gray-50"
+                  />
+                  <LinkField
+                    doctype="Gender"
+                    label="Gender"
+                    value={formData.gender}
+                    onChange={(val) => updateFormField("gender", val)}
+                    buttonClassName="h-12 rounded-xl border-gray-200 bg-gray-50"
+                  />
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">
+                      First Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.first_name}
+                      onChange={(e) => updateFormField("first_name", e.target.value)}
+                      className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">Middle Name</label>
+                    <input
+                      type="text"
+                      value={formData.middle_name}
+                      onChange={(e) => updateFormField("middle_name", e.target.value)}
+                      className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">Last Name</label>
+                    <input
+                      type="text"
+                      value={formData.last_name}
+                      onChange={(e) => updateFormField("last_name", e.target.value)}
+                      className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Contact Information */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Contact Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">
+                      Company Email <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={formData.company_email}
+                      onChange={(e) => updateFormField("company_email", e.target.value)}
+                      className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">Preferred Contact Email</label>
+                    <input
+                      type="email"
+                      value={formData.prefered_contact_email}
+                      onChange={(e) => updateFormField("prefered_contact_email", e.target.value)}
+                      className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">Phone Number</label>
+                    <input
+                      type="tel"
+                      value={formData.phone_number}
+                      onChange={(e) => updateFormField("phone_number", e.target.value)}
+                      className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Organization Information */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Organization Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <LinkField
+                    doctype="National Society"
+                    label="National Society"
+                    value={formData.national_society}
+                    onChange={(val) => updateFormField("national_society", val)}
+                    required
+                    buttonClassName="h-12 rounded-xl border-gray-200 bg-gray-50"
+                  />
+                  <LinkField
+                    doctype="Designation"
+                    label="Position"
+                    value={formData.position}
+                    onChange={(val) => updateFormField("position", val)}
+                    buttonClassName="h-12 rounded-xl border-gray-200 bg-gray-50"
+                  />
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">Personnel Type</label>
+                    <select
+                      value={formData.personnel_type}
+                      onChange={(e) => updateFormField("personnel_type", e.target.value)}
+                      className="h-12 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    >
+                      <option value="">Select Personnel Type</option>
+                      <option value="Governance Leader">Governance Leader</option>
+                      <option value="NS Staff">NS Staff</option>
+                      <option value="Volunteer">Volunteer</option>
+                      <option value="Consortium Partner">Consortium Partner</option>
+                    </select>
+                  </div>
+                  <LinkField
+                    doctype="Language"
+                    label="Primary Language"
+                    value={formData.primary_language}
+                    onChange={(val) => updateFormField("primary_language", val)}
+                    buttonClassName="h-12 rounded-xl border-gray-200 bg-gray-50"
+                  />
+                </div>
+              </div>
+
+              {/* Additional Information */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Additional Information</h3>
+                <div>
+                  <label className="mb-2 block text-sm font-bold text-gray-800">Bio</label>
+                  <textarea
+                    value={formData.bio}
+                    onChange={(e) => updateFormField("bio", e.target.value)}
+                    rows={4}
+                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10 resize-none"
+                  />
+                </div>
+                <div>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.is_steering_group === 1}
+                      onChange={(e) => updateFormField("is_steering_group", e.target.checked ? 1 : 0)}
+                      className="h-5 w-5 rounded border-gray-300 text-dash-red focus:ring-dash-red focus:ring-offset-0"
+                    />
+                    <div>
+                      <span className="text-sm font-bold text-gray-800">Steering Group Member</span>
+                      <p className="text-xs text-gray-500">Mark this user as a member of the steering group</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Form Actions */}
+              <div className="flex gap-3 pt-4 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => setShowCreateForm(false)}
+                  disabled={isSubmitting}
+                  className="flex-1 h-12 rounded-xl border border-gray-200 bg-white px-6 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 h-12 rounded-xl bg-dash-red px-6 text-sm font-bold text-white hover:bg-red-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <UserPlus className="h-4 w-4" />
+                      Create User
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
