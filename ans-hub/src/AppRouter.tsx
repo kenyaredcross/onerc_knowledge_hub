@@ -23,6 +23,7 @@ import NationalSocietiesIndex from "./components/national-societies/NationalSoci
 import NationalSocietyDetail from "./components/national-societies/NationalSocietyDetail.tsx";
 import NewsDetail from "./components/news/NewsDetail.tsx";
 import NewsIndex from "./components/news/NewsIndex.tsx";
+import NewNews from "./components/news/NewNews.tsx";
 import PendingApprovalPage from "./components/pending-approval/PendingApproval.tsx";
 import Pillars from "./components/pillars/Pillars.tsx";
 import Profile from "./components/profile/Profile.tsx";
@@ -47,6 +48,7 @@ const AppRouter = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/news" element={<NewsIndex />} />
             <Route path="/news/:slug" element={<NewsDetail />} />
+            <Route path="/create/news" element={<NewNews />} />
             <Route path="/events" element={<EventsIndex />} />
             <Route path="/events/:slug" element={<EventDetail />} />
             <Route path="/knowledge" element={<Knowledge />} />

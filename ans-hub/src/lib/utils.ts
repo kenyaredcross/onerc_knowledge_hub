@@ -57,6 +57,8 @@ export interface Article {
   is_featured?: number;
   sort_order?: number;
   view_count?: number;
+  like_count?: number;
+  comment_count?: number;
 }
 
 export interface NewsItem {
