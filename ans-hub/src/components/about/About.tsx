@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2, User, X } from "lucide-react";
+import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2, User, X, Menu } from "lucide-react";
 import { useFrappeAuth, useFrappeGetCall } from "frappe-react-sdk";
 import { useMemo, useState } from "react";
 
@@ -100,6 +100,7 @@ function PillarSwatch({ color }: { color: typeof pillars[number]["color"] }) {
 export default function AboutPage() {
   const { currentUser } = useFrappeAuth();
   const [selectedMember, setSelectedMember] = useState<any>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Fetch only Member National Societies from database
   const { data: memberSocietiesData } = useFrappeGetCall(
@@ -185,8 +186,10 @@ export default function AboutPage() {
               {organizationName}
             </div>
           </Link>
-          <div className="flex items-center gap-6">
-            <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-6">
+            <nav className="flex gap-6 text-sm text-muted-foreground">
               <Link to="/home" className="text-foreground font-medium">Home</Link>
             </nav>
             <div className="flex items-center gap-3">
@@ -221,7 +224,63 @@ export default function AboutPage() {
               )}
             </div>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden flex items-center justify-center p-2 text-foreground hover:bg-muted rounded-lg transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-border/60 bg-background">
+            <nav className="flex flex-col px-6 py-4 space-y-3">
+              <Link
+                to="/home"
+                className="text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              {currentUser ? (
+                <>
+                  <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground py-2 border-t border-border/60">
+                    <User className="h-4 w-4" />
+                    <span>{currentUser}</span>
+                  </div>
+                  <Link
+                    to="/home"
+                    className="w-full px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Go to Dashboard
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/login?signup=true"
+                    className="w-full px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition-opacity text-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero */}
