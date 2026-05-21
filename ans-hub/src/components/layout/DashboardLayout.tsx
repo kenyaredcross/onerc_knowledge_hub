@@ -111,9 +111,17 @@ export default function DashboardLayout() {
           to="/"
           className="flex h-14 items-center gap-3 px-4 border-b border-white/10 shrink-0 hover:bg-white/5 transition-colors"
         >
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-dash-red font-bold text-white text-sm">
-            +
-          </div>
+          {orgSettings.logo ? (
+            <img
+              src={orgSettings.logo}
+              alt="Logo"
+              className="h-8 w-8 shrink-0 object-contain rounded"
+            />
+          ) : (
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-dash-red font-bold text-white text-sm">
+              +
+            </div>
+          )}
           {!collapsed && (
             <div className="overflow-hidden">
               <div className="text-sm font-semibold text-white leading-tight whitespace-nowrap">
