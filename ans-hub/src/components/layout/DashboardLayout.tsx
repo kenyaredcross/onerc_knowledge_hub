@@ -21,6 +21,7 @@ import {
   Settings,
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
+import { useFrappeGetCall } from "frappe-react-sdk";
 
 const navItems = [
   { path: "/home", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -51,6 +52,15 @@ export default function DashboardLayout() {
   const { userData, logout } = useContext(UserContext);
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Fetch organization settings from onerc_core
+  const { data: orgData } = useFrappeGetCall(
+    "onerc_core.api.organization.get_organization_settings",
+    {}
+  );
+
+  const orgSettings = orgData?.message || orgData || {};
+  const organizationName = orgSettings.organization_name || "";
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -107,7 +117,7 @@ export default function DashboardLayout() {
           {!collapsed && (
             <div className="overflow-hidden">
               <div className="text-sm font-semibold text-white leading-tight whitespace-nowrap">
-                Localisation Hub
+                {organizationName}
               </div>
             </div>
           )}

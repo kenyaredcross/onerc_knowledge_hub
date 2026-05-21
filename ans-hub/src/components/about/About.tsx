@@ -118,6 +118,15 @@ export default function AboutPage() {
     {}
   );
 
+  // Fetch organization settings from onerc_core
+  const { data: orgData } = useFrappeGetCall(
+    "onerc_core.api.organization.get_organization_settings",
+    {}
+  );
+
+  const orgSettings = orgData?.message || orgData || {};
+  const organizationName = orgSettings.organization_name || "";
+
   // Get member societies
   const members = useMemo(() => {
     const societies = memberSocietiesData?.message || [];
@@ -164,7 +173,7 @@ export default function AboutPage() {
       <header className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="font-display text-lg font-semibold tracking-tight">
-            Localisation Hub
+            {organizationName}
           </Link>
           <div className="flex items-center gap-6">
             <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
@@ -543,7 +552,7 @@ export default function AboutPage() {
 
       <footer className="border-t border-border bg-secondary/40">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground md:flex-row">
-          <p>© {new Date().getFullYear()} The Localisation Hub</p>
+          <p>© {new Date().getFullYear()} {organizationName}</p>
           <p>Hosted by the Kenya Red Cross Society · Secretariat: NLRC</p>
         </div>
       </footer>

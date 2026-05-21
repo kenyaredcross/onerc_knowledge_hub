@@ -1,12 +1,25 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
-import { useFrappeAuth } from "frappe-react-sdk";
+import { useFrappeAuth, useFrappeGetCall } from "frappe-react-sdk";
 import { LogOut } from "lucide-react";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 
 export function SiteHeader() {
   const location = useLocation();
+
+  // Fetch organization settings from onerc_core
+  const { data: orgData } = useFrappeGetCall(
+    "onerc_core.api.organization.get_organization_settings",
+    {}
+  );
+
+  console.log("🔍 SiteHeader - orgData:", orgData);
+
+  const orgSettings = orgData?.message || orgData || {};
+  const organizationName = orgSettings.organization_name || "";
+
+  console.log("🏢 Organization Name:", organizationName);
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(path + "/");
@@ -18,7 +31,7 @@ export function SiteHeader() {
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
           <div className="leading-tight">
-            <div className="font-semibold text-base text-gray-900">Localisation Hub</div>
+            <div className="font-semibold text-base text-gray-900">{organizationName}</div>
           </div>
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
@@ -79,9 +92,17 @@ export function SiteHeader() {
 }
 
 export function SiteFooter() {
-  const navigate = useNavigate();
   const { currentUser } = useFrappeAuth();
   const { logout } = useContext(UserContext);
+
+  // Fetch organization settings from onerc_core
+  const { data: orgData } = useFrappeGetCall(
+    "onerc_core.api.organization.get_organization_settings",
+    {}
+  );
+
+  const orgSettings = orgData?.message || orgData || {};
+  const organizationName = orgSettings.organization_name || "";
 
   const handleSignOut = async () => {
     await logout();
@@ -93,7 +114,7 @@ export function SiteFooter() {
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
-            <div className="font-semibold text-base text-gray-900">The Localisation Hub</div>
+            <div className="font-semibold text-base text-gray-900">{organizationName}</div>
           </div>
           <p className="mt-4 max-w-md text-sm text-gray-600">
             A peer-to-peer learning platform supporting African National Societies on the journey toward self-reliance
@@ -120,7 +141,7 @@ export function SiteFooter() {
       </div>
       <div className="border-t border-gray-200">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-gray-600 md:flex-row">
-          <div>© 2026 The Localisation Hub</div>
+          <div>© 2026 {organizationName}</div>
           {currentUser && (
             <button
               onClick={handleSignOut}

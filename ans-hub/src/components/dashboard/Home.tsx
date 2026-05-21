@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useContext } from "react";
 import { useFrappeGetCall } from "frappe-react-sdk";
 import {
   ArrowUpRight,
@@ -9,19 +9,34 @@ import {
   Newspaper,
   Clock,
   MapPin,
-  UserCheck,
-  UserPlus,
 } from "lucide-react";
 import { pillarColor } from "../../lib/site-data";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function Home() {
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { userData } = useContext(UserContext);
 
   // Fetch dashboard overview from API
-  const { data: overviewData, error, isLoading: dataLoading } = useFrappeGetCall(
+  const { data: overviewData, error } = useFrappeGetCall(
     "onerc_knowledge_hub.api.overview.get_dashboard_overview"
   );
+
+  // Fetch events dynamically from events API
+  const { data: eventsData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.events.get_events",
+    {}
+  );
+
+  // Fetch knowledge hub entries dynamically
+  const { data: knowledgeData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.knowledge_hub.get_knowledge_hub_entries",
+    {}
+  );
+
+  // Get user display name
+  const displayName = (userData as any)?.full_name || (userData as any)?.first_name || "User";
 
   useEffect(() => {
     if (overviewData) {
@@ -61,8 +76,49 @@ export default function Home() {
 
   // Use API data if available, otherwise show empty arrays
   const recentNews = dashboardData?.recent_data?.recent_news || [];
-  const upcomingEvents = dashboardData?.recent_data?.upcoming_events || [];
-  const featuredPubs = dashboardData?.recent_data?.featured_resources || [];
+
+  // Dynamic upcoming events from events API
+  const upcomingEvents = useMemo(() => {
+    if (!eventsData) return [];
+    const result = eventsData?.message || eventsData;
+    const events = result?.upcoming || [];
+
+    // Format events to match the expected structure
+    return events.slice(0, 3).map((event: any) => {
+      const startDate = event.start_date ? new Date(event.start_date) : new Date();
+      return {
+        name: event.name,
+        slug: event.route || event.name,
+        title: event.title,
+        day: startDate.getDate().toString().padStart(2, '0'),
+        month: startDate.toLocaleString('default', { month: 'short' }).toUpperCase(),
+        time: event.start_time || 'TBA',
+        venue: event.venue,
+      };
+    });
+  }, [eventsData]);
+
+  // Dynamic featured resources from knowledge hub API
+  const featuredPubs = useMemo(() => {
+    if (!knowledgeData) return [];
+    const entries = knowledgeData?.message || knowledgeData;
+
+    // Filter for highlighted resources and limit to 6
+    const highlighted = Array.isArray(entries)
+      ? entries.filter((entry: any) => entry.is_highlighted)
+      : [];
+
+    return highlighted.slice(0, 6).map((resource: any) => ({
+      name: resource.name,
+      slug: resource.name,
+      title: resource.title,
+      description: resource.summary || resource.description,
+      category: resource.category || resource.resource_type,
+      file_type: resource.resource_type,
+      published_date: resource.published_date,
+      pillar: resource.category?.toLowerCase() || 'blue',
+    }));
+  }, [knowledgeData]);
 
   return (
     <div className="min-h-full bg-gradient-to-br from-gray-50 to-gray-100">
@@ -75,7 +131,7 @@ export default function Home() {
             </span>
           </div>
           <h1 className="text-4xl font-bold mb-3">
-            Welcome back, Alliance!
+            Welcome back, {displayName}!
           </h1>
           <p className="text-lg text-white/90 max-w-3xl">
             Empowering National Societies across Africa through peer learning, shared resources, and collaborative growth
@@ -140,7 +196,7 @@ export default function Home() {
             {/* News Cards */}
             <div className="space-y-4">
               {recentNews.length > 0 ? (
-                recentNews.map((n) => (
+                recentNews.map((n: any) => (
                   <Link
                     key={n.slug || n.name}
                     to={`/news/${n.slug || n.name}`}
@@ -198,7 +254,7 @@ export default function Home() {
               </div>
               <div className="space-y-4">
                 {upcomingEvents.length > 0 ? (
-                  upcomingEvents.map((e) => (
+                  upcomingEvents.map((e: any) => (
                     <Link
                       key={e.slug || e.name}
                       to={`/events/${e.slug || e.name}`}
@@ -289,8 +345,8 @@ export default function Home() {
                   </div>
                   <p className="text-xs text-gray-600 line-clamp-2 mb-4">{pub.description}</p>
                   <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>{pub.fileType || pub.file_type || 'PDF'}</span>
-                    <span>{pub.date || pub.published_date || 'Recent'}</span>
+                    <span>{pub.file_type || 'PDF'}</span>
+                    <span>{pub.published_date || 'Recent'}</span>
                   </div>
                 </div>
               ))
