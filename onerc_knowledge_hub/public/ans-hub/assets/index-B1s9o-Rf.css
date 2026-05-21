@@ -4765,6 +4765,10 @@ video {
     display: flex;
   }
 
+  .md\:hidden {
+    display: none;
+  }
+
   .md\:h-28 {
     height: 7rem;
   }
