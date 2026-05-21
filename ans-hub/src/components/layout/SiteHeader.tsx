@@ -29,7 +29,15 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
+          {orgSettings.logo ? (
+            <img
+              src={orgSettings.logo}
+              alt="Logo"
+              className="h-9 w-9 object-contain rounded-md"
+            />
+          ) : (
+            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
+          )}
           <div className="leading-tight">
             <div className="font-semibold text-base text-gray-900">{organizationName}</div>
           </div>
@@ -113,7 +121,15 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
+            {orgSettings.logo ? (
+              <img
+                src={orgSettings.logo}
+                alt="Logo"
+                className="h-9 w-9 object-contain rounded-md"
+              />
+            ) : (
+              <div className="flex h-9 w-9 items-center justify-center rounded-md bg-red-500 text-white font-bold text-lg">+</div>
+            )}
             <div className="font-semibold text-base text-gray-900">{organizationName}</div>
           </div>
           <p className="mt-4 max-w-md text-sm text-gray-600">

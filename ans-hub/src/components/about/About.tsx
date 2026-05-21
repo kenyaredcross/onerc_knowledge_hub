@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2, User } from "lucide-react";
+import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2, User, X } from "lucide-react";
 import { useFrappeAuth, useFrappeGetCall } from "frappe-react-sdk";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 // Removed hardcoded partners array - now fetched from database
 
@@ -99,6 +99,7 @@ function PillarSwatch({ color }: { color: typeof pillars[number]["color"] }) {
 
 export default function AboutPage() {
   const { currentUser } = useFrappeAuth();
+  const [selectedMember, setSelectedMember] = useState<any>(null);
 
   // Fetch only Member National Societies from database
   const { data: memberSocietiesData } = useFrappeGetCall(
@@ -127,10 +128,10 @@ export default function AboutPage() {
   const orgSettings = orgData?.message || orgData || {};
   const organizationName = orgSettings.organization_name || "";
 
-  // Get member societies
+  // Get member societies with full data including logos
   const members = useMemo(() => {
     const societies = memberSocietiesData?.message || [];
-    return societies.map((s: any) => s.national_society_name);
+    return societies;
   }, [memberSocietiesData]);
 
   // Filter partners and non-members from all societies
@@ -172,8 +173,17 @@ export default function AboutPage() {
       {/* Nav */}
       <header className="border-b border-border/60 bg-background/80 backdrop-blur sticky top-0 z-30">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link to="/" className="font-display text-lg font-semibold tracking-tight">
-            {organizationName}
+          <Link to="/" className="flex items-center gap-3">
+            {orgSettings.logo ? (
+              <img
+                src={orgSettings.logo}
+                alt="Logo"
+                className="h-8 w-8 object-contain"
+              />
+            ) : null}
+            <div className="font-display text-lg font-semibold tracking-tight">
+              {organizationName}
+            </div>
           </Link>
           <div className="flex items-center gap-6">
             <nav className="hidden gap-6 text-sm text-muted-foreground md:flex">
@@ -267,11 +277,29 @@ export default function AboutPage() {
                 <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
                   African National Societies
                 </h3>
-                <div className="flex flex-wrap gap-2">
-                  {members.map((m: string) => (
-                    <span key={m} className="rounded-full border border-border bg-card px-4 py-2 text-sm font-medium shadow-sm">
-                      {m}
-                    </span>
+                <div className="flex flex-wrap gap-4">
+                  {members.map((m: any) => (
+                    <div
+                      key={m.name}
+                      className="group relative flex items-center justify-center"
+                      title={m.national_society_name}
+                    >
+                      {m.logo ? (
+                        <div className="h-20 w-20 rounded-lg bg-card p-2 shadow-sm hover:shadow-md transition-all flex items-center justify-center overflow-hidden">
+                          <img
+                            src={m.logo}
+                            alt={m.national_society_name}
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
+                      ) : (
+                        <div className="h-20 w-20 rounded-lg flex items-center justify-center bg-primary/10 shadow-sm hover:shadow-md transition-all">
+                          <span className="text-xs font-bold text-primary text-center px-2">
+                            {m.abbreviation || m.national_society_name}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -323,9 +351,10 @@ export default function AboutPage() {
 
           <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {steeringGroup.map((s: any, i: number) => (
-              <div
+              <button
                 key={s.name || i}
-                className="group relative overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:shadow-md hover:border-primary/50"
+                onClick={() => setSelectedMember(s)}
+                className="group relative overflow-hidden rounded-lg border border-border bg-card transition-all duration-300 hover:shadow-md hover:border-primary/50 text-left w-full cursor-pointer"
               >
                 <div className="p-4">
                   {/* Header with avatar placeholder */}
@@ -371,7 +400,7 @@ export default function AboutPage() {
                   {/* Decorative element */}
                   <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -556,6 +585,76 @@ export default function AboutPage() {
           <p>Hosted by the Kenya Red Cross Society · Secretariat: NLRC</p>
         </div>
       </footer>
+
+      {/* Steering Group Member Modal */}
+      {selectedMember && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+          onClick={() => setSelectedMember(null)}
+        >
+          <div
+            className="relative max-w-2xl w-full bg-card rounded-lg shadow-xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedMember(null)}
+              className="absolute top-4 right-4 p-2 rounded-full bg-background/80 hover:bg-background transition-colors z-10"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            {/* Header with Image */}
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-8 pb-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                {selectedMember.image ? (
+                  <img
+                    src={selectedMember.image}
+                    alt={selectedMember.name}
+                    className="h-24 w-24 rounded-full object-cover ring-4 ring-background shadow-lg"
+                  />
+                ) : (
+                  <div className="h-24 w-24 rounded-full bg-primary/20 flex items-center justify-center ring-4 ring-background shadow-lg">
+                    <span className="text-3xl font-bold text-primary">
+                      {selectedMember.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+                    </span>
+                  </div>
+                )}
+                <div className="flex-1 text-center sm:text-left">
+                  <h2 className="text-2xl font-bold text-foreground">
+                    {selectedMember.name}
+                  </h2>
+                  <p className="text-lg text-primary font-medium mt-1">
+                    {selectedMember.title}
+                  </p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2 justify-center sm:justify-start">
+                    <Building2 className="h-4 w-4" />
+                    <span>{selectedMember.ns}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-8">
+              {selectedMember.bio ? (
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                    Biography
+                  </h3>
+                  <p className="text-foreground leading-relaxed whitespace-pre-line">
+                    {selectedMember.bio}
+                  </p>
+                </div>
+              ) : (
+                <p className="text-muted-foreground italic">
+                  No biography available
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

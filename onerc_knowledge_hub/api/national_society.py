@@ -74,6 +74,7 @@ def get_member_societies():
 			"abbreviation",
 			"type",
 			"country",
+			"logo",
 		],
 		order_by="national_society_name asc",
 	)
