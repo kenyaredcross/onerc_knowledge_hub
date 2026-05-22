@@ -3656,6 +3656,9 @@ video {
 .hover\:text-muted-foreground:hover {
   color: oklch(0.45 0.03 257);
 }
+.hover\:text-primary:hover {
+  color: oklch(0.221 0.067 257);
+}
 .hover\:text-red-500:hover {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity, 1));
