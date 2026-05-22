@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2, User, X, Menu } from "lucide-react";
+import { ArrowRight, Compass, Users, Building2, Sparkles, ShieldCheck, HandshakeIcon, Globe2, User, X, Menu, Mail, Phone, ExternalLink } from "lucide-react";
 import { useFrappeAuth, useFrappeGetCall } from "frappe-react-sdk";
 import { useMemo, useState } from "react";
 
@@ -161,7 +161,11 @@ export default function AboutPage() {
       title: member.position_name || "Member",
       ns: member.national_society_name || "",
       image: member.image,
-      bio: member.bio
+      bio: member.bio,
+      email: member.company_email,
+      prefered_email: member.prefered_contact_email,
+      phone: member.phone_number,
+      social_media: member.social_media || []
     }));
   }, [steeringGroupData]);
 
@@ -652,7 +656,7 @@ export default function AboutPage() {
           onClick={() => setSelectedMember(null)}
         >
           <div
-            className="relative max-w-2xl w-full bg-card rounded-lg shadow-xl overflow-hidden"
+            className="relative max-w-2xl w-full bg-card rounded-lg shadow-xl overflow-hidden max-h-[90vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
@@ -663,8 +667,8 @@ export default function AboutPage() {
               <X className="h-5 w-5" />
             </button>
 
-            {/* Header with Image */}
-            <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-8 pb-6">
+            {/* Header with Image - Fixed at top */}
+            <div className="bg-gradient-to-br from-primary/10 to-primary/5 p-8 pb-6 flex-shrink-0">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
                 {selectedMember.image ? (
                   <img
@@ -694,8 +698,79 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-8">
+            {/* Scrollable Content */}
+            <div className="overflow-y-auto flex-1 p-8 space-y-6">
+              {/* Contact Information */}
+              {(selectedMember.email || selectedMember.phone || selectedMember.prefered_email) && (
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                    Contact
+                  </h3>
+                  <div className="space-y-2">
+                    {selectedMember.email && (
+                      <a
+                        href={`mailto:${selectedMember.email}`}
+                        className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
+                      >
+                        <Mail className="h-4 w-4" />
+                        <span className="text-sm">{selectedMember.email}</span>
+                      </a>
+                    )}
+                    {selectedMember.prefered_email && selectedMember.prefered_email !== selectedMember.email && (
+                      <a
+                        href={`mailto:${selectedMember.prefered_email}`}
+                        className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
+                      >
+                        <Mail className="h-4 w-4" />
+                        <span className="text-sm">{selectedMember.prefered_email}</span>
+                      </a>
+                    )}
+                    {selectedMember.phone && (
+                      <a
+                        href={`tel:${selectedMember.phone}`}
+                        className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
+                      >
+                        <Phone className="h-4 w-4" />
+                        <span className="text-sm">{selectedMember.phone}</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Social Media Links */}
+              {selectedMember.social_media && selectedMember.social_media.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                    Connect
+                  </h3>
+                  <div className="flex flex-wrap gap-3">
+                    {selectedMember.social_media.map((social: any, idx: number) => (
+                      <a
+                        key={idx}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+                        title={social.social_media_site}
+                      >
+                        {social.icon ? (
+                          social.icon.startsWith('<') ? (
+                            <span className="h-4 w-4 flex items-center justify-center" dangerouslySetInnerHTML={{ __html: social.icon }} />
+                          ) : (
+                            <img src={social.icon} alt={social.social_media_site} className="h-4 w-4 object-contain" />
+                          )
+                        ) : (
+                          <ExternalLink className="h-4 w-4" />
+                        )}
+                        <span className="text-sm font-medium">{social.social_media_site}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Biography */}
               {selectedMember.bio ? (
                 <div>
                   <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-3">

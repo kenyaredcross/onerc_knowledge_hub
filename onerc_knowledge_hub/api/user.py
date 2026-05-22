@@ -18,18 +18,30 @@ def get_steering_group_members():
 			"position",
 			"national_society",
 			"image",
-			"bio"
+			"bio",
+			"phone_number",
+			"company_email",
+			"prefered_contact_email"
 		],
 		order_by="creation asc"
 	)
 
-	# Get position and national society names
+	# Get position and national society names, and social media links
 	for member in members:
 		if member.get("position"):
 			member["position_name"] = frappe.db.get_value("Designation", member["position"], "designation_name")
 
 		if member.get("national_society"):
 			member["national_society_name"] = frappe.db.get_value("National Society", member["national_society"], "national_society_name")
+
+		# Get social media links
+		social_media = frappe.get_all(
+			"Social Media Links",
+			filters={"parent": member["name"], "parenttype": "Localisation Hub User"},
+			fields=["social_media_site", "icon", "url"],
+			order_by="idx"
+		)
+		member["social_media"] = social_media
 
 	return members
 
