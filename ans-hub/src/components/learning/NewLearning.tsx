@@ -12,7 +12,6 @@ import {
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FileUploadField } from "../fields/FileUploadField";
-import { LinkField } from "../fields/LinkField";
 import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
 
 export default function NewLearning() {
@@ -28,7 +27,6 @@ export default function NewLearning() {
     summary: "",
     description: "",
     cover_image: "",
-    posted_by: "",
   });
 
   const updateField = (field: string, value: any) => {
@@ -46,11 +44,17 @@ export default function NewLearning() {
     try {
       // Transform pillar and category arrays into child table format
       const pillarLinks = form.pillar.map((p) => ({
+        doctype: "Localization Pillar Link",
         pillar: p,
+        parenttype: "Learning Hub",
+        parentfield: "pillar",
       }));
 
       const categoryLinks = form.category.map((c) => ({
+        doctype: "Category Link",
         category: c,
+        parenttype: "Learning Hub",
+        parentfield: "category",
       }));
 
       // Build doc with only non-empty fields
@@ -73,9 +77,6 @@ export default function NewLearning() {
       }
       if (form.cover_image) {
         doc.cover_image = form.cover_image;
-      }
-      if (form.posted_by) {
-        doc.posted_by = form.posted_by;
       }
       if (pillarLinks.length > 0) {
         doc.pillar = pillarLinks;
@@ -195,16 +196,6 @@ export default function NewLearning() {
                   <option value="External Platform">External Platform</option>
                   <option value="External URL">External URL</option>
                 </select>
-              </div>
-
-              <div>
-                <LinkField
-                  doctype="Localisation Hub User"
-                  label="Posted By"
-                  value={form.posted_by}
-                  onChange={(val) => updateField("posted_by", val)}
-                  {...linkFieldClasses}
-                />
               </div>
 
               <div className="md:col-span-2">

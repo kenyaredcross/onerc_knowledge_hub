@@ -136,7 +136,7 @@ def get_recent_news(limit=3):
 			"title",
 			"slug",
 			"summary as excerpt",
-			"published_on as published_date",
+			"published_on",
 			"category as tag",
 			"cover_image",
 			"is_featured"
@@ -155,9 +155,17 @@ def get_recent_news(limit=3):
 		"Finance Development": "finance"
 	}
 
+	from frappe.utils import formatdate
+
 	for article in articles:
 		category = article.get("tag", "")
 		article["color"] = category_color_map.get(category, "leadership")
+
+		# Format date to show only date without time
+		if article.get("published_on"):
+			article["date"] = formatdate(article["published_on"], "dd MMM yyyy")
+		else:
+			article["date"] = "Recent"
 
 	return articles
 

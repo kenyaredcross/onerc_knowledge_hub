@@ -213,7 +213,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                   </option>
                   {nationalSocieties?.message?.map((society: { name: string; full_official_name: string; short_name: string; country: string }) => (
                     <option key={society.name} value={society.name}>
-                      {society.full_official_name} {society.country ? `(${society.country})` : ''}
+                      {society.full_official_name}
                     </option>
                   ))}
                 </select>

@@ -27,6 +27,29 @@ def get_knowledge_hub_entries():
 		],
 		order_by="published_date asc",
 	)
+
+	# Get author's national society for each entry
+	for entry in entries:
+		if entry.get("uploaded_by"):
+			# Try to get Localisation Hub User
+			lh_user = frappe.db.get_value(
+				"Localisation Hub User",
+				{"user_id": entry["uploaded_by"]},
+				["national_society", "full_name"],
+				as_dict=True
+			)
+
+			if lh_user and lh_user.get("national_society"):
+				# Get national society name
+				ns_name = frappe.db.get_value("National Society", lh_user["national_society"], "national_society_name")
+				entry["author_national_society"] = ns_name
+				entry["author_name"] = lh_user.get("full_name")
+			else:
+				# Fallback to User's full name
+				user_name = frappe.db.get_value("User", entry["uploaded_by"], "full_name")
+				entry["author_name"] = user_name
+				entry["author_national_society"] = None
+
 	return entries
 
 

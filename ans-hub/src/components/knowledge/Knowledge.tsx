@@ -1,25 +1,17 @@
 import { useFrappeGetCall } from "frappe-react-sdk";
 import {
-  ArrowRight,
   BookOpen,
-  Calendar,
-  Clock,
   Download,
   ExternalLink,
   FileText,
   Folder,
   Grid3X3,
-  Info,
   List,
   Loader2,
-  MapPin,
   MoreVertical,
-  Search,
-  Users,
   X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 
 interface KnowledgeEntry {
   name: string;
@@ -33,6 +25,8 @@ interface KnowledgeEntry {
   language: string;
   contributing_ns: any[];
   uploaded_by: string;
+  author_name?: string;
+  author_national_society?: string;
   status: string;
   published_date: string | null;
   download_count: number;
@@ -67,6 +61,40 @@ const getResourceColor = (type: string) => {
   }
 };
 
+const getLanguageName = (code: string | undefined | null) => {
+  if (!code) return "N/A";
+
+  const languages: Record<string, string> = {
+    "en": "English",
+    "fr": "French",
+    "es": "Spanish",
+    "pt": "Portuguese",
+    "ar": "Arabic",
+    "sw": "Swahili",
+    "am": "Amharic",
+    "ha": "Hausa",
+    "yo": "Yoruba",
+    "zu": "Zulu",
+    "xh": "Xhosa",
+    "st": "Sotho",
+    "tn": "Tswana",
+    "ts": "Tsonga",
+    "ss": "Swazi",
+    "ve": "Venda",
+    "nr": "Ndebele",
+    "ny": "Chichewa",
+    "sn": "Shona",
+    "rw": "Kinyarwanda",
+    "rn": "Kirundi",
+    "ti": "Tigrinya",
+    "om": "Oromo",
+    "so": "Somali",
+    "lg": "Luganda",
+  };
+
+  return languages[code.toLowerCase()] || code;
+};
+
 export default function Knowledge() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [selectedResource, setSelectedResource] = useState<KnowledgeEntry | null>(null);
@@ -74,11 +102,6 @@ export default function Knowledge() {
 
   const { data: entriesData, isLoading } = useFrappeGetCall(
     "onerc_knowledge_hub.api.knowledge_hub.get_knowledge_hub_entries",
-    {},
-  );
-
-  const { data: eventsData, isLoading: eventsLoading } = useFrappeGetCall(
-    "onerc_knowledge_hub.api.events.get_events",
     {},
   );
 
@@ -91,11 +114,6 @@ export default function Knowledge() {
     if (filterType === "all") return entries;
     return entries.filter((e) => e.resource_type === filterType);
   }, [entries, filterType]);
-
-  const upcomingEvents = useMemo(() => {
-    const result = eventsData?.message || {};
-    return result.upcoming || [];
-  }, [eventsData]);
 
   const featuredResources = useMemo(() => {
     return entries.filter((e) => e.is_highlighted).slice(0, 4);
@@ -145,66 +163,12 @@ export default function Knowledge() {
               >
                 <List className="h-5 w-5" />
               </button>
-              <button className="rounded-lg p-2 text-gray-600 hover:bg-gray-50">
-                <Info className="h-5 w-5" />
-              </button>
             </div>
           </div>
         </div>
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-6">
-        {/* Upcoming Events Section */}
-        {!eventsLoading && upcomingEvents.length > 0 && (
-          <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">Upcoming Events</h2>
-              <Link
-                to="/events"
-                className="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-700"
-              >
-                View all
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-            <div className="space-y-3">
-              {upcomingEvents.slice(0, 3).map((event: any) => (
-                <Link
-                  key={event.name}
-                  to={`/events/${event.route}`}
-                  className="group flex items-start gap-4 rounded-lg border border-gray-100 bg-gray-50 p-4 transition-all hover:border-blue-200 hover:bg-blue-50"
-                >
-                  <div className="flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-lg bg-blue-600 text-white">
-                    <div className="text-xl font-bold">
-                      {new Date(event.start_date).getDate()}
-                    </div>
-                    <div className="text-[10px] font-bold uppercase">
-                      {new Date(event.start_date).toLocaleString("default", {
-                        month: "short",
-                      })}
-                    </div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="mb-1 truncate text-sm font-semibold text-gray-900 group-hover:text-blue-600">
-                      {event.title}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {event.start_time}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {event.venue || event.medium}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Featured Resources Section */}
         {featuredResources.length > 0 && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6">
@@ -312,7 +276,9 @@ export default function Knowledge() {
                         </div>
                       </div>
                       <div className="col-span-2 flex items-center text-sm text-gray-600">
-                        {entry.uploaded_by || "Unknown"}
+                        <div className="truncate">
+                          {entry.author_national_society || entry.author_name || "Unknown"}
+                        </div>
                       </div>
                       <div className="col-span-2 flex items-center text-sm text-gray-600">
                         {entry.published_date
@@ -421,9 +387,11 @@ export default function Knowledge() {
 
               <div className="mb-6 grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs font-medium text-gray-500">Owner</p>
+                  <p className="text-xs font-medium text-gray-500">
+                    {selectedResource.author_national_society ? "National Society" : "Author"}
+                  </p>
                   <p className="mt-1 text-sm text-gray-900">
-                    {selectedResource.uploaded_by || "Unknown"}
+                    {selectedResource.author_national_society || selectedResource.author_name || "Unknown"}
                   </p>
                 </div>
                 <div>
@@ -437,7 +405,7 @@ export default function Knowledge() {
                 <div>
                   <p className="text-xs font-medium text-gray-500">Language</p>
                   <p className="mt-1 text-sm text-gray-900">
-                    {selectedResource.language || "N/A"}
+                    {getLanguageName(selectedResource.language)}
                   </p>
                 </div>
                 <div>
