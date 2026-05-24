@@ -14,6 +14,7 @@ import {
   Loader2,
   AlertTriangle,
   Plus,
+  X,
 } from "lucide-react";
 import { pillarColor } from "../../lib/site-data";
 
@@ -86,6 +87,7 @@ export default function LearningHub() {
   const [query, setQuery] = useState("");
   const [activePillar, setActivePillar] = useState("All Pillars");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [selectedResource, setSelectedResource] = useState<LearningResource | null>(null);
 
   const { data: resourcesData, isLoading: loadingResources, error: resourcesError } = useFrappeGetCall(
     "onerc_knowledge_hub.api.learning_hub.get_learning_resources",
@@ -158,18 +160,6 @@ export default function LearningHub() {
                       <Skeleton className="h-4 w-8" />
                     ) : (
                       <span className="font-bold text-dash-red">{stats.total_resources}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Total Views</span>
-                    {loadingStats ? (
-                      <Skeleton className="h-4 w-12" />
-                    ) : (
-                      <span className="font-bold text-dash-red">
-                        {stats.total_views > 0
-                          ? `${(stats.total_views / 1000).toFixed(1)}k`
-                          : "—"}
-                      </span>
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -315,12 +305,10 @@ export default function LearningHub() {
                 {filtered.map((resource) => {
                   const pillarKey = getPillarColorKey(resource.pillar_name);
                   return (
-                    <a
+                    <button
                       key={resource.name}
-                      href={resource.external_url || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group bg-white rounded border border-gray-200 overflow-hidden hover:shadow-lg transition-all"
+                      onClick={() => setSelectedResource(resource)}
+                      className="group bg-white rounded border border-gray-200 overflow-hidden hover:shadow-lg transition-all text-left w-full"
                     >
                       {/* Cover Image */}
                       <div className={`relative h-48 ${pillarColor[pillarKey]} overflow-hidden`}>
@@ -383,7 +371,7 @@ export default function LearningHub() {
                           </div>
                         )}
                       </div>
-                    </a>
+                    </button>
                   );
                 })}
 
@@ -414,12 +402,10 @@ export default function LearningHub() {
                 {filtered.map((resource) => {
                   const pillarKey = getPillarColorKey(resource.pillar_name);
                   return (
-                    <a
+                    <button
                       key={resource.name}
-                      href={resource.external_url || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group flex gap-4 bg-white rounded border border-gray-200 overflow-hidden hover:shadow-lg transition-all p-4"
+                      onClick={() => setSelectedResource(resource)}
+                      className="group flex gap-4 bg-white rounded border border-gray-200 overflow-hidden hover:shadow-lg transition-all p-4 text-left w-full"
                     >
                       {/* Thumbnail */}
                       <div className={`flex-shrink-0 w-32 h-32 rounded ${pillarColor[pillarKey]} overflow-hidden`}>
@@ -476,7 +462,7 @@ export default function LearningHub() {
                           )}
                         </div>
                       </div>
-                    </a>
+                    </button>
                   );
                 })}
 
@@ -503,6 +489,110 @@ export default function LearningHub() {
           </div>
         </div>
       </div>
+
+      {/* Resource Detail Modal */}
+      {selectedResource && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="relative max-w-2xl w-full bg-white rounded-lg shadow-xl max-h-[90vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-start justify-between p-6 border-b border-gray-200">
+              <div className="flex-1 pr-4">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  {selectedResource.title}
+                </h2>
+                {selectedResource.pillar_name && (
+                  <span className="inline-flex items-center px-2 py-1 rounded text-xs font-semibold bg-dash-red/10 text-dash-red">
+                    {selectedResource.pillar_name}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => setSelectedResource(null)}
+                className="flex-shrink-0 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <X className="h-5 w-5 text-gray-500" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {/* Cover Image */}
+              {selectedResource.cover_image && (
+                <div className="mb-6 rounded-lg overflow-hidden">
+                  <img
+                    src={selectedResource.cover_image}
+                    alt={selectedResource.title}
+                    className="w-full h-64 object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Summary */}
+              {selectedResource.summary && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-bold text-gray-900 mb-2">Summary</h3>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {selectedResource.summary}
+                  </p>
+                </div>
+              )}
+
+              {/* Description */}
+              {selectedResource.description && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-bold text-gray-900 mb-2">Description</h3>
+                  <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">
+                    {selectedResource.description}
+                  </p>
+                </div>
+              )}
+
+              {/* Meta Information */}
+              <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                {selectedResource.external_platform_name && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Platform</p>
+                    <p className="text-sm text-gray-900">{selectedResource.external_platform_name}</p>
+                  </div>
+                )}
+                {selectedResource.date_posted && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Posted</p>
+                    <p className="text-sm text-gray-900">
+                      {new Date(selectedResource.date_posted).toLocaleDateString()}
+                    </p>
+                  </div>
+                )}
+                {selectedResource.views_count != null && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Views</p>
+                    <p className="text-sm text-gray-900">{selectedResource.views_count}</p>
+                  </div>
+                )}
+                {selectedResource.category_name && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Category</p>
+                    <p className="text-sm text-gray-900">{selectedResource.category_name}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Footer with External Link Button */}
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <a
+                href={selectedResource.external_url || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-dash-red text-white rounded-lg font-semibold hover:bg-dash-red/90 transition-colors"
+              >
+                <ExternalLink className="h-5 w-5" />
+                Visit External Resource
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

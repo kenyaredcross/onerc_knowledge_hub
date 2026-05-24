@@ -22,6 +22,9 @@ export default function NewsIndex() {
   const observerTarget = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 10;
 
+  // Sort state
+  const [sortBy, setSortBy] = useState<'latest' | 'oldest'>('latest');
+
   // Carousel setup
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start" },
@@ -76,15 +79,23 @@ export default function NewsIndex() {
   // Transform API data to component format with cover images and engagement data
   const news = useMemo(() => {
     if (!allArticles.length) return [];
-    return allArticles.map(article => ({
+    const mappedArticles = allArticles.map(article => ({
       ...mapArticleToNewsItem(article),
       name: article.name, // Keep the article name for Comments component
       cover_image: article.cover_image,
       is_featured: article.is_featured,
       like_count: article.like_count || 0,
-      comment_count: article.comment_count || 0
+      comment_count: article.comment_count || 0,
+      published_on: article.published_on
     }));
-  }, [allArticles]);
+
+    // Sort articles based on sortBy state
+    return mappedArticles.sort((a, b) => {
+      const dateA = new Date(a.published_on || 0).getTime();
+      const dateB = new Date(b.published_on || 0).getTime();
+      return sortBy === 'latest' ? dateB - dateA : dateA - dateB;
+    });
+  }, [allArticles, sortBy]);
 
   // Load more articles when scrolling
   const loadMoreArticles = useCallback(async () => {
@@ -489,7 +500,29 @@ export default function NewsIndex() {
             {/* Sort Options */}
             <div className="flex items-center justify-between px-2">
               <span className="text-xs text-gray-500">Sort by:</span>
-              <button className="text-xs font-medium text-gray-700 hover:underline">Top</button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSortBy('latest')}
+                  className={`text-xs font-medium transition-colors ${
+                    sortBy === 'latest'
+                      ? 'text-dash-red'
+                      : 'text-gray-700 hover:text-gray-900'
+                  }`}
+                >
+                  Latest
+                </button>
+                <span className="text-gray-300">|</span>
+                <button
+                  onClick={() => setSortBy('oldest')}
+                  className={`text-xs font-medium transition-colors ${
+                    sortBy === 'oldest'
+                      ? 'text-dash-red'
+                      : 'text-gray-700 hover:text-gray-900'
+                  }`}
+                >
+                  Oldest
+                </button>
+              </div>
             </div>
 
             {/* News Feed */}
@@ -724,27 +757,6 @@ export default function NewsIndex() {
                 )) || (
                   <p className="text-xs text-gray-500 text-center py-4">No resources available</p>
                 )}
-              </div>
-            </div>
-
-            {/* Add to Feed */}
-            <div className="bg-white rounded border border-gray-200 p-4">
-              <h3 className="font-bold text-gray-900 mb-3">Add to your feed</h3>
-              <p className="text-xs text-gray-600 mb-3">Follow categories and pillars to see more content</p>
-              <div className="space-y-2">
-                {categories.slice(0, 2).map((cat) => (
-                  <div key={cat.name} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className={`h-8 w-8 rounded ${cat.color} flex items-center justify-center text-white text-xs font-bold`}>
-                        {cat.name.charAt(0)}
-                      </div>
-                      <span className="text-sm font-medium text-gray-700">{cat.name}</span>
-                    </div>
-                    <button className="text-xs font-medium text-dash-red hover:bg-gray-50 px-3 py-1 rounded border border-gray-300">
-                      + Follow
-                    </button>
-                  </div>
-                ))}
               </div>
             </div>
           </div>

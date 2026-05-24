@@ -1,4 +1,5 @@
 import frappe
+from datetime import datetime
 
 
 @frappe.whitelist(allow_guest=True)
@@ -43,6 +44,18 @@ def get_events():
 		order_by="start_date asc",
 		ignore_permissions=True,
 	)
+
+	# Format time to 12-hour format with AM/PM
+	for event in events:
+		if event.get("start_time"):
+			# Convert time string to datetime object
+			time_obj = datetime.strptime(str(event["start_time"]), "%H:%M:%S")
+			# Format to 12-hour with AM/PM
+			event["start_time"] = time_obj.strftime("%I:%M %p")
+
+		if event.get("end_time"):
+			time_obj = datetime.strptime(str(event["end_time"]), "%H:%M:%S")
+			event["end_time"] = time_obj.strftime("%I:%M %p")
 
 	if not events:
 		return {"featured": None, "upcoming": []}
@@ -91,6 +104,15 @@ def get_event_details(event_route):
 	event_doc = frappe.get_doc("Buzz Event", {"route": event_route})
 
 	event_data = event_doc.as_dict()
+
+	# Format time to 12-hour format with AM/PM
+	if event_data.get("start_time"):
+		time_obj = datetime.strptime(str(event_data["start_time"]), "%H:%M:%S")
+		event_data["start_time"] = time_obj.strftime("%I:%M %p")
+
+	if event_data.get("end_time"):
+		time_obj = datetime.strptime(str(event_data["end_time"]), "%H:%M:%S")
+		event_data["end_time"] = time_obj.strftime("%I:%M %p")
 
 	event_data["featured_speakers"] = []
 	for speaker in event_doc.get("featured_speakers"):

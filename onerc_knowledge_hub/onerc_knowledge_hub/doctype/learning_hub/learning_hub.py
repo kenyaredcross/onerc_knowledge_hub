@@ -8,7 +8,20 @@ from frappe.model.document import Document
 class LearningHub(Document):
 
     def validate(self):
+        self.set_posted_by()
         self.validate_summary_word_count()
+
+    def set_posted_by(self):
+        """Auto-fill posted_by with current user's Localisation Hub User record"""
+        if not self.posted_by:
+            # Get the current user's Localisation Hub User record
+            lh_user = frappe.db.get_value(
+                "Localisation Hub User",
+                {"user_id": frappe.session.user},
+                "name"
+            )
+            if lh_user:
+                self.posted_by = lh_user
 
     def validate_summary_word_count(self):
         if self.summary:
