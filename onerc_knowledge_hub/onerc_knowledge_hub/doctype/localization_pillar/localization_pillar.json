@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:pillar",
  "creation": "2026-05-13 11:55:41.339228",

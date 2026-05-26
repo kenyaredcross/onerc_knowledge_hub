@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:region_name",
  "creation": "2026-05-13 11:24:25.413724",
@@ -20,7 +21,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-13 14:59:30.708217",
+ "modified": "2026-05-26 10:23:00.547904",
  "modified_by": "Administrator",
  "module": "Onerc Knowledge Hub",
  "name": "Region",
