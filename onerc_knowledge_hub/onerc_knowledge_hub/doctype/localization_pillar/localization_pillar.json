@@ -7,20 +7,56 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "pillar"
+  "pillar",
+  "pillar_color",
+  "column_break_ytvd",
+  "technical_lead",
+  "is_active",
+  "section_break_zppr",
+  "pillar_description"
  ],
  "fields": [
   {
    "fieldname": "pillar",
    "fieldtype": "Data",
-   "label": "Pillar",
+   "label": "Pillar Title",
    "unique": 1
+  },
+  {
+   "fieldname": "column_break_ytvd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "technical_lead",
+   "fieldtype": "Link",
+   "label": "Technical Lead",
+   "options": "Localisation Hub User"
+  },
+  {
+   "fieldname": "pillar_color",
+   "fieldtype": "Color",
+   "label": "Pillar Color"
+  },
+  {
+   "fieldname": "section_break_zppr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "pillar_description",
+   "fieldtype": "Text Editor",
+   "label": "Pillar Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-26 10:28:24.533397",
+ "modified": "2026-05-16 08:04:19.042322",
  "modified_by": "Administrator",
  "module": "Onerc Knowledge Hub",
  "name": "Localization Pillar",
