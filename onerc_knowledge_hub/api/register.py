@@ -471,7 +471,28 @@ def reject_localisation_hub_user(name, reason=None):
 #Get list of pending Localisation Hub Users
 @frappe.whitelist()
 def get_pending_users():
-	frappe.only_for("LH Admin", "System Manager")
+	# Check if user has any of the required roles
+	current_user_roles = frappe.get_roles()
+	allowed_roles = {"LH Admin", "LH Manager", "System Manager"}
+	if not allowed_roles.intersection(set(current_user_roles)):
+		frappe.throw(frappe._("Not permitted"), frappe.PermissionError)
+
+	filters = {"status": "Pending"}
+
+	# Check if user is a manager (not admin/system manager)
+	is_admin = "LH Admin" in current_user_roles or "System Manager" in current_user_roles
+	is_manager = "LH Manager" in current_user_roles and not is_admin
+
+	# If user is a manager, filter by their national society
+	if is_manager:
+		# Get the current user's national society
+		current_user_ns = frappe.db.get_value(
+			"Localisation Hub User",
+			{"user_id": frappe.session.user},
+			"national_society"
+		)
+		if current_user_ns:
+			filters["national_society"] = current_user_ns
 
 	users = frappe.get_all(
 		"Localisation Hub User",
@@ -489,7 +510,7 @@ def get_pending_users():
 			"creation",
 			"modified"
 		],
-		filters={"status": "Pending"},
+		filters=filters,
 		order_by="creation desc"
 	)
 
@@ -499,11 +520,30 @@ def get_pending_users():
 #Get all Localisation Hub Users with optional status filter
 @frappe.whitelist()
 def get_all_hub_users(status=None):
-	frappe.only_for("LH Admin", "System Manager")
+	# Check if user has any of the required roles
+	current_user_roles = frappe.get_roles()
+	allowed_roles = {"LH Admin", "LH Manager", "System Manager"}
+	if not allowed_roles.intersection(set(current_user_roles)):
+		frappe.throw(frappe._("Not permitted"), frappe.PermissionError)
 
 	filters = {}
 	if status:
 		filters["status"] = status
+
+	# Check if user is a manager (not admin/system manager)
+	is_admin = "LH Admin" in current_user_roles or "System Manager" in current_user_roles
+	is_manager = "LH Manager" in current_user_roles and not is_admin
+
+	# If user is a manager, filter by their national society
+	if is_manager:
+		# Get the current user's national society
+		current_user_ns = frappe.db.get_value(
+			"Localisation Hub User",
+			{"user_id": frappe.session.user},
+			"national_society"
+		)
+		if current_user_ns:
+			filters["national_society"] = current_user_ns
 
 	users = frappe.get_all(
 		"Localisation Hub User",

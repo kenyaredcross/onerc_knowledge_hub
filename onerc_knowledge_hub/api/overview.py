@@ -117,11 +117,18 @@ def get_knowledge_hub_count():
 
 def get_upcoming_events_count():
 	"""Count of upcoming events"""
-	if not frappe.db.exists("DocType", "Event"):
-		return 0
+	# Check for Buzz Event first, then fall back to Event
+	if frappe.db.exists("DocType", "Buzz Event"):
+		from frappe.utils import nowdate
+		return frappe.db.count("Buzz Event", {
+			"start_date": [">=", nowdate()],
+			"is_published": 1
+		})
+	elif frappe.db.exists("DocType", "Event"):
+		from frappe.utils import nowdate
+		return frappe.db.count("Event", {"starts_on": [">=", nowdate()]})
 
-	from frappe.utils import nowdate
-	return frappe.db.count("Event", {"starts_on": [">=", nowdate()]})
+	return 0
 
 
 def get_recent_news(limit=3):
@@ -172,31 +179,54 @@ def get_recent_news(limit=3):
 
 def get_upcoming_events(limit=3):
 	"""Get upcoming events"""
-	if not frappe.db.exists("DocType", "Event"):
-		return []
-
 	from frappe.utils import nowdate
 
-	events = frappe.get_all(
-		"Event",
-		fields=["name", "subject as title", "starts_on", "ends_on", "event_type"],
-		filters={
-			"starts_on": [">=", nowdate()],
-		},
-		order_by="starts_on asc",
-		limit=limit
-	)
+	# Check for Buzz Event first, then fall back to Event
+	if frappe.db.exists("DocType", "Buzz Event"):
+		events = frappe.get_all(
+			"Buzz Event",
+			fields=["name", "title", "start_date", "start_time", "end_date", "end_time", "venue", "category", "route"],
+			filters={
+				"start_date": [">=", nowdate()],
+				"is_published": 1
+			},
+			order_by="start_date asc",
+			limit=limit
+		)
 
-	# Format event data
-	for event in events:
-		if event.get("starts_on"):
-			from frappe.utils import formatdate
-			event["day"] = event["starts_on"].strftime("%d")
-			event["month"] = event["starts_on"].strftime("%b").upper()
-			event["time"] = event["starts_on"].strftime("%I:%M %p")
-			event["date"] = formatdate(event["starts_on"], "dd MMM yyyy")
+		# Format event data for Buzz Event
+		for event in events:
+			if event.get("start_date"):
+				from frappe.utils import formatdate
+				event["day"] = event["start_date"].strftime("%d")
+				event["month"] = event["start_date"].strftime("%b").upper()
+				event["time"] = event.get("start_time") or "TBA"
+				event["date"] = formatdate(event["start_date"], "dd MMM yyyy")
 
-	return events
+		return events
+	elif frappe.db.exists("DocType", "Event"):
+		events = frappe.get_all(
+			"Event",
+			fields=["name", "subject as title", "starts_on", "ends_on", "event_type"],
+			filters={
+				"starts_on": [">=", nowdate()],
+			},
+			order_by="starts_on asc",
+			limit=limit
+		)
+
+		# Format event data for Event
+		for event in events:
+			if event.get("starts_on"):
+				from frappe.utils import formatdate
+				event["day"] = event["starts_on"].strftime("%d")
+				event["month"] = event["starts_on"].strftime("%b").upper()
+				event["time"] = event["starts_on"].strftime("%I:%M %p")
+				event["date"] = formatdate(event["starts_on"], "dd MMM yyyy")
+
+		return events
+
+	return []
 
 
 def get_featured_resources(limit=6):

@@ -9,9 +9,11 @@ import {
   List,
   Loader2,
   MoreVertical,
+  Plus,
   X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface KnowledgeEntry {
   name: string;
@@ -164,6 +166,13 @@ export default function Knowledge() {
                 <List className="h-5 w-5" />
               </button>
             </div>
+            <Link
+              to="/create/knowledge"
+              className="flex items-center gap-2 px-4 py-2 bg-dash-red text-white rounded-md text-sm font-semibold hover:bg-dash-red/90 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              New
+            </Link>
           </div>
         </div>
       </div>

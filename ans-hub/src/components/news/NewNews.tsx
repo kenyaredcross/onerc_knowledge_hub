@@ -16,16 +16,25 @@ import {
   XCircle,
   Send,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FileUploadField } from "../fields/FileUploadField";
 import { LinkField } from "../fields/LinkField";
 import { type Article } from "../../lib/utils";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function NewNews() {
   const navigate = useNavigate();
+  const { userData } = useContext(UserContext);
   const [showForm, setShowForm] = useState(false);
   const [submitAction, setSubmitAction] = useState<"save" | "submit">("save");
+
+  // Check if user has admin or manager roles
+  const userRoles = (userData as any)?.roles?.map((r: any) => r.role) || [];
+  const canPublish =
+    userRoles.includes("LH Admin") ||
+    userRoles.includes("LH Manager") ||
+    userRoles.includes("System Manager");
 
   const [form, setForm] = useState({
     title: "",
@@ -43,13 +52,38 @@ export default function NewNews() {
     is_featured: 0,
   });
 
-  // Fetch all articles (including drafts)
+  // Fetch current user's national society
+  const { data: currentUserData } = useFrappeGetCall<{ message: any }>(
+    "onerc_knowledge_hub.api.article.get_current_user_ns"
+  );
+
+  // Fetch all articles (including drafts) - filtered by national society for managers
   const { data: articlesData, isLoading, mutate } = useFrappeGetCall<{ message: Article[] }>(
-    "onerc_core.api.article.get_articles",
+    "onerc_knowledge_hub.api.article.get_articles_filtered",
     {
       include_drafts: 1,
     }
   );
+
+  // Debug logging for filtering
+  console.log("=== FILTERING DEBUG ===");
+  console.log("Current User:", (userData as any)?.name);
+  console.log("User Roles:", userRoles);
+  console.log("Can Publish:", canPublish);
+  console.log("Current User Data Response:", currentUserData);
+  console.log("User's National Society:", currentUserData?.message?.national_society);
+  console.log("Total Articles Returned:", articlesData?.message?.length || 0);
+
+  if (articlesData?.message) {
+    console.log("\nArticles with Owner and NS comparison:");
+    const userNS = currentUserData?.message?.national_society;
+    articlesData.message.forEach((article: any) => {
+      const ownerNS = article.owner_national_society;
+      const match = userNS === ownerNS ? "✓ MATCH" : "✗ NO MATCH";
+      console.log(`  ${match} | ${article.title}`);
+      console.log(`    Owner: ${article.owner} | Owner NS: ${ownerNS} | User NS: ${userNS}`);
+    });
+  }
 
   const updateField = (field: string, value: any) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -513,19 +547,21 @@ export default function NewNews() {
                     )}
                     Save Draft
                   </button>
-                  <button
-                    type="submit"
-                    onClick={() => setSubmitAction("submit")}
-                    disabled={isSubmitting || isSubmittingDoc}
-                    className="flex-1 inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-dash-red px-8 text-sm font-black uppercase tracking-wider text-white transition-all hover:bg-red-700 disabled:opacity-60"
-                  >
-                    {isSubmitting && submitAction === "submit" ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Send className="h-4 w-4" />
-                    )}
-                    Submit & Publish
-                  </button>
+                  {canPublish && (
+                    <button
+                      type="submit"
+                      onClick={() => setSubmitAction("submit")}
+                      disabled={isSubmitting || isSubmittingDoc}
+                      className="flex-1 inline-flex h-14 items-center justify-center gap-2 rounded-2xl bg-dash-red px-8 text-sm font-black uppercase tracking-wider text-white transition-all hover:bg-red-700 disabled:opacity-60"
+                    >
+                      {isSubmitting && submitAction === "submit" ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
+                      Submit & Publish
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -657,7 +693,7 @@ export default function NewNews() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-3">
-                          {article.docstatus === 0 && (
+                          {canPublish && article.docstatus === 0 && (
                             <button
                               onClick={() => handlePublishFromList(article.name)}
                               disabled={isSubmittingDoc}
