@@ -90,7 +90,7 @@ home_page = "index"
 # ------------
 
 # before_install = "onerc_knowledge_hub.install.before_install"
-# after_install = "onerc_knowledge_hub.install.after_install"
+after_install = "onerc_knowledge_hub.install.after_install"
 
 # Uninstallation
 # ------------

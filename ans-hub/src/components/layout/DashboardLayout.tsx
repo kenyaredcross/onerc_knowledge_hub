@@ -9,7 +9,6 @@ import {
   Globe2,
   ChevronLeft,
   ChevronRight,
-  Bell,
   Search,
   Menu,
   X,
@@ -61,6 +60,13 @@ export default function DashboardLayout() {
 
   const orgSettings = orgData?.message || orgData || {};
   const organizationName = orgSettings.organization_name || "";
+
+  // Check if user has admin or manager roles
+  const userRoles = userData?.roles?.map((r: any) => r.role) || [];
+  const isAdminOrManager =
+    userRoles.includes("LH Admin") ||
+    userRoles.includes("LH Manager") ||
+    userRoles.includes("System Manager");
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -246,7 +252,16 @@ export default function DashboardLayout() {
                 Management.
               </div>
             )}
-            {managementItems.map((item) => {
+            {managementItems
+              .filter((item) => {
+                // Show "Users" and "Desk" only to admins and managers
+                if (item.path === "/users" || item.path === "/app") {
+                  return isAdminOrManager;
+                }
+                // Show other management items (FAQs) to everyone
+                return true;
+              })
+              .map((item) => {
               const active = isActive(item);
               const className = [
                 "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
