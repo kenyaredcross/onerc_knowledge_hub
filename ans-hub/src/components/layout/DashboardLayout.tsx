@@ -37,6 +37,7 @@ const createItems = [
   { path: "/create/knowledge", label: "Knowledge", icon: BookOpen },
   { path: "/create/learning", label: "Learning", icon: GraduationCap },
   { path: "/create/news", label: "News & Stories", icon: Newspaper },
+  { path: "/create/event", label: "Event", icon: Calendar },
 ];
 
 const managementItems = [

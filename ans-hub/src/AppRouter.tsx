@@ -12,6 +12,7 @@ import ErrorPage403 from "./components/error/ErrorPage403.tsx";
 import ErrorPage404 from "./components/error/ErrorPage404.tsx";
 import EventDetail from "./components/events/EventDetail.tsx";
 import EventsIndex from "./components/events/EventsIndex.tsx";
+import NewEvent from "./components/events/NewEvent.tsx";
 import FAQs from "./components/faqs/FAQs.tsx";
 import Knowledge from "./components/knowledge/Knowledge.tsx";
 import KnowledgeDetail from "./components/knowledge/KnowledgeDetail.tsx";
@@ -52,6 +53,7 @@ const AppRouter = () => {
             <Route path="/create/news" element={<NewNews />} />
             <Route path="/events" element={<EventsIndex />} />
             <Route path="/events/:slug" element={<EventDetail />} />
+            <Route path="/create/event" element={<NewEvent />} />
             <Route path="/knowledge" element={<Knowledge />} />
             <Route path="/knowledge/filter/:type" element={<KnowledgeFiltered />} />
             <Route path="/knowledge/:slug" element={<KnowledgeDetail />} />
