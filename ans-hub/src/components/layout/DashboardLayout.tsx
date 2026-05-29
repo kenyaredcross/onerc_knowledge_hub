@@ -361,6 +361,19 @@ export default function DashboardLayout() {
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>
 
+          {/* Desktop sidebar toggle */}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="hidden lg:flex h-8 w-8 items-center justify-center rounded-md text-gray-600 hover:bg-gray-100 hover:text-dash-red transition-colors"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? (
+              <ChevronRight className="h-4.5 w-4.5 font-bold stroke-[3]" />
+            ) : (
+              <ChevronLeft className="h-4.5 w-4.5 font-bold stroke-[3]" />
+            )}
+          </button>
+
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5 text-sm">
             <Link
@@ -392,7 +405,7 @@ export default function DashboardLayout() {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto relative">
           <Outlet />
         </main>
       </div>
