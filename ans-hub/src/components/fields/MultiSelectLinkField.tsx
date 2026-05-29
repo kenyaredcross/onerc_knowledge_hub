@@ -70,25 +70,15 @@ export const MultiSelectLinkField = ({
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-  const { data: metaData, isLoading: loadingMeta } = useFrappeGetCall(
-    "onerc_knowledge_hub.api.register.get_link_field_target",
-    {
-      doctype: parentDoctype,
-      fieldname: fieldname,
-    },
-    // Skip fetching metadata if targetDoctype is already provided
-    { skip: !!providedTargetDoctype }
-  );
-
   const { call: searchLink } = useFrappePostCall(
     "frappe.desk.search.search_link",
   );
 
   React.useEffect(() => {
-    if (!providedTargetDoctype && metaData?.message?.options) {
-      setTargetDoctype(metaData.message.options);
+    if (providedTargetDoctype) {
+      setTargetDoctype(providedTargetDoctype);
     }
-  }, [metaData, providedTargetDoctype]);
+  }, [providedTargetDoctype]);
 
   const calculatePosition = React.useCallback(() => {
     if (!buttonRef.current || !open) return;
@@ -206,7 +196,7 @@ export const MultiSelectLinkField = ({
               />
             </div>
             <div className="max-h-[320px] overflow-y-auto p-2">
-              {loading || loadingMeta ? (
+              {loading ? (
                 <div className="py-10 text-center text-sm text-gray-500">
                   <Loader2 className="mx-auto mb-2 h-4 w-4 animate-spin" />
                   Loading...
@@ -279,7 +269,7 @@ export const MultiSelectLinkField = ({
       <Button
         ref={buttonRef}
         type="button"
-        disabled={disabled || loadingMeta}
+        disabled={disabled}
         onClick={() => setOpen((o) => !o)}
         style={{
           minHeight: "56px",

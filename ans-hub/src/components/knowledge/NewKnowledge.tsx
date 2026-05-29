@@ -171,6 +171,7 @@ export default function NewKnowledge() {
               <div className="md:col-span-1">
                 <MultiSelectLinkField
                   doctype="National Society Detail"
+                  targetDoctype="National Society"
                   label="Contributing NS"
                   value={form.contributing_ns}
                   onChange={(val) => updateField("contributing_ns", val)}
