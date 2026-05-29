@@ -211,9 +211,9 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                   <option value="">
                     {loadingSocieties ? "Loading..." : "Select your organization"}
                   </option>
-                  {nationalSocieties?.message?.map((society: { name: string; full_official_name: string; short_name: string; country: string }) => (
+                  {nationalSocieties?.message?.map((society: { name: string; national_society_name: string; abbreviation: string; country: string }) => (
                     <option key={society.name} value={society.name}>
-                      {society.full_official_name}
+                      {society.national_society_name}
                     </option>
                   ))}
                 </select>
