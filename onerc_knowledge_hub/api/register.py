@@ -646,6 +646,25 @@ def get_other_languages():
 	)
 
 
+@frappe.whitelist()
+def get_link_field_target(doctype, fieldname):
+	"""
+	Get the target doctype for a Link field.
+	Safe alternative to querying DocField directly.
+	"""
+	try:
+		meta = frappe.get_meta(doctype)
+		field = meta.get_field(fieldname)
+
+		if field and field.fieldtype == "Link":
+			return {"options": field.options}
+
+		return {"options": None}
+	except Exception as e:
+		frappe.log_error(f"Error getting link field target: {str(e)}")
+		return {"options": None}
+
+
 # ================== Password Reset Functions ==================
 
 @frappe.whitelist(allow_guest=True)
@@ -771,7 +790,7 @@ def send_password_reset_email(user_name, first_name, email, reset_key):
 	"""Send password reset email with reset link."""
 	try:
 		# Generate reset link
-		reset_link = frappe.utils.get_url(f"/reset-password?token={reset_key}")
+		reset_link = frappe.utils.get_url(f"/ans-hub/reset-password?token={reset_key}")
 
 		# Email subject and message
 		subject = "Reset Your Localisation Hub Password"

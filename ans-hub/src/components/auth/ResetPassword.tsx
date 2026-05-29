@@ -44,7 +44,10 @@ export default function ResetPassword() {
       }
 
       try {
-        const result = await validateToken({ token });
+        const response = await validateToken({ token });
+        // Handle both direct response and wrapped response
+        const result = response?.message || response;
+
         if (result?.valid) {
           setTokenValid(true);
           setUserEmail(result.email || "");

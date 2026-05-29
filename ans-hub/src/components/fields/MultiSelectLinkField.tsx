@@ -71,14 +71,10 @@ export const MultiSelectLinkField = ({
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   const { data: metaData, isLoading: loadingMeta } = useFrappeGetCall(
-    "frappe.client.get_value",
+    "onerc_knowledge_hub.api.register.get_link_field_target",
     {
-      doctype: "DocField",
-      filters: {
-        parent: parentDoctype,
-        fieldtype: "Link",
-      },
-      fieldname: "options",
+      doctype: parentDoctype,
+      fieldname: fieldname,
     },
     // Skip fetching metadata if targetDoctype is already provided
     { skip: !!providedTargetDoctype }
