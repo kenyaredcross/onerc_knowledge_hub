@@ -146,3 +146,50 @@ def get_event_details(event_route):
 		)
 
 	return event_data
+
+
+@frappe.whitelist(allow_guest=True)
+def get_past_events():
+	"""Get all past/previous events"""
+	now = frappe.utils.now_datetime()
+
+	past_events = frappe.get_all(
+		"Buzz Event",
+		filters=[
+			["is_published", "=", 1],
+			["end_date", "<", now.date()],
+		],
+		fields=[
+			"name",
+			"title",
+			"category",
+			"start_date",
+			"start_time",
+			"time_zone",
+			"end_date",
+			"end_time",
+			"short_description",
+			"about",
+			"venue",
+			"host",
+			"free_webinar",
+			"medium",
+			"banner_image",
+			"is_published",
+			"route",
+		],
+		order_by="start_date desc",  # Most recent first
+		ignore_permissions=True,
+	)
+
+	# Format time to 12-hour format with AM/PM
+	for event in past_events:
+		if event.get("start_time"):
+			time_obj = datetime.strptime(str(event["start_time"]), "%H:%M:%S")
+			event["start_time"] = time_obj.strftime("%I:%M %p")
+
+		if event.get("end_time"):
+			time_obj = datetime.strptime(str(event["end_time"]), "%H:%M:%S")
+			event["end_time"] = time_obj.strftime("%I:%M %p")
+
+	return past_events

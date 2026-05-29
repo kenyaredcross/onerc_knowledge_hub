@@ -9,7 +9,7 @@ import {
   Star,
   Users,
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 const formatBadge = {
@@ -25,9 +25,17 @@ const formatColor = {
 };
 
 export default function EventsIndex() {
+  const [showPastEvents, setShowPastEvents] = useState(false);
+
   const { data, isLoading } = useFrappeGetCall(
     "onerc_knowledge_hub.api.events.get_events",
     {},
+  );
+
+  const { data: pastEventsData, isLoading: pastEventsLoading } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.events.get_past_events",
+    {},
+    showPastEvents ? undefined : { enabled: false } // Only fetch when needed
   );
 
   const { featuredEvent, upcomingEvents } = useMemo(() => {
@@ -37,6 +45,10 @@ export default function EventsIndex() {
       upcomingEvents: result.upcoming || [],
     };
   }, [data]);
+
+  const pastEvents = useMemo(() => {
+    return pastEventsData?.message || [];
+  }, [pastEventsData]);
 
   const truncateText = (text: string, limit: number) => {
     if (!text) return "";
@@ -202,59 +214,153 @@ export default function EventsIndex() {
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-xl font-bold text-gray-900 pb-3 border-b border-gray-100">
-            Upcoming Schedule
-          </h2>
-          <div className="grid gap-4">
-            {upcomingEvents.map((e: any) => (
-              <Link
-                key={e.name}
-                to={`/events/${e.route}`}
-                className="group flex items-start gap-6 rounded border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-dash-red/30"
+          {/* Toggle between Upcoming and Past Events */}
+          <div className="flex items-center justify-between pb-3 border-b border-gray-100">
+            <h2 className="text-xl font-bold text-gray-900">
+              {showPastEvents ? "Past Events" : "Upcoming Schedule"}
+            </h2>
+            <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setShowPastEvents(false)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  !showPastEvents
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
               >
-                {e.banner_image && (
-                  <div className="relative h-32 md:w-48 md:h-28 shrink-0 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
-                    <img
-                      src={e.banner_image}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      alt=""
-                    />
-                  </div>
-                )}
-
-                <div className="flex-1 py-0.5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className="text-xs font-black text-dash-red uppercase">
-                      {new Date(e.start_date).toLocaleDateString("default", {
-                        day: "2-digit",
-                        month: "short",
-                      })}
-                    </span>
-                    <span
-                      className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${formatBadge[e.medium]}`}
-                    >
-                      {e.medium}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-900 group-hover:text-dash-red transition-colors mb-2">
-                    {e.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-3">
-                    {truncateText(e.short_description, 120)}
-                  </p>
-                  <div className="flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="h-3 w-3 text-dash-red" />{" "}
-                      {e.venue || "Online"}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="h-3 w-3" /> {e.start_time}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                Upcoming
+              </button>
+              <button
+                onClick={() => setShowPastEvents(true)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  showPastEvents
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Past Events
+              </button>
+            </div>
           </div>
+
+          {/* Events List */}
+          {showPastEvents ? (
+            // Past Events
+            pastEventsLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <Loader2 className="h-6 w-6 animate-spin text-dash-red" />
+              </div>
+            ) : pastEvents.length > 0 ? (
+              <div className="grid gap-4">
+                {pastEvents.map((e: any) => (
+                  <Link
+                    key={e.name}
+                    to={`/events/${e.route}`}
+                    className="group flex items-start gap-6 rounded border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-dash-red/30"
+                  >
+                    {e.banner_image && (
+                      <div className="relative h-32 md:w-48 md:h-28 shrink-0 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
+                        <img
+                          src={e.banner_image}
+                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          alt=""
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex-1 py-0.5">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xs font-black text-gray-500 uppercase">
+                          {new Date(e.start_date).toLocaleDateString("default", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </span>
+                        <span
+                          className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${formatBadge[e.medium] || "bg-gray-100 text-gray-700"}`}
+                        >
+                          {e.medium}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-bold text-gray-900 group-hover:text-dash-red transition-colors mb-2">
+                        {e.title}
+                      </h3>
+                      <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-3">
+                        {truncateText(e.short_description, 120)}
+                      </p>
+                      <div className="flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        <span className="flex items-center gap-1.5">
+                          <MapPin className="h-3 w-3 text-dash-red" />{" "}
+                          {e.venue || "Online"}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <Clock className="h-3 w-3" /> {e.start_time}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <Calendar className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                <p className="text-gray-500">No past events found.</p>
+              </div>
+            )
+          ) : (
+            // Upcoming Events
+            <div className="grid gap-4">
+              {upcomingEvents.map((e: any) => (
+                <Link
+                  key={e.name}
+                  to={`/events/${e.route}`}
+                  className="group flex items-start gap-6 rounded border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-dash-red/30"
+                >
+                  {e.banner_image && (
+                    <div className="relative h-32 md:w-48 md:h-28 shrink-0 rounded-xl overflow-hidden bg-gray-100 shadow-sm">
+                      <img
+                        src={e.banner_image}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        alt=""
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex-1 py-0.5">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-xs font-black text-dash-red uppercase">
+                        {new Date(e.start_date).toLocaleDateString("default", {
+                          day: "2-digit",
+                          month: "short",
+                        })}
+                      </span>
+                      <span
+                        className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${formatBadge[e.medium] || "bg-gray-100 text-gray-700"}`}
+                      >
+                        {e.medium}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-dash-red transition-colors mb-2">
+                      {e.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-3">
+                      {truncateText(e.short_description, 120)}
+                    </p>
+                    <div className="flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                      <span className="flex items-center gap-1.5">
+                        <MapPin className="h-3 w-3 text-dash-red" />{" "}
+                        {e.venue || "Online"}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="h-3 w-3" /> {e.start_time}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

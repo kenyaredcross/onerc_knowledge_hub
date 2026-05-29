@@ -127,7 +127,8 @@
    "fieldtype": "Table MultiSelect",
    "ignore_user_permissions": 1,
    "label": "Contributing NS",
-   "options": "National Society Detail"
+   "options": "National Society Detail",
+   "max_height": "400px"
   },
   {
    "fieldname": "column_break_attrib",

@@ -142,13 +142,12 @@ after_install = "onerc_knowledge_hub.install.after_install"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+	"User": {
+		"before_insert": "onerc_knowledge_hub.overrides.user_hooks.add_app_roles_before_insert",
+		"after_insert": "onerc_knowledge_hub.overrides.user_hooks.restore_save_method"
+	}
+}
 
 # Scheduled Tasks
 # ---------------

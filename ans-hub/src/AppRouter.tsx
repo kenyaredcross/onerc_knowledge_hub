@@ -6,6 +6,7 @@ import LoginForm from "./components/auth/Login.tsx";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute.tsx";
 import ResetPassword from "./components/auth/ResetPassword.tsx";
 import SetPassword from "./components/auth/SetPassword.tsx";
+import Connect from "./components/connect/Connect.tsx";
 import Home from "./components/dashboard/Home.tsx";
 import ErrorPage403 from "./components/error/ErrorPage403.tsx";
 import ErrorPage404 from "./components/error/ErrorPage404.tsx";
@@ -66,6 +67,7 @@ const AppRouter = () => {
               element={<NationalSocietyDetail />}
             />
             <Route path="/pillars" element={<Pillars />} />
+            <Route path="/connect" element={<Connect />} />
             <Route path="/users" element={<UsersManagement />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/profile" element={<Profile />} />

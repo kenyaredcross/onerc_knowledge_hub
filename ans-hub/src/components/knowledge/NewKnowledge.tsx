@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FileUploadField } from "../fields/FileUploadField";
 import { LinkField } from "../fields/LinkField";
 import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
+import { RichTextEditor } from "../fields/RichTextEditor";
 
 export default function NewKnowledge() {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ export default function NewKnowledge() {
 
   const linkFieldClasses = {
     buttonClassName:
-      "h-14 rounded-2xl border-gray-200 bg-gray-50 text-gray-900",
+      "rounded-2xl border-gray-200 bg-gray-50 text-gray-900",
     dropdownClassName: "rounded-2xl border border-gray-200 shadow-2xl",
     inputClassName: "h-12 text-sm",
     optionClassName: "rounded-xl",
@@ -219,14 +220,11 @@ export default function NewKnowledge() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Full Description
-                </label>
-                <textarea
-                  rows={6}
+                <RichTextEditor
+                  label="Full Description"
                   value={form.description}
-                  onChange={(e) => updateField("description", e.target.value)}
-                  className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm"
+                  onChange={(val) => updateField("description", val)}
+                  placeholder="Provide a detailed description of this resource..."
                 />
               </div>
             </div>

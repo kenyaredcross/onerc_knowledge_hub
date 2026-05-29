@@ -30,7 +30,7 @@ const navItems = [
   { path: "/learning", label: "Learning Hub", icon: GraduationCap },
   { path: "/national-societies", label: "National Societies", icon: Globe2 },
   { path: "/pillars", label: "Pillars", icon: Layers },
-  { path: "/raven", label: "Connect", icon: MessageSquare, external: true },
+  { path: "/connect", label: "Connect", icon: MessageSquare },
 ];
 
 const createItems = [
@@ -363,7 +363,12 @@ export default function DashboardLayout() {
 
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5 text-sm">
-            <span className="text-gray-400">Hub</span>
+            <Link
+              to="/home"
+              className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+            >
+              Hub
+            </Link>
             <ChevronRight className="h-3.5 w-3.5 text-gray-300" />
             <span className="font-medium text-gray-800">{currentPage}</span>
           </div>
