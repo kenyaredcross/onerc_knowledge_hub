@@ -771,7 +771,7 @@ def send_password_reset_email(user_name, first_name, email, reset_key):
 	"""Send password reset email with reset link."""
 	try:
 		# Generate reset link
-		reset_link = frappe.utils.get_url(f"/reset-password?token={reset_key}")
+		reset_link = frappe.utils.get_url(f"/ans-hub/reset-password?token={reset_key}")
 
 		# Email subject and message
 		subject = "Reset Your Localisation Hub Password"
