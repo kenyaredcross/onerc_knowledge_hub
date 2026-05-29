@@ -10,8 +10,9 @@ import {
   Users,
   Plus,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
 
 const formatBadge = {
   Webinar: "bg-blue-50 text-blue-700 border border-blue-200",
@@ -27,6 +28,14 @@ const formatColor = {
 
 export default function EventsIndex() {
   const [showPastEvents, setShowPastEvents] = useState(false);
+  const { userData } = useContext(UserContext);
+
+  // Check if user has admin or manager roles
+  const userRoles = (userData as any)?.roles?.map((r: any) => r.role) || [];
+  const canCreateEvent =
+    userRoles.includes("LH Admin") ||
+    userRoles.includes("LH Manager") ||
+    userRoles.includes("System Manager");
 
   const { data, isLoading } = useFrappeGetCall(
     "onerc_knowledge_hub.api.events.get_events",
@@ -89,13 +98,15 @@ export default function EventsIndex() {
                 Convening the network
               </h1>
             </div>
-            <Link
-              to="/create/event"
-              className="flex items-center gap-2 px-4 py-2.5 bg-dash-red text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
-            >
-              <Plus className="h-4 w-4" />
-              <span>New Event</span>
-            </Link>
+            {canCreateEvent && (
+              <Link
+                to="/create/event"
+                className="flex items-center gap-2 px-4 py-2.5 bg-dash-red text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span>New Event</span>
+              </Link>
+            )}
           </div>
         </div>
       </div>

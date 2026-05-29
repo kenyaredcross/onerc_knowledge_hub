@@ -37,7 +37,7 @@ const createItems = [
   { path: "/create/knowledge", label: "Knowledge", icon: BookOpen },
   { path: "/create/learning", label: "Learning", icon: GraduationCap },
   { path: "/create/news", label: "News & Stories", icon: Newspaper },
-  { path: "/create/event", label: "Event", icon: Calendar },
+  { path: "/create/event", label: "Event", icon: Calendar, adminOnly: true },
 ];
 
 const managementItems = [
@@ -210,7 +210,9 @@ export default function DashboardLayout() {
                 Create
               </div>
             )}
-            {createItems.map((item) => {
+            {createItems
+              .filter((item: any) => !item.adminOnly || isAdminOrManager)
+              .map((item) => {
               const active = isActive(item);
               return (
                 <Link
