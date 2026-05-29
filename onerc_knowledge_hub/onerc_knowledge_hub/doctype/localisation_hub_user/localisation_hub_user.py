@@ -42,7 +42,8 @@ def create_user(name, email=None):
 	if frappe.db.exists("User", email):
 		frappe.throw(frappe._("User {0} already exists").format(email))
 
-	# Create the user disabled
+	# Create the user disabled with LH User role
+	# Our before_insert hook will automatically add app-specific roles
 	user = frappe.get_doc({
 		"doctype": "User",
 		"email": email,
@@ -52,8 +53,17 @@ def create_user(name, email=None):
 		"last_name": usr.last_name,
 		"phone": usr.phone_number,
 	})
+
+	# Add LH User role
 	user.append("roles", {"role": "LH User"})
+
+	user.flags.ignore_permissions = True
+
+	# Insert user - our before_insert hook will add app roles before insert
+	# This prevents timestamp conflicts from app hooks (like Buzz)
 	user.insert()
+	frappe.db.commit()
+
 	usr.db_set("user_id", user.name)
 
 	return user.name

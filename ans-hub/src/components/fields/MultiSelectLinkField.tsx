@@ -285,22 +285,26 @@ export const MultiSelectLinkField = ({
         type="button"
         disabled={disabled || loadingMeta}
         onClick={() => setOpen((o) => !o)}
+        style={{
+          minHeight: "56px",
+          maxHeight: "300px",
+        }}
         className={cn(
-          "h-auto min-h-[56px] w-full justify-between rounded-2xl border bg-gray-50 px-4 py-3 text-left font-normal text-gray-900 transition-all",
+          "h-auto overflow-y-auto w-full justify-between rounded-2xl border bg-gray-50 px-4 py-3 text-left font-normal text-gray-900 transition-all",
           open && "border-dash-red ring-4 ring-dash-red/10 bg-white",
           buttonClassName,
         )}
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 flex-1 pr-2">
           {value.length > 0 ? (
             value.map((v) => (
               <span
                 key={v}
-                className="flex items-center gap-1.5 rounded-lg bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-300"
+                className="flex items-center gap-1.5 rounded-lg bg-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-300"
               >
                 {v}
                 <X
-                  className="h-3 w-3 cursor-pointer"
+                  className="h-3 w-3 cursor-pointer hover:text-red-600"
                   onClick={(e) => {
                     e.stopPropagation();
                     onChange(value.filter((item) => item !== v));
@@ -316,7 +320,7 @@ export const MultiSelectLinkField = ({
         </div>
         <ChevronsUpDown
           className={cn(
-            "ml-2 h-4 w-4 shrink-0 text-gray-400 transition-transform",
+            "ml-2 h-4 w-4 shrink-0 text-gray-400 transition-transform self-start mt-1",
             open && "rotate-180",
           )}
         />

@@ -324,79 +324,63 @@ export default function AboutPage() {
 
       {/* Membership */}
       <section className="mx-auto max-w-7xl px-6 py-20 md:py-28">
-        <div className="grid gap-12 md:grid-cols-[1fr_2fr]">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-accent">Membership</p>
-            <h2 className="mt-3 text-4xl font-semibold md:text-5xl">
-              {memberCount} National Societies. {partnerCount} Partners. One Alliance.
-            </h2>
-            <p className="mt-5 text-muted-foreground">
-              Aligned leadership and coordinated action accelerating localisation across the continent.
-            </p>
+        <div className="text-center mb-12">
+          <p className="text-xs font-semibold uppercase tracking-widest text-accent">Membership</p>
+
+          {/* Stats in separate lines */}
+          <div className="mt-8 space-y-3 text-3xl md:text-4xl font-semibold text-foreground">
+            <div>{memberCount} National Societies</div>
+            <div>{partnerCount} Partners</div>
           </div>
-          <div className="space-y-8">
-            {members.length > 0 && (
-              <div>
-                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                  African National Societies
-                </h3>
-                <div className="flex flex-wrap gap-4">
-                  {members.map((m: any) => (
-                    <div
-                      key={m.name}
-                      className="group relative flex items-center justify-center"
-                      title={m.national_society_name}
-                    >
-                      {m.logo ? (
-                        <div className="h-20 w-20 rounded-lg bg-card p-2 shadow-sm hover:shadow-md transition-all flex items-center justify-center overflow-hidden">
-                          <img
-                            src={m.logo}
-                            alt={m.national_society_name}
-                            className="h-full w-full object-contain"
-                          />
-                        </div>
-                      ) : (
-                        <div className="h-20 w-20 rounded-lg flex items-center justify-center bg-primary/10 shadow-sm hover:shadow-md transition-all">
-                          <span className="text-xs font-bold text-primary text-center px-2">
-                            {m.abbreviation || m.national_society_name}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            {partners.length > 0 && (
-              <div>
-                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                  Consortium Partners
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {partners.map((p: string) => (
-                    <span key={p} className="rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground">
-                      {p}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {nonMembers.length > 0 && (
-              <div>
-                <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                  Non-member Societies
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {nonMembers.map((nm: string) => (
-                    <span key={nm} className="rounded-full border border-border bg-muted px-4 py-2 text-sm font-medium">
-                      {nm}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+
+          {/* One Alliance heading */}
+          <h2 className="mt-8 text-5xl md:text-6xl font-bold text-primary">
+            One Alliance
+          </h2>
+
+          <p className="mt-6 text-muted-foreground max-w-2xl mx-auto">
+            Aligned leadership and coordinated action accelerating localisation across the continent.
+          </p>
         </div>
+
+        {/* National Societies Carousel */}
+        {members.length > 0 && (
+          <div className="mt-12">
+            <h3 className="mb-6 text-center text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              African National Societies
+            </h3>
+            <div className="relative overflow-hidden">
+              <div className="flex gap-6 animate-scroll-slow pb-4">
+                {/* Duplicate members for seamless loop */}
+                {[...members, ...members].map((m: any, idx: number) => (
+                  <div
+                    key={`${m.name}-${idx}`}
+                    className="group relative flex items-center justify-center flex-shrink-0"
+                    title={m.national_society_name}
+                  >
+                    {m.logo ? (
+                      <div className="h-24 w-24 rounded-lg bg-card p-3 shadow-sm hover:shadow-md transition-all flex items-center justify-center overflow-hidden">
+                        <img
+                          src={m.logo}
+                          alt={m.national_society_name}
+                          className="h-full w-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      <div className="h-24 w-24 rounded-lg flex items-center justify-center bg-primary/10 shadow-sm hover:shadow-md transition-all">
+                        <span className="text-xs font-bold text-primary text-center px-2">
+                          {m.abbreviation || m.national_society_name}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+     
       </section>
 
       {/* Steering Group */}
