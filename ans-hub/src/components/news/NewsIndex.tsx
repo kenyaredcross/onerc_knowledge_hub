@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useMemo, useCallback, useState, useEffect, useRef } from "react";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
-import { Newspaper, TrendingUp, Activity, ArrowUpRight, ChevronRight, BookOpen, Filter, Star, ChevronLeft, Heart, MessageCircle, Loader2 } from "lucide-react";
+import { Newspaper, TrendingUp, Activity, ArrowUpRight, ChevronRight, BookOpen, Filter, Star, ChevronLeft, Heart, MessageCircle, Loader2, Search, Edit3 } from "lucide-react";
 import { pillarColor, publications } from "../../lib/site-data";
 import { mapArticleToNewsItem, type Article } from "../../lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
@@ -24,6 +24,9 @@ export default function NewsIndex() {
 
   // Sort state
   const [sortBy, setSortBy] = useState<'latest' | 'oldest'>('latest');
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Carousel setup
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -79,7 +82,7 @@ export default function NewsIndex() {
   // Transform API data to component format with cover images and engagement data
   const news = useMemo(() => {
     if (!allArticles.length) return [];
-    const mappedArticles = allArticles.map(article => ({
+    let mappedArticles = allArticles.map(article => ({
       ...mapArticleToNewsItem(article),
       name: article.name, // Keep the article name for Comments component
       cover_image: article.cover_image,
@@ -89,13 +92,24 @@ export default function NewsIndex() {
       published_on: article.published_on
     }));
 
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      mappedArticles = mappedArticles.filter(article =>
+        article.title.toLowerCase().includes(query) ||
+        article.excerpt.toLowerCase().includes(query) ||
+        article.tag.toLowerCase().includes(query) ||
+        article.place.toLowerCase().includes(query)
+      );
+    }
+
     // Sort articles based on sortBy state
     return mappedArticles.sort((a, b) => {
       const dateA = new Date(a.published_on || 0).getTime();
       const dateB = new Date(b.published_on || 0).getTime();
       return sortBy === 'latest' ? dateB - dateA : dateA - dateB;
     });
-  }, [allArticles, sortBy]);
+  }, [allArticles, sortBy, searchQuery]);
 
   // Load more articles when scrolling
   const loadMoreArticles = useCallback(async () => {
@@ -473,27 +487,27 @@ export default function NewsIndex() {
 
           {/* Main Feed - Center */}
           <div className="lg:col-span-6 space-y-4">
-            {/* Create Post Card */}
+            {/* Search Bar */}
             <div className="bg-white rounded border border-gray-200 p-4">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-600">
-                  A
-                </div>
-                <Link
-                  to="/create/news"
-                  className="flex-1 text-left px-4 py-3 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
-                >
-                  Start a post
-                </Link>
-              </div>
-              <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
-                <Link
-                  to="/create/news"
-                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded transition-colors"
-                >
-                  <Newspaper className="h-4 w-4 text-dash-red" />
-                  <span>Write article</span>
-                </Link>
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search news and stories..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-dash-red focus:border-transparent transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -697,6 +711,17 @@ export default function NewsIndex() {
 
           {/* Right Sidebar - Sticky */}
           <div className="lg:col-span-3 space-y-4 lg:sticky lg:top-6 lg:self-start">
+            {/* Create Post Button */}
+            <div className="bg-white rounded border border-gray-200 p-4">
+              <Link
+                to="/create/news"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-dash-red text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
+              >
+                <Edit3 className="h-4 w-4" />
+                <span>Start a Post</span>
+              </Link>
+            </div>
+
             {/* Featured News */}
             <div className="bg-white rounded border border-gray-200 p-4">
               <div className="flex items-center justify-between mb-4">

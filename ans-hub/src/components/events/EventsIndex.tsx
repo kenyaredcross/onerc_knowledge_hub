@@ -8,9 +8,11 @@ import {
   MapPin,
   Star,
   Users,
+  Plus,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { UserContext } from "../../contexts/UserContext";
 
 const formatBadge = {
   Webinar: "bg-blue-50 text-blue-700 border border-blue-200",
@@ -26,6 +28,14 @@ const formatColor = {
 
 export default function EventsIndex() {
   const [showPastEvents, setShowPastEvents] = useState(false);
+  const { userData } = useContext(UserContext);
+
+  // Check if user has admin or manager roles
+  const userRoles = (userData as any)?.roles?.map((r: any) => r.role) || [];
+  const canCreateEvent =
+    userRoles.includes("LH Admin") ||
+    userRoles.includes("LH Manager") ||
+    userRoles.includes("System Manager");
 
   const { data, isLoading } = useFrappeGetCall(
     "onerc_knowledge_hub.api.events.get_events",
@@ -76,15 +86,28 @@ export default function EventsIndex() {
     <div className="min-h-full bg-white pb-12">
       <div className="border-b border-gray-100 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <div className="flex items-center gap-2 mb-2">
-            <Calendar className="h-4 w-4 text-dash-red" />
-            <span className="text-[10px] font-black uppercase tracking-wider text-dash-red">
-              Events &amp; Gatherings
-            </span>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar className="h-4 w-4 text-dash-red" />
+                <span className="text-[10px] font-black uppercase tracking-wider text-dash-red">
+                  Events &amp; Gatherings
+                </span>
+              </div>
+              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+                Convening the network
+              </h1>
+            </div>
+            {canCreateEvent && (
+              <Link
+                to="/create/event"
+                className="flex items-center gap-2 px-4 py-2.5 bg-dash-red text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span>New Event</span>
+              </Link>
+            )}
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
-            Convening the network
-          </h1>
         </div>
       </div>
 
