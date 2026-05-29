@@ -2371,6 +2371,9 @@ video {
 .fill-foreground {
   fill: oklch(0.15 0.05 260);
 }
+.stroke-\[3\] {
+  stroke-width: 3;
+}
 .stroke-\[4\] {
   stroke-width: 4;
 }
