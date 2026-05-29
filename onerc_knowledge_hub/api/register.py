@@ -646,6 +646,25 @@ def get_other_languages():
 	)
 
 
+@frappe.whitelist()
+def get_link_field_target(doctype, fieldname):
+	"""
+	Get the target doctype for a Link field.
+	Safe alternative to querying DocField directly.
+	"""
+	try:
+		meta = frappe.get_meta(doctype)
+		field = meta.get_field(fieldname)
+
+		if field and field.fieldtype == "Link":
+			return {"options": field.options}
+
+		return {"options": None}
+	except Exception as e:
+		frappe.log_error(f"Error getting link field target: {str(e)}")
+		return {"options": None}
+
+
 # ================== Password Reset Functions ==================
 
 @frappe.whitelist(allow_guest=True)
