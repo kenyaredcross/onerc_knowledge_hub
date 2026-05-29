@@ -582,8 +582,8 @@ def get_national_societies():
 	"""Returns all National Society records"""
 	return frappe.get_all(
 		"National Society",
-		fields=["name", "full_official_name", "short_name", "country"],
-		order_by="full_official_name asc",
+		fields=["name", "national_society_name", "abbreviation", "country"],
+		order_by="national_society_name asc",
 	)
 
 
