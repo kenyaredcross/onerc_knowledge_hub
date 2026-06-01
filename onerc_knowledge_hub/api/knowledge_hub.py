@@ -70,7 +70,14 @@ def get_knowledge_hub_categories():
 @frappe.whitelist(allow_guest=True)
 def get_knowledge_hub_details(name):
 	entry = frappe.get_doc("Knowledge Hub", name)
-	return entry.as_dict()
+	result = entry.as_dict()
+
+	# Replace uploaded_by email with full name
+	if result.get("uploaded_by"):
+		full_name = frappe.db.get_value("User", entry.uploaded_by, "full_name")
+		result["uploaded_by"] = full_name or entry.uploaded_by
+
+	return result
 
 
 @frappe.whitelist()

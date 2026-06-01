@@ -9,7 +9,6 @@ import {
   Globe2,
   ChevronLeft,
   ChevronRight,
-  Search,
   Menu,
   X,
   Users,
@@ -390,12 +389,6 @@ export default function DashboardLayout() {
           </div>
 
           <div className="ml-auto flex items-center gap-2">
-            {/* Search */}
-            <div className="hidden sm:flex items-center gap-2 h-8 w-52 rounded-md border border-gray-200 bg-gray-50 px-3 text-sm text-gray-400">
-              <Search className="h-3.5 w-3.5 shrink-0" />
-              <span>Search…</span>
-            </div>
-
             {/* Avatar */}
             <button
               onClick={() => navigate("/profile")}
