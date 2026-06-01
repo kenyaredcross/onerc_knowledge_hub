@@ -72,11 +72,10 @@ def get_knowledge_hub_details(name):
 	entry = frappe.get_doc("Knowledge Hub", name)
 	result = entry.as_dict()
 
-	# Ensure uploaded_by shows email instead of full name
+	# Replace uploaded_by email with full name
 	if result.get("uploaded_by"):
-		# uploaded_by is already the email (User doctype name is email)
-		# Just make sure it's not being replaced with full_name
-		result["uploaded_by"] = entry.uploaded_by
+		full_name = frappe.db.get_value("User", entry.uploaded_by, "full_name")
+		result["uploaded_by"] = full_name or entry.uploaded_by
 
 	return result
 
