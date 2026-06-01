@@ -7,7 +7,6 @@ import {
   Grid3X3,
   List,
   Loader2,
-  MoreVertical,
   Plus,
 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -257,16 +256,8 @@ export default function Knowledge() {
                           ? new Date(entry.published_date).toLocaleDateString()
                           : "N/A"}
                       </div>
-                      <div className="col-span-2 flex items-center text-sm text-gray-600">
+                      <div className="col-span-3 flex items-center text-sm text-gray-600">
                         {entry.download_count || 0} downloads
-                      </div>
-                      <div className="col-span-1 flex items-center justify-end">
-                        <button
-                          className="rounded p-1 hover:bg-gray-100"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          <MoreVertical className="h-5 w-5 text-gray-400" />
-                        </button>
                       </div>
                     </Link>
                   );
@@ -295,7 +286,7 @@ export default function Knowledge() {
                     <p className="truncate text-xs text-gray-500">
                       {entry.resource_type}
                     </p>
-                    <div className="mt-2 flex items-center justify-between border-t border-gray-100 pt-2">
+                    <div className="mt-2 flex items-center border-t border-gray-100 pt-2">
                       <span className="text-xs text-gray-400">
                         {entry.published_date
                           ? new Date(entry.published_date).toLocaleDateString("en-US", {
@@ -304,12 +295,6 @@ export default function Knowledge() {
                             })
                           : "N/A"}
                       </span>
-                      <button
-                        className="rounded p-1 hover:bg-gray-100"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <MoreVertical className="h-4 w-4 text-gray-400" />
-                      </button>
                     </div>
                   </Link>
                 );
