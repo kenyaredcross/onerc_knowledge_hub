@@ -186,9 +186,9 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "onerc_knowledge_hub.event.get_events"
-# }
+override_whitelisted_methods = {
+	"buzz.api.auth.get_login_context": "onerc_knowledge_hub.overrides.auth.get_login_context"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -210,6 +210,10 @@ doc_events = {
 # ----------------
 # before_request = ["onerc_knowledge_hub.utils.before_request"]
 # after_request = ["onerc_knowledge_hub.utils.after_request"]
+
+# Session Events
+# ----------------
+on_session_creation = ["onerc_knowledge_hub.overrides.auth.on_session_creation"]
 
 # Job Events
 # ----------

@@ -37,10 +37,6 @@ def add_app_roles_before_insert(doc, method=None):
 	if "lms" in installed_apps and "LMS Student" not in existing_roles:
 		doc.append("roles", {"role": "LMS Student"})
 
-	# Add Drive User role if Drive is installed
-	if "drive" in installed_apps and "Drive User" not in existing_roles:
-		doc.append("roles", {"role": "Drive User"})
-
 	# Store original save method
 	if not _original_user_save:
 		from frappe.core.doctype.user.user import User
