@@ -53,14 +53,19 @@ export default function Home() {
   // Use API data
   const stats = [
     {
-      value: dashboardData?.stats?.national_societies ?? 0,
+      value: dashboardData?.stats?.localization_alliance_members ?? 12,
+      label: "Localization Alliance Members",
+      icon: Globe2
+    },
+    {
+      value: dashboardData?.stats?.national_societies ?? 33,
       label: "National Societies",
       icon: Globe2
     },
     {
-      value: dashboardData?.stats?.news_stories ?? 0,
-      label: "News & Stories",
-      icon: Newspaper
+      value: dashboardData?.stats?.consortium_partners ?? 7,
+      label: "Consortium Partners",
+      icon: Globe2
     },
     {
       value: dashboardData?.stats?.knowledge_hub ?? 0,
@@ -141,10 +146,10 @@ export default function Home() {
 
       <div className="mx-auto max-w-7xl px-6 py-8">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           {isLoading ? (
             // Loading skeleton
-            Array.from({ length: 4 }).map((_, idx) => (
+            Array.from({ length: 5 }).map((_, idx) => (
               <div
                 key={idx}
                 className="bg-white rounded border border-gray-200 p-6 shadow-sm animate-pulse"
