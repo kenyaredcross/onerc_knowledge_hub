@@ -35,8 +35,36 @@ export default function Home() {
     {}
   );
 
+  // Fetch member societies
+  const { data: memberSocietiesData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.national_society.get_member_societies",
+    {}
+  );
+
+  // Fetch all societies for partners
+  const { data: allSocietiesData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.national_society.get_national_societies_list",
+    {}
+  );
+
   // Get user display name
   const displayName = (userData as any)?.full_name || (userData as any)?.first_name || "User";
+
+  // Calculate dynamic counts
+  const memberCount = useMemo(() => {
+    const societies = memberSocietiesData?.message || [];
+    return societies.length;
+  }, [memberSocietiesData]);
+
+  const consortiumPartnersCount = useMemo(() => {
+    const societies = allSocietiesData?.message || [];
+    return societies.filter((s: any) => s.type === "Consortium Partner").length;
+  }, [allSocietiesData]);
+
+  const nationalSocietiesCount = useMemo(() => {
+    const societies = allSocietiesData?.message || [];
+    return societies.filter((s: any) => s.type === "Member" || s.type === "Non-member").length;
+  }, [allSocietiesData]);
 
   useEffect(() => {
     if (overviewData) {
@@ -50,17 +78,22 @@ export default function Home() {
     }
   }, [overviewData, error]);
 
-  // Use API data
+  // Use API data with dynamic counts
   const stats = [
     {
-      value: dashboardData?.stats?.national_societies ?? 0,
+      value: memberCount || dashboardData?.stats?.localization_alliance_members || 0,
+      label: "Localisation Alliance Members",
+      icon: Globe2
+    },
+    {
+      value: nationalSocietiesCount || dashboardData?.stats?.national_societies || 0,
       label: "National Societies",
       icon: Globe2
     },
     {
-      value: dashboardData?.stats?.news_stories ?? 0,
-      label: "News & Stories",
-      icon: Newspaper
+      value: consortiumPartnersCount || dashboardData?.stats?.consortium_partners || 0,
+      label: "Consortium Partners",
+      icon: Globe2
     },
     {
       value: dashboardData?.stats?.knowledge_hub ?? 0,
@@ -141,10 +174,10 @@ export default function Home() {
 
       <div className="mx-auto max-w-7xl px-6 py-8">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           {isLoading ? (
             // Loading skeleton
-            Array.from({ length: 4 }).map((_, idx) => (
+            Array.from({ length: 5 }).map((_, idx) => (
               <div
                 key={idx}
                 className="bg-white rounded border border-gray-200 p-6 shadow-sm animate-pulse"

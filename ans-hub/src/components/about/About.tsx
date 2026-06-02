@@ -329,8 +329,8 @@ export default function AboutPage() {
 
           {/* Stats in separate lines */}
           <div className="mt-8 space-y-3 text-3xl md:text-4xl font-semibold text-foreground">
-            <div>{memberCount} National Societies</div>
-            <div>{partnerCount} Partners</div>
+            <div>{memberCount} Localisation Alliance Members</div>
+            <div>{partnerCount} Consortium Partners</div>
           </div>
 
           {/* One Alliance heading */}
@@ -627,9 +627,8 @@ export default function AboutPage() {
       </section>
 
       <footer className="border-t border-border bg-secondary/40">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted-foreground md:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-center gap-4 px-6 py-8 text-sm text-muted-foreground">
           <p>© {new Date().getFullYear()} {organizationName}</p>
-          <p>Hosted by the Kenya Red Cross Society · Secretariat: NLRC</p>
         </div>
       </footer>
 
