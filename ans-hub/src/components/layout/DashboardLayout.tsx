@@ -42,7 +42,7 @@ const createItems = [
 const managementItems = [
   { path: "/users", label: "Users", icon: Users },
   { path: "/faqs", label: "FAQs", icon: HelpCircle },
-  { path: "/app", label: "Desk", icon: Settings, external: true },
+  { path: "/app/afr-localisation-hub", label: "Desk", icon: Settings, external: true },
 ];
 
 export default function DashboardLayout() {
@@ -257,7 +257,7 @@ export default function DashboardLayout() {
             {managementItems
               .filter((item) => {
                 // Show "Users" and "Desk" only to admins and managers
-                if (item.path === "/users" || item.path === "/app") {
+                if (item.path === "/users" || item.path.startsWith("/app")) {
                   return isAdminOrManager;
                 }
                 // Show other management items (FAQs) to everyone
