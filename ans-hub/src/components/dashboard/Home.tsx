@@ -35,8 +35,36 @@ export default function Home() {
     {}
   );
 
+  // Fetch member societies
+  const { data: memberSocietiesData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.national_society.get_member_societies",
+    {}
+  );
+
+  // Fetch all societies for partners
+  const { data: allSocietiesData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.national_society.get_national_societies_list",
+    {}
+  );
+
   // Get user display name
   const displayName = (userData as any)?.full_name || (userData as any)?.first_name || "User";
+
+  // Calculate dynamic counts
+  const memberCount = useMemo(() => {
+    const societies = memberSocietiesData?.message || [];
+    return societies.length;
+  }, [memberSocietiesData]);
+
+  const consortiumPartnersCount = useMemo(() => {
+    const societies = allSocietiesData?.message || [];
+    return societies.filter((s: any) => s.type === "Consortium Partner").length;
+  }, [allSocietiesData]);
+
+  const nationalSocietiesCount = useMemo(() => {
+    const societies = allSocietiesData?.message || [];
+    return societies.filter((s: any) => s.type === "Member" || s.type === "Non-member").length;
+  }, [allSocietiesData]);
 
   useEffect(() => {
     if (overviewData) {
@@ -50,20 +78,20 @@ export default function Home() {
     }
   }, [overviewData, error]);
 
-  // Use API data
+  // Use API data with dynamic counts
   const stats = [
     {
-      value: dashboardData?.stats?.localization_alliance_members ?? 12,
-      label: "Localization Alliance Members",
+      value: memberCount || dashboardData?.stats?.localization_alliance_members || 0,
+      label: "Localisation Alliance Members",
       icon: Globe2
     },
     {
-      value: dashboardData?.stats?.national_societies ?? 33,
+      value: nationalSocietiesCount || dashboardData?.stats?.national_societies || 0,
       label: "National Societies",
       icon: Globe2
     },
     {
-      value: dashboardData?.stats?.consortium_partners ?? 7,
+      value: consortiumPartnersCount || dashboardData?.stats?.consortium_partners || 0,
       label: "Consortium Partners",
       icon: Globe2
     },
