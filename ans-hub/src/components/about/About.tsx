@@ -329,8 +329,8 @@ export default function AboutPage() {
 
           {/* Stats in separate lines */}
           <div className="mt-8 space-y-3 text-3xl md:text-4xl font-semibold text-foreground">
-            <div>{memberCount} National Societies</div>
-            <div>{partnerCount} Partners</div>
+            <div>{memberCount} Localisation Alliance Members</div>
+            <div>{partnerCount} Consortium Partners</div>
           </div>
 
           {/* One Alliance heading */}
