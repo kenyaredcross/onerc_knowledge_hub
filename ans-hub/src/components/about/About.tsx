@@ -6,9 +6,30 @@ import { useMemo, useState } from "react";
 // Removed hardcoded partners array - now fetched from database
 
 const mandates = [
-  { title: "Grand Bargain", note: "& IFRC NSD Compact" },
-  { title: "IFRC Strategy 2030", note: "& Agenda for Renewal" },
-  { title: "Pan-African Conference", note: "PAC 2013 & 2017 commitments" },
+  {
+    title: "Grand Bargain",
+    note: "& IFRC NSD Compact",
+    links: [
+      { text: "Grand Bargain", url: "https://interagencystandingcommittee.org/grand-bargain" },
+      { text: "IFRC NSD Compact", url: "https://www.ifrc.org/sites/default/files/2021-07/20200723_NSD_Compact_ONLINE_EN.pdf" }
+    ]
+  },
+  {
+    title: "IFRC Strategy 2030",
+    note: "& Agenda for Renewal",
+    links: [
+      { text: "IFRC Strategy 2030", url: "https://www.ifrc.org/sites/default/files/2021-06/S2030-EN.pdf" },
+      { text: "Agenda for Renewal", url: "https://www.ifrc.org/sites/default/files/2026-01/IFRC-Renewal-2025-EN.pdf" }
+    ]
+  },
+  {
+    title: "Pan-African Conference",
+    note: "& PAC 2013-2017 commitments",
+    links: [
+      { text: "Pan-African Conference", url: "https://pan-africanconference.com/" },
+      { text: "PAC Plan of Action", url: "https://kenyaredcross.sharepoint.com/sites/LOCALISATIONHUB/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FLOCALISATIONHUB%2FShared%20Documents%2FNSD%2C%20Youth%20%26%20Localisation%2F10%20PAC%20Plan%20of%20Action%20%2D%20FINAL%20DRAFT%20VER%2019%20Sep%202023%20830%20PM%20EN%2Epdf&parent=%2Fsites%2FLOCALISATIONHUB%2FShared%20Documents%2FNSD%2C%20Youth%20%26%20Localisation&p=true&ct=1780515091833&or=OWA%2DNT%2DMail&cid=f1b1e39d%2D1fac%2Db74a%2D35ef%2D99855f588e80&ga=1&LOF=1" }
+    ]
+  },
 ];
 
 // Removed hardcoded steering group - now fetched from database
@@ -316,6 +337,22 @@ export default function AboutPage() {
               <div key={m.title} className="rounded-lg border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
                 <p className="text-sm font-semibold text-white">{m.title}</p>
                 <p className="text-xs text-white/70">{m.note}</p>
+                {m.links && m.links.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {m.links.map((link, idx) => (
+                      <a
+                        key={idx}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-white/90 hover:text-white underline underline-offset-2 transition-colors"
+                      >
+                        {link.text}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
           </div>
