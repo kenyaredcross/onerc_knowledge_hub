@@ -13,6 +13,7 @@ import {
 import { useMemo, useState, useContext } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../contexts/UserContext";
+import { useTranslation } from 'react-i18next';
 
 const formatBadge = {
   Webinar: "bg-blue-50 text-blue-700 border border-blue-200",
@@ -27,6 +28,7 @@ const formatColor = {
 };
 
 export default function EventsIndex() {
+  const { t } = useTranslation(['events', 'common']);
   const [showPastEvents, setShowPastEvents] = useState(false);
   const { userData } = useContext(UserContext);
 
@@ -77,7 +79,7 @@ export default function EventsIndex() {
   if (!featuredEvent) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-20 text-center">
-        <p className="text-gray-500">No upcoming events found.</p>
+        <p className="text-gray-500">{t('events:noUpcomingEvents')}</p>
       </div>
     );
   }
@@ -91,11 +93,11 @@ export default function EventsIndex() {
               <div className="flex items-center gap-2 mb-2">
                 <Calendar className="h-4 w-4 text-dash-red" />
                 <span className="text-[10px] font-black uppercase tracking-wider text-dash-red">
-                  Events &amp; Gatherings
+                  {t('events:pageTitle')}
                 </span>
               </div>
               <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
-                Convening the network
+                {t('events:pageSubtitle')}
               </h1>
             </div>
             {canCreateEvent && (
@@ -104,7 +106,7 @@ export default function EventsIndex() {
                 className="flex items-center gap-2 px-4 py-2.5 bg-dash-red text-white font-medium rounded-lg hover:bg-red-600 transition-colors"
               >
                 <Plus className="h-4 w-4" />
-                <span>New Event</span>
+                <span>{t('events:newEvent')}</span>
               </Link>
             )}
           </div>
@@ -116,7 +118,7 @@ export default function EventsIndex() {
           <div className="flex items-center gap-2 mb-4">
             <Star className="h-3.5 w-3.5 text-dash-red" />
             <span className="text-[10px] font-black uppercase tracking-wider text-dash-red">
-              Featured Event
+              {t('events:featuredEvent')}
             </span>
           </div>
 
@@ -171,7 +173,7 @@ export default function EventsIndex() {
                       to={`/events/${featuredEvent.route}`}
                       className="ml-2 text-dash-red font-bold hover:underline inline-flex items-center gap-1 text-sm"
                     >
-                      Read more <ExternalLink className="h-3 w-3" />
+                      {t('events:readMore')} <ExternalLink className="h-3 w-3" />
                     </Link>
                   )}
                 </p>
@@ -179,7 +181,7 @@ export default function EventsIndex() {
                 {featuredEvent.featured_speakers?.length > 0 && (
                   <div className="mt-6 pt-6 border-t border-gray-100">
                     <div className="text-[10px] font-black uppercase text-gray-400 mb-4 flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5" /> Featured Speakers
+                      <Users className="h-3.5 w-3.5" /> {t('events:featuredSpeakers')}
                     </div>
                     <div className="grid sm:grid-cols-2 gap-4">
                       {featuredEvent.featured_speakers

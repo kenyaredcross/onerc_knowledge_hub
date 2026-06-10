@@ -20,35 +20,38 @@ import {
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
 import { useFrappeGetCall } from "frappe-react-sdk";
-
-const navItems = [
-  { path: "/home", label: "Overview", icon: LayoutDashboard, exact: true },
-  { path: "/news", label: "News & Stories", icon: Newspaper },
-  { path: "/events", label: "Events", icon: Calendar },
-  { path: "/knowledge", label: "Knowledge Hub", icon: BookOpen },
-  { path: "/learning", label: "Learning Hub", icon: GraduationCap },
-  { path: "/national-societies", label: "National Societies", icon: Globe2 },
-  { path: "/pillars", label: "Pillars", icon: Layers },
-  { path: "/connect", label: "Connect", icon: MessageSquare },
-];
-
-const createItems = [
-  { path: "/create/knowledge", label: "Knowledge", icon: BookOpen },
-  { path: "/create/learning", label: "Learning", icon: GraduationCap },
-  { path: "/create/news", label: "News & Stories", icon: Newspaper },
-  { path: "/create/event", label: "Event", icon: Calendar, adminOnly: true },
-];
-
-const managementItems = [
-  { path: "/users", label: "Users", icon: Users },
-  { path: "/faqs", label: "FAQs", icon: HelpCircle },
-  { path: "/app", label: "Desk", icon: Settings, external: true },
-];
+import LanguageSwitcher from "../LanguageSwitcher";
+import { useTranslation } from 'react-i18next';
 
 export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { userData, logout } = useContext(UserContext);
+  const { t } = useTranslation(['navigation', 'common']);
+
+  const navItems = [
+    { path: "/home", label: t('navigation:overview'), icon: LayoutDashboard, exact: true },
+    { path: "/news", label: t('navigation:newsStories'), icon: Newspaper },
+    { path: "/events", label: t('navigation:events'), icon: Calendar },
+    { path: "/knowledge", label: t('navigation:knowledgeHub'), icon: BookOpen },
+    { path: "/learning", label: t('navigation:learningHub'), icon: GraduationCap },
+    { path: "/national-societies", label: t('navigation:nationalSocieties'), icon: Globe2 },
+    { path: "/pillars", label: t('navigation:pillars'), icon: Layers },
+    { path: "/connect", label: t('navigation:connect'), icon: MessageSquare },
+  ];
+
+  const createItems = [
+    { path: "/create/knowledge", label: t('navigation:knowledge'), icon: BookOpen },
+    { path: "/create/learning", label: t('navigation:learning'), icon: GraduationCap },
+    { path: "/create/news", label: t('navigation:newsStories'), icon: Newspaper },
+    { path: "/create/event", label: t('navigation:event'), icon: Calendar, adminOnly: true },
+  ];
+
+  const managementItems = [
+    { path: "/users", label: t('navigation:users'), icon: Users },
+    { path: "/faqs", label: t('navigation:faqs'), icon: HelpCircle },
+    { path: "/app", label: t('navigation:desk'), icon: Settings, external: true },
+  ];
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -202,11 +205,16 @@ export default function DashboardLayout() {
             })}
           </div>
 
+          {/* Language Switcher in Navbar */}
+          <div className="px-3 py-2">
+            <LanguageSwitcher />
+          </div>
+
           {/* Create Section */}
           <div className="space-y-0.5">
             {!collapsed && (
               <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-white/40">
-                Create
+                {t('navigation:sectionCreate')}
               </div>
             )}
             {createItems
@@ -251,7 +259,7 @@ export default function DashboardLayout() {
           <div className="space-y-0.5">
             {!collapsed && (
               <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-white/40">
-                Management.
+                {t('navigation:sectionManagement')}
               </div>
             )}
             {managementItems
@@ -345,7 +353,7 @@ export default function DashboardLayout() {
               className="w-full rounded-lg bg-white/5 p-3 text-[11px] text-white/60 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-2"
             >
               <LogOut className="h-3.5 w-3.5" />
-              <span>Sign out</span>
+              <span>{t('common:signOut')}</span>
             </button>
           </div>
         )}
@@ -382,7 +390,7 @@ export default function DashboardLayout() {
               to="/home"
               className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
             >
-              Hub
+              {t('navigation:hub')}
             </Link>
             <ChevronRight className="h-3.5 w-3.5 text-gray-300" />
             <span className="font-medium text-gray-800">{currentPage}</span>

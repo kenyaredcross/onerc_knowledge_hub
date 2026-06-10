@@ -1,0 +1,18 @@
+{
+  "dashboardOverview": "Dashboard Overview",
+  "welcomeBack": "Welcome back, {{name}}!",
+  "heroDescription": "Empowering National Societies across Africa through peer learning, shared resources, and collaborative growth",
+  "recentNews": "Recent News & Stories",
+  "latestUpdates": "Latest updates from the network",
+  "upcomingEvents": "Upcoming Events",
+  "quickActions": "Quick Actions",
+  "addKnowledgeResource": "Add Knowledge Resource",
+  "shareNewsStory": "Share News Story",
+  "featuredResources": "Featured Resources",
+  "toolsReportsLearning": "Tools, reports & learning materials",
+  "noRecentNews": "No recent news available",
+  "noUpcomingEvents": "No upcoming events",
+  "noFeaturedResources": "No featured resources available",
+  "checkBackLater": "Check back later for knowledge resources",
+  "resource": "Resource"
+}

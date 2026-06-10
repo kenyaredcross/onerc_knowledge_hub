@@ -12,8 +12,10 @@ import {
 } from "lucide-react";
 import { pillarColor } from "../../lib/site-data";
 import { UserContext } from "../../contexts/UserContext";
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
+  const { t } = useTranslation(['dashboard', 'common']);
   const [dashboardData, setDashboardData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { userData } = useContext(UserContext);
@@ -160,14 +162,14 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-4">
             <span className="text-sm font-bold uppercase tracking-wider text-yellow-300">
-              Dashboard Overview
+              {t('dashboard:dashboardOverview')}
             </span>
           </div>
           <h1 className="text-4xl font-bold mb-3">
-            Welcome back, {displayName}!
+            {t('dashboard:welcomeBack', { name: displayName })}
           </h1>
           <p className="text-lg text-white/90 max-w-3xl">
-            Empowering National Societies across Africa through peer learning, shared resources, and collaborative growth
+            {t('dashboard:heroDescription')}
           </p>
         </div>
       </div>
@@ -214,14 +216,14 @@ export default function Home() {
             {/* Section Header */}
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-1">Recent News & Stories</h2>
-                <p className="text-sm text-gray-600">Latest updates from the network</p>
+                <h2 className="text-2xl font-bold text-gray-900 mb-1">{t('dashboard:recentNews')}</h2>
+                <p className="text-sm text-gray-600">{t('dashboard:latestUpdates')}</p>
               </div>
               <Link
                 to="/news"
                 className="flex items-center gap-2 px-4 py-2 bg-dash-red text-white rounded hover:bg-red-600 transition-colors text-sm font-medium"
               >
-                View All
+                {t('common:viewAll')}
                 <ArrowUpRight className="h-4 w-4" />
               </Link>
             </div>
@@ -269,7 +271,7 @@ export default function Home() {
               ) : (
                 <div className="bg-white rounded border border-gray-200 p-8 text-center">
                   <Newspaper className="h-12 w-12 text-dash-navy/30 mx-auto mb-3" />
-                  <p className="text-gray-500">No recent news available</p>
+                  <p className="text-gray-500">{t('dashboard:noRecentNews')}</p>
                 </div>
               )}
             </div>
@@ -280,9 +282,9 @@ export default function Home() {
             {/* Upcoming Events */}
             <div className="bg-white rounded border border-gray-200 p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-gray-900">Upcoming Events</h3>
+                <h3 className="text-lg font-bold text-gray-900">{t('dashboard:upcomingEvents')}</h3>
                 <Link to="/events" className="text-xs font-medium text-dash-red hover:underline">
-                  View all
+                  {t('common:viewAll')}
                 </Link>
               </div>
               <div className="space-y-4">
@@ -311,7 +313,7 @@ export default function Home() {
                 ) : (
                   <div className="p-6 text-center text-sm text-gray-500">
                     <Calendar className="h-10 w-10 text-dash-navy/30 mx-auto mb-2" />
-                    No upcoming events
+                    {t('dashboard:noUpcomingEvents')}
                   </div>
                 )}
               </div>
@@ -319,21 +321,21 @@ export default function Home() {
 
             {/* Quick Actions */}
             <div className="bg-white rounded border border-gray-200 p-6 shadow-sm">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">{t('dashboard:quickActions')}</h3>
               <div className="space-y-3">
                 <Link
                   to="/create/knowledge"
                   className="flex items-center gap-3 p-3 rounded bg-blue-50 hover:bg-blue-100 transition-colors border border-blue-200"
                 >
                   <BookOpen className="h-5 w-5 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-900">Add Knowledge Resource</span>
+                  <span className="text-sm font-medium text-blue-900">{t('dashboard:addKnowledgeResource')}</span>
                 </Link>
                 <Link
                   to="/create/news"
                   className="flex items-center gap-3 p-3 rounded bg-purple-50 hover:bg-purple-100 transition-colors border border-purple-200"
                 >
                   <Newspaper className="h-5 w-5 text-purple-600" />
-                  <span className="text-sm font-medium text-purple-900">Share News Story</span>
+                  <span className="text-sm font-medium text-purple-900">{t('dashboard:shareNewsStory')}</span>
                 </Link>
               </div>
             </div>
@@ -344,14 +346,14 @@ export default function Home() {
         <div className="mt-8">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">Featured Resources</h2>
-              <p className="text-sm text-gray-600">Tools, reports & learning materials</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">{t('dashboard:featuredResources')}</h2>
+              <p className="text-sm text-gray-600">{t('dashboard:toolsReportsLearning')}</p>
             </div>
             <Link
               to="/knowledge"
               className="flex items-center gap-2 px-4 py-2 bg-dash-navy text-white rounded hover:bg-blue-900 transition-colors text-sm font-medium"
             >
-              Browse Library
+              {t('common:browseLibrary')}
               <ArrowUpRight className="h-4 w-4" />
             </Link>
           </div>
@@ -386,8 +388,8 @@ export default function Home() {
             ) : (
               <div className="col-span-full bg-white rounded border border-gray-200 p-12 text-center">
                 <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 font-medium mb-2">No featured resources available</p>
-                <p className="text-sm text-gray-400">Check back later for knowledge resources</p>
+                <p className="text-gray-500 font-medium mb-2">{t('dashboard:noFeaturedResources')}</p>
+                <p className="text-sm text-gray-400">{t('dashboard:checkBackLater')}</p>
               </div>
             )}
           </div>

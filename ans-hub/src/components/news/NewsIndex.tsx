@@ -8,8 +8,10 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Comments from "../common/Comments";
 import toast from "react-hot-toast";
+import { useTranslation } from 'react-i18next';
 
 export default function NewsIndex() {
+  const { t } = useTranslation(['news', 'common']);
   // API call for toggling likes
   const { call: toggleLike } = useFrappePostCall("onerc_core.api.article.toggle_like");
   const { call: fetchMoreArticles } = useFrappePostCall<{ message: Article[] }>("onerc_core.api.article.get_articles");
@@ -342,7 +344,7 @@ export default function NewsIndex() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
                 <Star className="h-5 w-5 text-dash-red fill-current" />
-                Featured Stories
+                {t('news:featuredStories')}
               </h2>
               <div className="flex items-center gap-2">
                 <button
@@ -400,7 +402,7 @@ export default function NewsIndex() {
                             </span>
                             <span className="flex items-center gap-1 text-xs text-white">
                               <Star className="h-3 w-3 fill-current" />
-                              Featured
+                              {t('news:featured')}
                             </span>
                           </div>
                           <h3 className="text-lg font-bold text-white mb-1 line-clamp-2 group-hover:underline">
@@ -443,11 +445,11 @@ export default function NewsIndex() {
 
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Total articles</span>
+                    <span className="text-gray-600">{t('news:totalArticles')}</span>
                     <span className="font-bold text-dash-red">{news.length}</span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Featured stories</span>
+                    <span className="text-gray-600">{t('news:featuredStories')}</span>
                     <span className="font-bold text-dash-red">{featuredStories.length}</span>
                   </div>
                 </div>
@@ -459,7 +461,7 @@ export default function NewsIndex() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold text-gray-900 flex items-center gap-2">
                   <Filter className="h-4 w-4" />
-                  Categories
+                  {t('news:categories')}
                 </h3>
               </div>
               <div className="space-y-2">
@@ -480,8 +482,8 @@ export default function NewsIndex() {
 
             {/* Saved Items */}
             <div className="bg-white rounded border border-gray-200 p-4">
-              <h3 className="font-bold text-gray-900 mb-3">Saved items</h3>
-              <p className="text-sm text-gray-600">Save stories to read later</p>
+              <h3 className="font-bold text-gray-900 mb-3">{t('news:savedItems')}</h3>
+              <p className="text-sm text-gray-600">{t('news:saveStoriesToReadLater')}</p>
             </div>
           </div>
 
@@ -493,7 +495,7 @@ export default function NewsIndex() {
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search news and stories..."
+                  placeholder={t('news:search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-dash-red focus:border-transparent transition-all"
@@ -513,7 +515,7 @@ export default function NewsIndex() {
 
             {/* Sort Options */}
             <div className="flex items-center justify-between px-2">
-              <span className="text-xs text-gray-500">Sort by:</span>
+              <span className="text-xs text-gray-500">{t('news:sortBy')}</span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setSortBy('latest')}
@@ -523,7 +525,7 @@ export default function NewsIndex() {
                       : 'text-gray-700 hover:text-gray-900'
                   }`}
                 >
-                  Latest
+                  {t('news:latest')}
                 </button>
                 <span className="text-gray-300">|</span>
                 <button
@@ -534,7 +536,7 @@ export default function NewsIndex() {
                       : 'text-gray-700 hover:text-gray-900'
                   }`}
                 >
-                  Oldest
+                  {t('news:oldest')}
                 </button>
               </div>
             </div>

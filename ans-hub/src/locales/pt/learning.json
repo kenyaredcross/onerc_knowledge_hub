@@ -1,0 +1,17 @@
+{
+  "pageTitle": "Centro de Aprendizagem",
+  "pageSubtitle": "Conhecimento e Recursos",
+  "totalResources": "Recursos Totais",
+  "filterByPillar": "Filtrar por Pilar",
+  "allPillars": "Todos os Pilares",
+  "searchPlaceholder": "Pesquisar cursos, tópicos ou plataformas…",
+  "viewGrid": "Vista em grelha",
+  "viewList": "Vista em lista",
+  "views": "visualizações",
+  "newResource": "Novo Recurso",
+  "errorLoading": "Falha ao carregar recursos. Por favor, tente novamente.",
+  "noResources": "Nenhum recurso de aprendizagem encontrado",
+  "visitPlatform": "Visitar Plataforma",
+  "viewDetails": "Ver Detalhes",
+  "close": "Fechar"
+}

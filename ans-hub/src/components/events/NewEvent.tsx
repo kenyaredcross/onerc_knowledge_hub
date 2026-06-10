@@ -1,7 +1,9 @@
 import { Calendar, Loader2, RefreshCw, ExternalLink } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 export default function NewEvent() {
+  const { t } = useTranslation(['forms', 'common']);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -39,7 +41,7 @@ export default function NewEvent() {
         <div className="flex items-center justify-center flex-1 bg-gray-50">
           <div className="text-center">
             <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-dash-red border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"></div>
-            <p className="mt-4 text-gray-600">Loading Event Form...</p>
+            <p className="mt-4 text-gray-600">{t('forms:loadingEventForm')}</p>
           </div>
         </div>
       )}
@@ -52,15 +54,15 @@ export default function NewEvent() {
               <Calendar className="h-8 w-8 text-dash-red" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              Unable to Load Event Form
+              {t('forms:unableToLoadEventForm')}
             </h3>
             <p className="text-gray-600 mb-4">
-              There was an error loading the event creation form. This could be because:
+              {t('forms:eventFormErrorMessage')}
             </p>
             <ul className="text-left text-sm text-gray-500 mb-6 space-y-2">
-              <li>• Buzz Event form is not accessible</li>
-              <li>• Your session may have expired</li>
-              <li>• The iframe is blocked by security settings</li>
+              <li>• {t('forms:eventFormErrorReason1')}</li>
+              <li>• {t('forms:eventFormErrorReason2')}</li>
+              <li>• {t('forms:eventFormErrorReason3')}</li>
             </ul>
             <div className="flex gap-3 justify-center">
               <button
@@ -68,14 +70,14 @@ export default function NewEvent() {
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-dash-red rounded-lg hover:bg-red-600 transition-colors"
               >
                 <RefreshCw className="h-4 w-4" />
-                Try Again
+                {t('common:tryAgain')}
               </button>
               <button
                 onClick={handleOpenExternal}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <ExternalLink className="h-4 w-4" />
-                Open Directly
+                {t('common:openDirectly')}
               </button>
             </div>
           </div>

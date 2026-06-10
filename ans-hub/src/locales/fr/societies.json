@@ -1,0 +1,17 @@
+{
+  "pageTitle": "Sociétés Nationales",
+  "memberSocieties": "Sociétés Membres",
+  "pageDescription": "Explorez toutes les Sociétés Nationales membres de l'Alliance du Hub de Localisation — leurs profils, alignement sur les piliers et coordonnées.",
+  "totalVolunteers": "Total des Volontaires",
+  "totalBranches": "Total des Branches",
+  "filterByRegion": "Filtrer par Région",
+  "allRegions": "Toutes les Régions",
+  "searchPlaceholder": "Rechercher par nom, pays, abréviation ou région…",
+  "volunteers": "Volontaires",
+  "branches": "Branches",
+  "viewProfile": "Voir le Profil",
+  "noSocieties": "Aucune société trouvée",
+  "website": "Site Web",
+  "email": "E-mail",
+  "phone": "Téléphone"
+}

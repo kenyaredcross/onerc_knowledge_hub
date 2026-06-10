@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { HelpCircle, Plus, Minus, Mail, Phone, MessageCircle, Filter } from "lucide-react";
 import { useFrappeGetCall } from "frappe-react-sdk";
+import { useTranslation } from 'react-i18next';
 
 interface FAQ {
   name: string;
@@ -18,6 +19,7 @@ interface FAQCategory {
 }
 
 export default function FAQs() {
+  const { t } = useTranslation(['faqs', 'common']);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
@@ -76,10 +78,10 @@ export default function FAQs() {
         </div>
         <div>
           <h1 className="font-display text-3xl font-bold text-gray-900">
-            Frequently Asked Questions
+            {t('faqs:pageTitle')}
           </h1>
           <p className="text-sm text-gray-500">
-            Find answers to common questions about the platform
+            {t('faqs:pageSubtitle')}
           </p>
         </div>
       </div>
@@ -88,7 +90,7 @@ export default function FAQs() {
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
         <div className="flex items-center gap-3 mb-3">
           <Filter className="h-4 w-4 text-gray-500" />
-          <span className="text-sm font-semibold text-gray-700">Filter by Category</span>
+          <span className="text-sm font-semibold text-gray-700">{t('faqs:filterByCategory')}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
@@ -99,7 +101,7 @@ export default function FAQs() {
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            All Categories
+            {t('faqs:allCategories')}
           </button>
           {categories.map((cat) => (
             <button
@@ -184,10 +186,10 @@ export default function FAQs() {
           </div>
           <div className="flex-1">
             <h3 className="font-display text-xl font-bold mb-2">
-              Still need help?
+              {t('faqs:stillNeedHelp')}
             </h3>
             <p className="text-blue-200 mb-4">
-              Can't find the answer you're looking for? Our support team is here to help.
+              {t('faqs:supportDescription')}
             </p>
             <div className="flex flex-wrap gap-4">
               <a
@@ -195,14 +197,14 @@ export default function FAQs() {
                 className="flex items-center gap-2 px-4 py-2 bg-white text-blue-800 rounded-lg hover:bg-blue-100 transition-colors font-medium"
               >
                 <Mail className="h-4 w-4" />
-                Email Support
+                {t('faqs:emailSupport')}
               </a>
               <a
                 href="tel:+1234567890"
                 className="flex items-center gap-2 px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-colors font-medium border border-white/30"
               >
                 <Phone className="h-4 w-4" />
-                Call Us
+                {t('faqs:callUs')}
               </a>
             </div>
           </div>

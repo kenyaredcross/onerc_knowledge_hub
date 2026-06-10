@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { useFrappePostCall } from "frappe-react-sdk";
 import toast from "react-hot-toast";
 import { Mail, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 export default function ForgotPassword() {
+  const { t } = useTranslation(['auth', 'common']);
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -60,21 +62,21 @@ export default function ForgotPassword() {
             </div>
 
             <h1 className="text-2xl font-bold text-gray-900 mb-3">
-              Check Your Email
+              {t('auth:checkYourEmail')}
             </h1>
 
             <p className="text-gray-600 mb-6">
-              If an account exists for <strong>{email}</strong>, you will receive password reset instructions shortly.
+              {t('auth:resetEmailSent', { email })}
             </p>
 
             <div className="bg-blue-50 border border-blue-200 rounded p-4 mb-6 text-left">
               <p className="text-sm text-blue-900">
-                <strong>Didn't receive the email?</strong>
+                <strong>{t('auth:didntReceiveEmail')}</strong>
               </p>
               <ul className="text-sm text-blue-800 mt-2 ml-4 list-disc space-y-1">
-                <li>Check your spam or junk folder</li>
-                <li>Make sure you entered the correct email</li>
-                <li>Wait a few minutes and check again</li>
+                <li>{t('auth:checkSpam')}</li>
+                <li>{t('auth:checkCorrectEmail')}</li>
+                <li>{t('auth:waitFewMinutes')}</li>
               </ul>
             </div>
 
@@ -83,7 +85,7 @@ export default function ForgotPassword() {
               className="inline-flex items-center gap-2 text-dash-red font-medium hover:underline"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to sign in
+              {t('auth:backToSignIn')}
             </Link>
           </div>
 
@@ -112,10 +114,10 @@ export default function ForgotPassword() {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Reset Your Password
+            {t('auth:resetPassword')}
           </h1>
           <p className="text-gray-600">
-            Enter your email address and we'll send you instructions to reset your password.
+            {t('auth:resetPasswordInstructions')}
           </p>
         </div>
 
@@ -125,7 +127,7 @@ export default function ForgotPassword() {
             {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                {t('auth:emailAddress')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -134,7 +136,7 @@ export default function ForgotPassword() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded focus:ring-2 focus:ring-dash-navy focus:border-transparent outline-none transition-all"
-                  placeholder="your.email@example.com"
+                  placeholder={t('auth:enterEmail')}
                   required
                 />
               </div>
@@ -149,12 +151,12 @@ export default function ForgotPassword() {
               {isLoading ? (
                 <>
                   <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Sending...</span>
+                  <span>{t('auth:sending')}</span>
                 </>
               ) : (
                 <>
                   <Mail className="h-5 w-5" />
-                  <span>Send Reset Link</span>
+                  <span>{t('auth:sendResetLink')}</span>
                 </>
               )}
             </button>
@@ -163,9 +165,9 @@ export default function ForgotPassword() {
 
         {/* Footer */}
         <div className="mt-6 text-center text-sm text-gray-600">
-          Remember your password?{" "}
+          {t('auth:rememberPassword')}{" "}
           <Link to="/login" className="text-dash-red font-medium hover:underline">
-            Sign in
+            {t('auth:signIn')}
           </Link>
         </div>
 

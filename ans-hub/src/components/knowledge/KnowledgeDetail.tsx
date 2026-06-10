@@ -15,6 +15,7 @@ import {
   User,
 } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const resourceBadge: Record<string, string> = {
   Publication: "bg-blue-100 text-blue-700 border border-blue-200",
@@ -23,6 +24,7 @@ const resourceBadge: Record<string, string> = {
 };
 
 export default function KnowledgeDetail() {
+  const { t } = useTranslation(['knowledge', 'common']);
   const { slug } = useParams<{ slug: string }>();
 
   const { data, isLoading, error } = useFrappeGetCall(
@@ -52,7 +54,7 @@ export default function KnowledgeDetail() {
           className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-dash-red"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Knowledge Repository
+          {t('common:back')} to Knowledge Repository
         </Link>
 
         <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
@@ -213,7 +215,7 @@ export default function KnowledgeDetail() {
 
                       <div>
                         <div className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                          Published Date
+                          {t('common:published')}
                         </div>
 
                         <div className="mt-1 text-sm font-bold text-gray-900">
@@ -241,11 +243,11 @@ export default function KnowledgeDetail() {
                         </div>
 
                         <div className="mt-1 text-sm font-bold text-gray-900">
-                          {resource.view_count || 0} Views
+                          {resource.view_count || 0} {t('common:views')}
                         </div>
 
                         <div className="text-xs text-gray-500">
-                          {resource.download_count || 0} Downloads
+                          {resource.download_count || 0} {t('common:downloads')}
                         </div>
                       </div>
                     </div>
@@ -274,7 +276,7 @@ export default function KnowledgeDetail() {
 
                         <div>
                           <div className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                            Language
+                            {t('forms:language')}
                           </div>
 
                           <div className="mt-1 text-sm font-bold text-gray-900">

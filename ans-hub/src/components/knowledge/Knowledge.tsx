@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 interface KnowledgeEntry {
   name: string;
@@ -61,6 +62,7 @@ const getResourceColor = (type: string) => {
 };
 
 export default function Knowledge() {
+  const { t } = useTranslation(['knowledge', 'common']);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [filterType, setFilterType] = useState<string>("all");
 
@@ -133,7 +135,7 @@ export default function Knowledge() {
               className="flex items-center gap-2 px-4 py-2 bg-dash-red text-white rounded text-sm font-semibold hover:bg-dash-red/90 transition-colors"
             >
               <Plus className="h-4 w-4" />
-              New
+              {t('knowledge:new')}
             </Link>
           </div>
         </div>
@@ -144,8 +146,8 @@ export default function Knowledge() {
         {featuredResources.length > 0 && (
           <div className="mb-8 rounded border border-gray-200 bg-white p-6">
             <div className="mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Featured Resources</h2>
-              <p className="text-sm text-gray-500">Tools, reports & learning materials</p>
+              <h2 className="text-lg font-semibold text-gray-900">{t('knowledge:featuredResources')}</h2>
+              <p className="text-sm text-gray-500">{t('knowledge:featuredSubtitle')}</p>
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {featuredResources.map((resource) => {
@@ -190,7 +192,7 @@ export default function Knowledge() {
                 : "border-transparent text-gray-600 hover:text-gray-900"
             }`}
           >
-            All Files ({entries.length})
+            {t('knowledge:allFiles')} ({entries.length})
           </button>
           {folderTypes.map((folder) => (
             <button
@@ -214,10 +216,10 @@ export default function Knowledge() {
             <div className="rounded border border-gray-200 bg-white">
               {/* Table Header */}
               <div className="grid grid-cols-12 gap-4 border-b border-gray-200 px-4 py-3 text-xs font-medium text-gray-500">
-                <div className="col-span-5">Name</div>
-                <div className="col-span-2">Owner</div>
-                <div className="col-span-2">Last Modified</div>
-                <div className="col-span-2">File Size</div>
+                <div className="col-span-5">{t('knowledge:name')}</div>
+                <div className="col-span-2">{t('knowledge:owner')}</div>
+                <div className="col-span-2">{t('knowledge:lastModified')}</div>
+                <div className="col-span-2">{t('knowledge:fileSize')}</div>
                 <div className="col-span-1"></div>
               </div>
 
@@ -257,7 +259,7 @@ export default function Knowledge() {
                           : "N/A"}
                       </div>
                       <div className="col-span-3 flex items-center text-sm text-gray-600">
-                        {entry.download_count || 0} downloads
+                        {entry.download_count || 0} {t('knowledge:downloads')}
                       </div>
                     </Link>
                   );
@@ -304,7 +306,7 @@ export default function Knowledge() {
         ) : (
           <div className="rounded border border-gray-200 bg-white py-20 text-center">
             <FileText className="mx-auto h-12 w-12 text-gray-300" />
-            <p className="mt-4 text-sm text-gray-500">No files found</p>
+            <p className="mt-4 text-sm text-gray-500">{t('knowledge:noResources')}</p>
           </div>
         )}
       </div>

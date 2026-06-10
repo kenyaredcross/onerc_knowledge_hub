@@ -1,0 +1,22 @@
+{
+  "pageTitle": "Events & Gatherings",
+  "pageSubtitle": "Convening the network",
+  "upcoming": "Upcoming",
+  "past": "Past",
+  "noUpcomingEvents": "No upcoming events found.",
+  "noPastEvents": "No past events",
+  "eventDetails": "Event Details",
+  "date": "Date",
+  "time": "Time",
+  "venue": "Venue",
+  "register": "Register",
+  "addToCalendar": "Add to Calendar",
+  "participants": "Participants",
+  "organizer": "Organizer",
+  "featuredEvent": "Featured Event",
+  "featuredSpeakers": "Featured Speakers",
+  "readMore": "Read more",
+  "newEvent": "New Event",
+  "upcomingEvents": "Upcoming Events",
+  "showPastEvents": "Show Past Events"
+}

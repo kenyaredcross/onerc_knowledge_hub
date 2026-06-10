@@ -1,0 +1,98 @@
+{
+  "aboutAlliance": "Sobre a Aliança",
+  "heroTitle": "Uma jornada rumo à autonomia",
+  "heroTitleEmphasis": "das Sociedades Nacionais.",
+  "heroDescription": "O Centro de Localização reúne Sociedades Nacionais africanas comprometidas com sistemas humanitários e de desenvolvimento mais fortes, liderados localmente — através de liderança alinhada, visão partilhada e ação coordenada.",
+
+  "membership": "Adesão",
+  "localisationAllianceMembers": "Membros da Aliança de Localização",
+  "consortiumPartners": "Parceiros do Consórcio",
+  "oneAlliance": "Uma Aliança",
+  "membershipDescription": "Liderança alinhada e ação coordenada acelerando a localização em todo o continente.",
+  "africanNationalSocieties": "Sociedades Nacionais Africanas",
+
+  "governance": "Governação",
+  "steeringGroupTitle": "Grupo Diretor & Liderança",
+  "steeringGroupDescription": "A Aliança opera através de um Grupo Diretor de líderes voluntários das Sociedades Nacionais participantes, fornecendo direção estratégica, coordenação e supervisão.",
+
+  "implementingArm": "Braço de Implementação",
+  "localisationHubTitle": "O Centro de Localização",
+  "localisationHubDescription": "Hospedado pela Sociedade da Cruz Vermelha do Quénia (KRCS), o Centro traduz a visão da Aliança em prática através de coordenação, apoio técnico, facilitação da aprendizagem e implementação de projetos — incluindo o desenvolvimento e hospedagem desta plataforma.",
+
+  "digitalTransformationTitle": "Transformação Digital & Inovação",
+  "digitalTransformationDesc": "Construção desta plataforma de aprendizagem entre pares e apoio ao fortalecimento de sistemas nas SN africanas.",
+
+  "impactMeasurementTitle": "Impacto & Medição",
+  "impactMeasurementDesc": "Estudos de Impacto da Sustentabilidade Financeira e uma estrutura de medição adaptada aos contextos africanos.",
+
+  "capacityBuildingTitle": "Capacitação",
+  "capacityBuildingDesc": "Um Grupo de Trabalho NSD em África e ferramentas de avaliação de aprendizagem entre pares.",
+
+  "fourPillarFramework": "Estrutura dos Quatro Pilares",
+  "fourPillarTitle": "Uma jornada holística rumo à autonomia",
+  "fourPillarDescription": "O trabalho da Aliança está organizado em quatro pilares técnicos, cada um liderado por um parceiro específico. Os recursos, ferramentas e atualizações da plataforma são categorizados por cor de pilar para uma experiência consistente.",
+
+  "leadershipPillar": "Liderança",
+  "leadershipGovernanceName": "Liderança & Governação",
+  "leadershipDesc": "Construir integridade, boa governação e liderança eficaz e transparente.",
+  "leadershipLead": "FICV",
+
+  "branchPillar": "Delegações",
+  "branchDevelopmentName": "Desenvolvimento de Delegações",
+  "branchDesc": "Fortalecimento de estruturas de delegações, planos e receitas geradas localmente.",
+  "branchLead": "FICV",
+
+  "resourcePillar": "Recursos",
+  "resourceMobilisationName": "Mobilização de Recursos Domésticos",
+  "resourceDesc": "Diversificação de receitas, incluindo iniciativas de Primeiros Socorros no Local de Trabalho.",
+  "resourceLead": "CV Suíça & CV Países Baixos",
+
+  "financePillar": "Finanças",
+  "financeDevelopmentName": "Desenvolvimento Financeiro",
+  "financeDesc": "Cobertura de custos essenciais, sistemas financeiros robustos e resiliência a longo prazo.",
+  "financeLead": "CV Norueguesa",
+
+  "technicalLead": "Líder Técnico",
+
+  "indicatorTracking": "Rastreamento de Indicadores",
+  "financialSustainabilityIndicators": "Indicadores de Sustentabilidade Financeira",
+  "indicatorDescription": "A plataforma foi concebida para integrar os indicadores de sustentabilidade financeira da Aliança — desde contas auditadas até planos NSD e documentação de ativos.",
+
+  "pillarColumn": "Pilar",
+  "principleColumn": "Princípio a medir",
+  "indicatorsColumn": "Indicadores",
+
+  "guidingPrinciples": "Princípios Orientadores",
+  "anchoredInValues": "Ancorados em valores partilhados.",
+
+  "locallyLedTitle": "Tomada de decisão liderada localmente",
+  "locallyLedDesc": "Responsabilidade mútua em toda a Aliança.",
+
+  "sustainabilityTitle": "Sustentabilidade & aprendizagem entre pares",
+  "sustainabilityDesc": "Colaboração que perdura para além de qualquer projeto único.",
+
+  "institutionalCapacityTitle": "Capacidade institucional",
+  "institutionalCapacityDesc": "Fortalecimento da liderança e governação.",
+
+  "primaryFocusAreas": "Áreas de Foco Primárias",
+  "whereWeDirectEnergy": "Onde direcionamos a nossa energia.",
+
+  "financialSustainabilityTitle": "Sustentabilidade Financeira",
+  "financialSustainabilityDesc": "Mobilização de recursos, diversificação e resiliência a longo prazo.",
+
+  "institutionalDevelopmentTitle": "Desenvolvimento Institucional",
+  "institutionalDevelopmentDesc": "Fortalecimento da liderança, governação e transformação digital.",
+
+  "knowledgeSharingTitle": "Partilha de Conhecimento",
+  "knowledgeSharingDesc": "Aprendizagem regional e documentação de ferramentas desenvolvidas.",
+
+  "ctaTitle": "Mais do que um projeto — um movimento rumo à ação humanitária liderada localmente.",
+  "explorePlatform": "Explorar a plataforma",
+
+  "home": "Início",
+  "login": "Entrar",
+  "signUp": "Registar",
+  "goToDashboard": "Ir para o Painel",
+
+  "copyright": "© {{year}} {{organizationName}}"
+}

@@ -1,3 +1,4 @@
+import "./i18n"; // Initialize i18n BEFORE React
 import { FrappeProvider } from "frappe-react-sdk";
 import React from "react";
 import ReactDOM from "react-dom/client";

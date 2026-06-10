@@ -1,0 +1,18 @@
+{
+  "dashboardOverview": "Aperçu du Tableau de Bord",
+  "welcomeBack": "Bon retour, {{name}}!",
+  "heroDescription": "Autonomiser les Sociétés Nationales à travers l'Afrique grâce à l'apprentissage entre pairs, le partage de ressources et la croissance collaborative",
+  "recentNews": "Actualités & Récits Récents",
+  "latestUpdates": "Dernières mises à jour du réseau",
+  "upcomingEvents": "Événements à Venir",
+  "quickActions": "Actions Rapides",
+  "addKnowledgeResource": "Ajouter une Ressource de Connaissance",
+  "shareNewsStory": "Partager une Actualité",
+  "featuredResources": "Ressources en Vedette",
+  "toolsReportsLearning": "Outils, rapports et matériel d'apprentissage",
+  "noRecentNews": "Aucune actualité récente disponible",
+  "noUpcomingEvents": "Aucun événement à venir",
+  "noFeaturedResources": "Aucune ressource en vedette disponible",
+  "checkBackLater": "Revenez plus tard pour les ressources de connaissances",
+  "resource": "Ressource"
+}

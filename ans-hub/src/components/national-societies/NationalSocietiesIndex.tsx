@@ -12,6 +12,7 @@ import {
   Loader2,
   AlertTriangle,
 } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface NSSociety {
@@ -98,6 +99,7 @@ function CardSkeleton() {
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function NationalSocietiesIndex() {
+  const { t } = useTranslation(['societies', 'common']);
   const [activeRegion, setActiveRegion] = useState("All Regions");
   const [query, setQuery] = useState("");
 
@@ -164,7 +166,7 @@ export default function NationalSocietiesIndex() {
 
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Member Societies</span>
+                    <span className="text-gray-600">{t('societies:memberSocieties')}</span>
                     {isLoading ? (
                       <Skeleton className="h-4 w-8" />
                     ) : (
@@ -172,7 +174,7 @@ export default function NationalSocietiesIndex() {
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Total Volunteers</span>
+                    <span className="text-gray-600">{t('societies:totalVolunteers')}</span>
                     {isLoading ? (
                       <Skeleton className="h-4 w-12" />
                     ) : (
@@ -184,7 +186,7 @@ export default function NationalSocietiesIndex() {
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Total Branches</span>
+                    <span className="text-gray-600">{t('societies:totalBranches')}</span>
                     {isLoading ? (
                       <Skeleton className="h-4 w-10" />
                     ) : (
@@ -201,7 +203,7 @@ export default function NationalSocietiesIndex() {
             <div className="bg-white rounded border border-gray-200 p-4">
               <div className="flex items-center gap-2 mb-4">
                 <Filter className="h-4 w-4 text-gray-500" />
-                <h3 className="font-bold text-gray-900">Filter by Region</h3>
+                <h3 className="font-bold text-gray-900">{t('societies:filterByRegion')}</h3>
               </div>
               <div className="space-y-1">
                 {regions.map((r) => (
@@ -215,7 +217,7 @@ export default function NationalSocietiesIndex() {
                         : "text-gray-700 hover:bg-gray-50",
                     ].join(" ")}
                   >
-                    <span>{r}</span>
+                    <span>{r === "All Regions" ? t('societies:allRegions') : r}</span>
                     <span className="text-xs text-gray-400">
                       {r === "All Regions"
                         ? societies.length
@@ -234,13 +236,12 @@ export default function NationalSocietiesIndex() {
               <div className="flex items-center gap-2 mb-2">
                 <Globe2 className="h-5 w-5 text-dash-red" />
                 <span className="text-xs font-bold uppercase tracking-wider text-dash-red">
-                  Member Societies
+                  {t('societies:memberSocieties')}
                 </span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">National Societies</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-1">{t('societies:pageTitle')}</h1>
               <p className="text-sm text-gray-600 mb-4">
-                Explore all member National Societies in the Localisation Hub Alliance — their
-                profiles, pillar alignment, and contact information.
+                {t('societies:pageDescription')}
               </p>
 
               {/* Search */}
@@ -248,7 +249,7 @@ export default function NationalSocietiesIndex() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search by name, country, abbreviation or region…"
+                  placeholder={t('societies:searchPlaceholder')}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-dash-red/30 focus:border-dash-red transition"
@@ -393,7 +394,7 @@ export default function NationalSocietiesIndex() {
                   <div className="bg-white rounded border border-gray-200 p-12 text-center">
                     <Globe2 className="h-10 w-10 text-gray-200 mx-auto mb-3" />
                     <p className="text-gray-500 text-sm">
-                      No societies match your search.
+                      {t('societies:noSocieties')}
                     </p>
                     <button
                       onClick={() => {
@@ -402,7 +403,7 @@ export default function NationalSocietiesIndex() {
                       }}
                       className="mt-3 text-xs text-dash-red hover:underline"
                     >
-                      Clear filters
+                      {t('common:clearFilters')}
                     </button>
                   </div>
                 )}

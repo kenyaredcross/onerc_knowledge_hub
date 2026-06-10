@@ -1,0 +1,17 @@
+{
+  "pageTitle": "Learning Hub",
+  "pageSubtitle": "Knowledge & Resources",
+  "totalResources": "Total Resources",
+  "filterByPillar": "Filter by Pillar",
+  "allPillars": "All Pillars",
+  "searchPlaceholder": "Search courses, topics, or platforms…",
+  "viewGrid": "Grid view",
+  "viewList": "List view",
+  "views": "views",
+  "newResource": "New Resource",
+  "errorLoading": "Failed to load resources. Please try again.",
+  "noResources": "No learning resources found",
+  "visitPlatform": "Visit Platform",
+  "viewDetails": "View Details",
+  "close": "Close"
+}
