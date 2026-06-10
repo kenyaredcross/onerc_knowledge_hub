@@ -265,7 +265,7 @@ export default function DashboardLayout() {
             {managementItems
               .filter((item) => {
                 // Show "Users" and "Desk" only to admins and managers
-                if (item.path === "/users" || item.path === "/app") {
+                if (item.path === "/users" || item.path.startsWith("/app")) {
                   return isAdminOrManager;
                 }
                 // Show other management items (FAQs) to everyone
