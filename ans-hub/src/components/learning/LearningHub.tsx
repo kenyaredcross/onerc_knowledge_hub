@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { pillarColor } from "../../lib/site-data";
+import { useTranslation } from 'react-i18next';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 interface LearningResource {
@@ -84,6 +85,7 @@ function CardSkeleton() {
 
 // ── Component ────────────────────────────────────────────────────────────────
 export default function LearningHub() {
+  const { t } = useTranslation(['learning', 'common']);
   const [query, setQuery] = useState("");
   const [activePillar, setActivePillar] = useState("All Pillars");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -150,12 +152,12 @@ export default function LearningHub() {
                     <GraduationCap className="h-7 w-7 text-white" />
                   </div>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-1">Learning Hub</h3>
-                <p className="text-sm text-gray-600 mb-4">Knowledge & Resources</p>
+                <h3 className="font-bold text-gray-900 mb-1">{t('learning:pageTitle')}</h3>
+                <p className="text-sm text-gray-600 mb-4">{t('learning:pageSubtitle')}</p>
 
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Total Resources</span>
+                    <span className="text-gray-600">{t('learning:totalResources')}</span>
                     {loadingStats ? (
                       <Skeleton className="h-4 w-8" />
                     ) : (
@@ -180,7 +182,7 @@ export default function LearningHub() {
             <div className="bg-white rounded border border-gray-200 p-4">
               <div className="flex items-center gap-2 mb-4">
                 <Filter className="h-4 w-4 text-gray-500" />
-                <h3 className="font-bold text-gray-900">Filter by Pillar</h3>
+                <h3 className="font-bold text-gray-900">{t('learning:filterByPillar')}</h3>
               </div>
               <div className="space-y-1">
                 {pillars.map((p) => (
@@ -196,7 +198,7 @@ export default function LearningHub() {
                   >
                     <span>{p}</span>
                     <span className="text-xs text-gray-400">
-                      {p === "All Pillars"
+                      {p === t('learning:allPillars')
                         ? resources.length
                         : resources.filter((r) => r.pillar_name === p).length}
                     </span>
@@ -216,7 +218,7 @@ export default function LearningHub() {
                   Learning & Development
                 </span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">Learning Hub</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-1">{t('learning:pageTitle')}</h1>
               <p className="text-sm text-gray-600 mb-4">
                 Access curated learning resources, courses, and training materials across all four pillars of the Localisation Hub.
               </p>
@@ -227,7 +229,7 @@ export default function LearningHub() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search courses, topics, or platforms…"
+                    placeholder={t('learning:searchPlaceholder')}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-dash-red/30 focus:border-dash-red transition"

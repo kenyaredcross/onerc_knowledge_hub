@@ -5,8 +5,10 @@ import { Calendar, MapPin, ArrowLeft, Newspaper, Eye } from "lucide-react";
 import { pillarColor } from "../../lib/site-data";
 import { mapArticleToNewsItem, type Article } from "../../lib/utils";
 import Comments from "../common/Comments";
+import { useTranslation } from 'react-i18next';
 
 export default function NewsDetail() {
+  const { t } = useTranslation(['news', 'common']);
   const { slug } = useParams<{ slug: string }>();
 
   // Fetch article from API
@@ -66,7 +68,7 @@ export default function NewsDetail() {
             to="/news"
             className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-dash-red"
           >
-            <ArrowLeft className="h-4 w-4" /> Back to News
+            <ArrowLeft className="h-4 w-4" /> {t('common:back')} to News
           </Link>
           <div className="rounded-xl bg-white border border-dash-border shadow-sm p-12 text-center">
             <Newspaper className="h-16 w-16 text-gray-300 mx-auto mb-4" />
@@ -76,7 +78,7 @@ export default function NewsDetail() {
               to="/news"
               className="inline-flex items-center gap-2 px-4 py-2 bg-dash-red text-white rounded hover:bg-red-600 transition-colors"
             >
-              <ArrowLeft className="h-4 w-4" /> Back to News
+              <ArrowLeft className="h-4 w-4" /> {t('common:back')} to News
             </Link>
           </div>
         </div>
@@ -91,7 +93,7 @@ export default function NewsDetail() {
           to="/news"
           className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-dash-red"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to News
+          <ArrowLeft className="h-4 w-4" /> {t('common:back')} to News
         </Link>
 
         <div className="grid gap-6 lg:grid-cols-12">
@@ -167,7 +169,7 @@ export default function NewsDetail() {
             {/* Related Stories */}
             {relatedArticles.length > 0 && (
               <div className="bg-white rounded border border-gray-200 p-4">
-                <h3 className="font-bold text-gray-900 mb-4">Related Stories</h3>
+                <h3 className="font-bold text-gray-900 mb-4">{t('news:relatedStories')}</h3>
                 <div className="space-y-3">
                   {relatedArticles.map((n) => (
                     <Link

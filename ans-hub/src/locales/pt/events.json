@@ -1,0 +1,22 @@
+{
+  "pageTitle": "Eventos e Encontros",
+  "pageSubtitle": "Reunir a rede",
+  "upcoming": "Próximos",
+  "past": "Passados",
+  "noUpcomingEvents": "Nenhum evento próximo encontrado.",
+  "noPastEvents": "Sem eventos passados",
+  "eventDetails": "Detalhes do Evento",
+  "date": "Data",
+  "time": "Hora",
+  "venue": "Local",
+  "register": "Registar",
+  "addToCalendar": "Adicionar ao Calendário",
+  "participants": "Participantes",
+  "organizer": "Organizador",
+  "featuredEvent": "Evento em Destaque",
+  "featuredSpeakers": "Oradores em Destaque",
+  "readMore": "Ler mais",
+  "newEvent": "Novo Evento",
+  "upcomingEvents": "Eventos Próximos",
+  "showPastEvents": "Mostrar Eventos Passados"
+}

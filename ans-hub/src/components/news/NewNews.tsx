@@ -22,8 +22,10 @@ import { FileUploadField } from "../fields/FileUploadField";
 import { LinkField } from "../fields/LinkField";
 import { type Article } from "../../lib/utils";
 import { UserContext } from "../../contexts/UserContext";
+import { useTranslation } from 'react-i18next';
 
 export default function NewNews() {
+  const { t } = useTranslation(['forms', 'common']);
   const navigate = useNavigate();
   const { userData } = useContext(UserContext);
   const [showForm, setShowForm] = useState(false);
@@ -265,17 +267,17 @@ export default function NewNews() {
               className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-500 transition-colors hover:text-dash-red"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to Articles List
+              {t('forms:backTo')} Articles List
             </button>
 
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl">
                 <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-dash-red/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-dash-red">
                   <Newspaper className="h-3.5 w-3.5" />
-                  Create Article
+                  {t('forms:createResource')}
                 </div>
                 <h1 className="font-display text-4xl font-bold tracking-tight text-gray-900">
-                  Add New News Article
+                  {t('forms:addNew')} News Article
                 </h1>
               </div>
             </div>
@@ -300,7 +302,7 @@ export default function NewNews() {
               <div className="grid gap-6 md:grid-cols-2">
                 <div className="md:col-span-2">
                   <label className="mb-2 block text-sm font-bold text-gray-800">
-                    Title <span className="text-red-500">*</span>
+                    {t('forms:title')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -338,7 +340,7 @@ export default function NewNews() {
                 <div>
                   <LinkField
                     doctype="Localisation Category"
-                    label="Category"
+                    label={t('forms:category')}
                     value={form.category}
                     onChange={(val) => updateField("category", val)}
                     required

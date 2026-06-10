@@ -1,0 +1,18 @@
+{
+  "dashboardOverview": "Visão Geral do Painel",
+  "welcomeBack": "Bem-vindo de volta, {{name}}!",
+  "heroDescription": "Capacitar Sociedades Nacionais em África através de aprendizagem entre pares, partilha de recursos e crescimento colaborativo",
+  "recentNews": "Notícias & Histórias Recentes",
+  "latestUpdates": "Últimas atualizações da rede",
+  "upcomingEvents": "Eventos Próximos",
+  "quickActions": "Ações Rápidas",
+  "addKnowledgeResource": "Adicionar Recurso de Conhecimento",
+  "shareNewsStory": "Partilhar Notícia",
+  "featuredResources": "Recursos em Destaque",
+  "toolsReportsLearning": "Ferramentas, relatórios e materiais de aprendizagem",
+  "noRecentNews": "Sem notícias recentes disponíveis",
+  "noUpcomingEvents": "Sem eventos próximos",
+  "noFeaturedResources": "Sem recursos em destaque disponíveis",
+  "checkBackLater": "Volte mais tarde para recursos de conhecimento",
+  "resource": "Recurso"
+}

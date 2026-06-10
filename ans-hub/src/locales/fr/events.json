@@ -1,0 +1,22 @@
+{
+  "pageTitle": "Événements et Rassemblements",
+  "pageSubtitle": "Rassembler le réseau",
+  "upcoming": "À Venir",
+  "past": "Passés",
+  "noUpcomingEvents": "Aucun événement à venir trouvé.",
+  "noPastEvents": "Aucun événement passé",
+  "eventDetails": "Détails de l'Événement",
+  "date": "Date",
+  "time": "Heure",
+  "venue": "Lieu",
+  "register": "S'inscrire",
+  "addToCalendar": "Ajouter au Calendrier",
+  "participants": "Participants",
+  "organizer": "Organisateur",
+  "featuredEvent": "Événement en Vedette",
+  "featuredSpeakers": "Intervenants Vedettes",
+  "readMore": "Lire la suite",
+  "newEvent": "Nouvel Événement",
+  "upcomingEvents": "Événements à Venir",
+  "showPastEvents": "Afficher les Événements Passés"
+}

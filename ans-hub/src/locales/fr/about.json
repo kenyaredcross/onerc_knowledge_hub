@@ -1,0 +1,98 @@
+{
+  "aboutAlliance": "À propos de l'Alliance",
+  "heroTitle": "Un parcours vers l'autonomie",
+  "heroTitleEmphasis": "des Sociétés Nationales.",
+  "heroDescription": "Le Hub de Localisation rassemble les Sociétés Nationales africaines engagées dans des systèmes humanitaires et de développement plus solides, dirigés localement — à travers un leadership aligné, une vision partagée et une action coordonnée.",
+
+  "membership": "Adhésion",
+  "localisationAllianceMembers": "Membres de l'Alliance de Localisation",
+  "consortiumPartners": "Partenaires du Consortium",
+  "oneAlliance": "Une Alliance",
+  "membershipDescription": "Leadership aligné et action coordonnée accélérant la localisation à travers le continent.",
+  "africanNationalSocieties": "Sociétés Nationales Africaines",
+
+  "governance": "Gouvernance",
+  "steeringGroupTitle": "Groupe de Pilotage & Leadership",
+  "steeringGroupDescription": "L'Alliance fonctionne à travers un Groupe de Pilotage de leaders volontaires des Sociétés Nationales participantes, fournissant orientation stratégique, coordination et supervision.",
+
+  "implementingArm": "Bras de Mise en Œuvre",
+  "localisationHubTitle": "Le Hub de Localisation",
+  "localisationHubDescription": "Hébergé par la Société de la Croix-Rouge du Kenya (KRCS), le Hub traduit la vision de l'Alliance en pratique à travers la coordination, le soutien technique, la facilitation de l'apprentissage et la mise en œuvre de projets — y compris le développement et l'hébergement de cette plateforme.",
+
+  "digitalTransformationTitle": "Transformation Numérique & Innovation",
+  "digitalTransformationDesc": "Construction de cette plateforme d'apprentissage entre pairs et soutien au renforcement des systèmes à travers les SN africaines.",
+
+  "impactMeasurementTitle": "Impact & Mesure",
+  "impactMeasurementDesc": "Études d'Impact de la Durabilité Financière et un cadre de mesure adapté aux contextes africains.",
+
+  "capacityBuildingTitle": "Renforcement des Capacités",
+  "capacityBuildingDesc": "Un Groupe de Travail NSD en Afrique et des outils d'évaluation de l'apprentissage entre pairs.",
+
+  "fourPillarFramework": "Cadre des Quatre Piliers",
+  "fourPillarTitle": "Un parcours holistique vers l'autonomie",
+  "fourPillarDescription": "Le travail de l'Alliance est organisé en quatre piliers techniques, chacun dirigé par un partenaire spécifique. Les ressources, outils et mises à jour de la plateforme sont catégorisés par couleur de pilier pour une expérience cohérente.",
+
+  "leadershipPillar": "Leadership",
+  "leadershipGovernanceName": "Leadership & Gouvernance",
+  "leadershipDesc": "Renforcer l'intégrité, la bonne gouvernance et un leadership efficace et transparent.",
+  "leadershipLead": "FICR",
+
+  "branchPillar": "Branches",
+  "branchDevelopmentName": "Développement des Branches",
+  "branchDesc": "Renforcement des cadres de branches, des plans et des revenus générés localement.",
+  "branchLead": "FICR",
+
+  "resourcePillar": "Ressources",
+  "resourceMobilisationName": "Mobilisation des Ressources Domestiques",
+  "resourceDesc": "Diversification des revenus, y compris les initiatives de Premiers Secours en Milieu de Travail.",
+  "resourceLead": "CR Suisse & CR Pays-Bas",
+
+  "financePillar": "Finance",
+  "financeDevelopmentName": "Développement Financier",
+  "financeDesc": "Couverture des coûts de base, systèmes financiers robustes et résilience à long terme.",
+  "financeLead": "CR Norvégienne",
+
+  "technicalLead": "Responsable Technique",
+
+  "indicatorTracking": "Suivi des Indicateurs",
+  "financialSustainabilityIndicators": "Indicateurs de Durabilité Financière",
+  "indicatorDescription": "La plateforme est conçue pour intégrer les indicateurs de durabilité financière de l'Alliance — des comptes audités aux plans NSD et à la documentation des actifs.",
+
+  "pillarColumn": "Pilier",
+  "principleColumn": "Principe à mesurer",
+  "indicatorsColumn": "Indicateurs",
+
+  "guidingPrinciples": "Principes Directeurs",
+  "anchoredInValues": "Ancrés dans des valeurs partagées.",
+
+  "locallyLedTitle": "Prise de décision dirigée localement",
+  "locallyLedDesc": "Responsabilité mutuelle à travers l'Alliance.",
+
+  "sustainabilityTitle": "Durabilité & apprentissage entre pairs",
+  "sustainabilityDesc": "Collaboration qui perdure au-delà de tout projet unique.",
+
+  "institutionalCapacityTitle": "Capacité institutionnelle",
+  "institutionalCapacityDesc": "Renforcement du leadership et de la gouvernance.",
+
+  "primaryFocusAreas": "Domaines d'Action Prioritaires",
+  "whereWeDirectEnergy": "Où nous dirigeons notre énergie.",
+
+  "financialSustainabilityTitle": "Durabilité Financière",
+  "financialSustainabilityDesc": "Mobilisation des ressources, diversification et résilience à long terme.",
+
+  "institutionalDevelopmentTitle": "Développement Institutionnel",
+  "institutionalDevelopmentDesc": "Renforcement du leadership, de la gouvernance et de la transformation numérique.",
+
+  "knowledgeSharingTitle": "Partage des Connaissances",
+  "knowledgeSharingDesc": "Apprentissage régional et documentation des outils développés.",
+
+  "ctaTitle": "Plus qu'un projet — un mouvement vers une action humanitaire dirigée localement.",
+  "explorePlatform": "Explorer la plateforme",
+
+  "home": "Accueil",
+  "login": "Connexion",
+  "signUp": "S'inscrire",
+  "goToDashboard": "Aller au Tableau de Bord",
+
+  "copyright": "© {{year}} {{organizationName}}"
+}

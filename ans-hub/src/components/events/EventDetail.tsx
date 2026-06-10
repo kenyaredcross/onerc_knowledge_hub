@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { Link, Navigate, useParams } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 const formatBadge: Record<string, string> = {
   Webinar: "bg-blue-100 text-blue-700",
@@ -22,6 +23,7 @@ const formatBadge: Record<string, string> = {
 };
 
 export default function EventDetail() {
+  const { t } = useTranslation(['events', 'common']);
   const { slug } = useParams<{ slug: string }>();
 
   const { data, isLoading, error } = useFrappeGetCall(
@@ -58,7 +60,7 @@ export default function EventDetail() {
           to="/events"
           className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-500 transition-colors hover:text-dash-red"
         >
-          <ArrowLeft className="h-4 w-4" /> Back to Events
+          <ArrowLeft className="h-4 w-4" /> {t('common:back')} to Events
         </Link>
 
         <div className="rounded-2xl bg-white border border-dash-border shadow-sm overflow-hidden">
@@ -203,7 +205,7 @@ export default function EventDetail() {
                     </div>
                     <div>
                       <div className="text-[10px] font-black uppercase tracking-wider text-gray-400 mb-1">
-                        Date
+                        {t('events:date')}
                       </div>
                       <div className="text-sm font-bold text-gray-900">
                         {startDate.toLocaleDateString("en-US", {
@@ -231,7 +233,7 @@ export default function EventDetail() {
                     </div>
                     <div>
                       <div className="text-[10px] font-black uppercase tracking-wider text-gray-400 mb-1">
-                        Time
+                        {t('events:time')}
                       </div>
                       <div className="text-sm font-bold text-gray-900">
                         {event.start_time}
@@ -250,7 +252,7 @@ export default function EventDetail() {
                     </div>
                     <div>
                       <div className="text-[10px] font-black uppercase tracking-wider text-gray-400 mb-1">
-                        Location
+                        {t('events:venue')}
                       </div>
                       <div className="text-sm font-bold text-gray-900">
                         {event.venue || "Online / TBD"}

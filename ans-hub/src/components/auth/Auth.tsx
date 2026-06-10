@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useFrappeGetCall } from "frappe-react-sdk";
+import { useTranslation } from 'react-i18next';
 
 /**
  * Auth — sign-in / sign-up screen with a sliding red panel.
@@ -22,6 +23,7 @@ interface AuthProps {
 }
 
 export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
+  const { t } = useTranslation(['auth', 'common']);
   const [isSignIn, setIsSignIn] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -108,20 +110,20 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
             <form className="ma-form" onSubmit={handleSignUp}>
               <div className="ma-eyebrow">01 &nbsp; Begin</div>
               <h2 className="ma-title">
-                Create an <em>account</em>
+                {t('auth:createAccountTitle').split(' ').slice(0, -1).join(' ')} <em>{t('auth:createAccountTitle').split(' ').slice(-1)}</em>
               </h2>
               <p className="ma-sub">
-                Submit your details below. Your account will be reviewed and activated upon approval.
+                {t('auth:createAccountSubtitle')}
               </p>
 
               <div className="ma-field">
                 <label className="ma-label">
-                  First Name
+                  {t('auth:firstName')}
                 </label>
                 <input
                   className="ma-input"
                   type="text"
-                  placeholder="Enter your first name"
+                  placeholder={t('auth:enterFirstName')}
                   value={signUpData.first_name}
                   onChange={(e) =>
                     setSignUpData({ ...signUpData, first_name: e.target.value })
@@ -131,12 +133,12 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  Last Name
+                  {t('auth:lastName')}
                 </label>
                 <input
                   className="ma-input"
                   type="text"
-                  placeholder="Enter your last name"
+                  placeholder={t('auth:enterLastName')}
                   value={signUpData.last_name}
                   onChange={(e) =>
                     setSignUpData({ ...signUpData, last_name: e.target.value })
@@ -146,12 +148,12 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  Email
+                  {t('auth:email')}
                 </label>
                 <input
                   className="ma-input"
                   type="email"
-                  placeholder="you@somewhere.com"
+                  placeholder={t('auth:enterEmail')}
                   value={signUpData.preferred_contact_email}
                   onChange={(e) =>
                     setSignUpData({ ...signUpData, preferred_contact_email: e.target.value })
@@ -161,12 +163,12 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  Phone Number
+                  {t('auth:phoneNumber')}
                 </label>
                 <input
                   className="ma-input"
                   type="tel"
-                  placeholder="+1234567890"
+                  placeholder={t('auth:enterPhoneNumber')}
                   value={signUpData.phone_number}
                   onChange={(e) =>
                     setSignUpData({ ...signUpData, phone_number: e.target.value })
@@ -176,7 +178,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  Position
+                  {t('auth:position')}
                 </label>
                 <select
                   className="ma-input"
@@ -187,7 +189,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                   required
                   disabled={loadingDesignations}
                 >
-                  <option value="">Select your position</option>
+                  <option value="">{t('auth:selectPosition')}</option>
                   {designations?.message?.map((designation: any) => (
                     <option key={designation.name} value={designation.name}>
                       {designation.name}
@@ -197,7 +199,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  National Society
+                  {t('auth:nationalSociety')}
                 </label>
                 <select
                   className="ma-input"
@@ -209,7 +211,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                   disabled={loadingSocieties}
                 >
                   <option value="">
-                    {loadingSocieties ? "Loading..." : "Select your organization"}
+                    {loadingSocieties ? t('common:loading') : t('auth:selectNationalSociety')}
                   </option>
                   {nationalSocieties?.message?.map((society: { name: string; national_society_name: string; abbreviation: string; country: string }) => (
                     <option key={society.name} value={society.name}>
@@ -220,7 +222,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  Primary Language
+                  {t('auth:primaryLanguage')}
                 </label>
                 <select
                   className="ma-input"
@@ -231,7 +233,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                   required
                   disabled={loadingLanguages}
                 >
-                  <option value="">Select your primary language</option>
+                  <option value="">{t('auth:selectLanguage')}</option>
                   {languages?.message?.map((lang: any) => (
                     <option key={lang.name} value={lang.name}>
                       {lang.language_name || lang.name}
@@ -241,7 +243,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  Gender
+                  {t('auth:gender')}
                 </label>
                 <select
                   className="ma-input"
@@ -251,16 +253,16 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                   }
                   required
                 >
-                  <option value="">Select your gender</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                  <option value="Prefer not to say">Prefer not to say</option>
+                  <option value="">{t('auth:selectGender')}</option>
+                  <option value="Male">{t('auth:male')}</option>
+                  <option value="Female">{t('auth:female')}</option>
+                  <option value="Other">{t('auth:other')}</option>
+                  <option value="Prefer not to say">{t('auth:preferNotToSay')}</option>
                 </select>
               </div>
 
               <button className="ma-button" type="submit">
-                <span className="ma-btn-label">Submit Registration</span>
+                <span className="ma-btn-label">{t('auth:submit')}</span>
                 <span className="ma-btn-arrow">→</span>
               </button>
             </form>
@@ -271,18 +273,18 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
             <form className="ma-form" onSubmit={handleSignIn}>
               <div className="ma-eyebrow">Return &nbsp; ·</div>
               <h2 className="ma-title">
-                Welcome <em>back</em>
+                {t('auth:welcomeBack').split(' ')[0]} <em>{t('auth:welcomeBack').split(' ')[1]}</em>
               </h2>
-              <p className="ma-sub">The room is as you left it. Sign in to continue.</p>
+              <p className="ma-sub">{t('auth:welcomeBackSubtitle')}</p>
 
               <div className="ma-field">
                 <label className="ma-label">
-                  Email or Username
+                  {t('auth:email')}
                 </label>
                 <input
                   className="ma-input"
                   type="text"
-                  placeholder="you@somewhere.com or username"
+                  placeholder={t('auth:enterEmail')}
                   value={signInData.email}
                   onChange={(e) =>
                     setSignInData({ ...signInData, email: e.target.value })
@@ -292,12 +294,12 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
               </div>
               <div className="ma-field">
                 <label className="ma-label">
-                  Password
+                  {t('auth:password')}
                 </label>
                 <input
                   className="ma-input"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder={t('auth:enterPassword')}
                   value={signInData.password}
                   onChange={(e) =>
                     setSignInData({ ...signInData, password: e.target.value })
@@ -308,12 +310,12 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
 
               <div className="ma-row">
                 <Link to="/forgot-password" className="ma-link">
-                  Forgot your password?
+                  {t('auth:forgotPasswordLink')}
                 </Link>
               </div>
 
               <button className="ma-button" type="submit">
-                <span className="ma-btn-label">Sign In</span>
+                <span className="ma-btn-label">{t('auth:signIn')}</span>
                 <span className="ma-btn-arrow">→</span>
               </button>
             </form>
@@ -333,10 +335,10 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                 Hello,<strong>Stranger.</strong>
               </h2>
               <p className="ma-switch-desc">
-                <strong>Already a member? Step back through the door and we'll pick up where you left off.</strong>
+                <strong>{t('auth:alreadyHaveAccount')} {t('auth:signInHere')}</strong>
               </p>
               <button className="ma-switch-btn" type="button" onClick={toggleForm}>
-                <span>Sign In</span>
+                <span>{t('auth:signIn')}</span>
                 <span>→</span>
               </button>
             </div>
@@ -347,10 +349,10 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                 Hello,<strong>Friend.</strong>
               </h2>
               <p className="ma-switch-desc">
-                <strong>Not a member yet? Leave your details and we'll prepare a place for you.</strong>
+                <strong>{t('auth:noAccount')} {t('auth:signUpHere')}</strong>
               </p>
               <button className="ma-switch-btn" type="button" onClick={toggleForm}>
-                <span>Sign Up</span>
+                <span>{t('auth:signUp')}</span>
                 <span>→</span>
               </button>
             </div>

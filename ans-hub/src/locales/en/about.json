@@ -1,0 +1,98 @@
+{
+  "aboutAlliance": "About the Alliance",
+  "heroTitle": "A journey toward National Society",
+  "heroTitleEmphasis": "self-reliance.",
+  "heroDescription": "The Localisation Hub brings together African National Societies committed to stronger, locally led humanitarian and development systems — through aligned leadership, shared vision, and coordinated action.",
+
+  "membership": "Membership",
+  "localisationAllianceMembers": "Localisation Alliance Members",
+  "consortiumPartners": "Consortium Partners",
+  "oneAlliance": "One Alliance",
+  "membershipDescription": "Aligned leadership and coordinated action accelerating localisation across the continent.",
+  "africanNationalSocieties": "African National Societies",
+
+  "governance": "Governance",
+  "steeringGroupTitle": "Steering Group & Leadership",
+  "steeringGroupDescription": "The Alliance operates through a Steering Group of volunteer leaders from participating National Societies, providing strategic direction, coordination and oversight.",
+
+  "implementingArm": "Implementing Arm",
+  "localisationHubTitle": "The Localisation Hub",
+  "localisationHubDescription": "Hosted by the Kenya Red Cross Society (KRCS), the Hub translates the Alliance's vision into practice through coordination, technical support, learning facilitation and project implementation — including the development and hosting of this platform.",
+
+  "digitalTransformationTitle": "Digital Transformation & Innovation",
+  "digitalTransformationDesc": "Building this peer-to-peer learning platform and supporting systems strengthening across African NSs.",
+
+  "impactMeasurementTitle": "Impact & Measurement",
+  "impactMeasurementDesc": "Financial Sustainability Impact Studies and a measurement framework tailored to African contexts.",
+
+  "capacityBuildingTitle": "Capacity Building",
+  "capacityBuildingDesc": "An NSD Working Group in Africa and peer-to-peer learning assessment tools.",
+
+  "fourPillarFramework": "Four-Pillar Framework",
+  "fourPillarTitle": "A holistic journey to self-reliance",
+  "fourPillarDescription": "The Alliance's work is organised into four technical pillars, each led by a specific partner. The platform's resources, tools and updates are categorised by pillar colour for a consistent experience.",
+
+  "leadershipPillar": "Leadership",
+  "leadershipGovernanceName": "Leadership & Governance",
+  "leadershipDesc": "Building integrity, good governance and effective, transparent leadership.",
+  "leadershipLead": "IFRC",
+
+  "branchPillar": "Branch",
+  "branchDevelopmentName": "Branch Development",
+  "branchDesc": "Strengthening branch frameworks, plans and locally generated income.",
+  "branchLead": "IFRC",
+
+  "resourcePillar": "Resource",
+  "resourceMobilisationName": "Domestic Resource Mobilisation",
+  "resourceDesc": "Diversifying income, including Workplace First Aid initiatives.",
+  "resourceLead": "Swiss RC & Netherlands RC",
+
+  "financePillar": "Finance",
+  "financeDevelopmentName": "Finance Development",
+  "financeDesc": "Core cost coverage, robust finance systems and long-term resilience.",
+  "financeLead": "Norwegian RC",
+
+  "technicalLead": "Technical Lead",
+
+  "indicatorTracking": "Indicator Tracking",
+  "financialSustainabilityIndicators": "Financial Sustainability Indicators",
+  "indicatorDescription": "The platform is designed to integrate the Alliance's financial sustainability indicators — from audited accounts to NSD plans and asset documentation.",
+
+  "pillarColumn": "Pillar",
+  "principleColumn": "Principle to measure",
+  "indicatorsColumn": "Indicators",
+
+  "guidingPrinciples": "Guiding Principles",
+  "anchoredInValues": "Anchored in shared values.",
+
+  "locallyLedTitle": "Locally led decision-making",
+  "locallyLedDesc": "Mutual accountability across the Alliance.",
+
+  "sustainabilityTitle": "Sustainability & peer-to-peer",
+  "sustainabilityDesc": "Collaboration that endures beyond any single project.",
+
+  "institutionalCapacityTitle": "Institutional capacity",
+  "institutionalCapacityDesc": "Strengthening leadership and governance.",
+
+  "primaryFocusAreas": "Primary Focus Areas",
+  "whereWeDirectEnergy": "Where we direct our energy.",
+
+  "financialSustainabilityTitle": "Financial Sustainability",
+  "financialSustainabilityDesc": "Resource mobilisation, diversification and long-term resilience.",
+
+  "institutionalDevelopmentTitle": "Institutional Development",
+  "institutionalDevelopmentDesc": "Strengthening leadership, governance and digital transformation.",
+
+  "knowledgeSharingTitle": "Knowledge Sharing",
+  "knowledgeSharingDesc": "Regional learning and documentation of developed tools.",
+
+  "ctaTitle": "More than a project — a movement toward locally led humanitarian action.",
+  "explorePlatform": "Explore the platform",
+
+  "home": "Home",
+  "login": "Login",
+  "signUp": "Sign Up",
+  "goToDashboard": "Go to Dashboard",
+
+  "copyright": "© {{year}} {{organizationName}}"
+}

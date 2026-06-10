@@ -13,8 +13,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FileUploadField } from "../fields/FileUploadField";
 import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
+import { useTranslation } from 'react-i18next';
 
 export default function NewLearning() {
+  const { t } = useTranslation(['forms', 'common']);
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
