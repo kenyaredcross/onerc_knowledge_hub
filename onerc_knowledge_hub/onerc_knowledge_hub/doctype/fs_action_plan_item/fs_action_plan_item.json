@@ -1,0 +1,52 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2026-06-28 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "action_item",
+  "timeline",
+  "expected_outcome"
+ ],
+ "fields": [
+  {
+   "columns": 4,
+   "fieldname": "action_item",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Action Item"
+  },
+  {
+   "columns": 3,
+   "fieldname": "timeline",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Timeline"
+  },
+  {
+   "columns": 4,
+   "fieldname": "expected_outcome",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Expected Outcome"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-28 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "FS Action Plan Item",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

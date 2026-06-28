@@ -1,0 +1,155 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:FSQ-{#####}",
+ "creation": "2026-06-28 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "question_text",
+  "question_type",
+  "phase",
+  "display_order",
+  "column_break_cfg",
+  "is_scored",
+  "is_required",
+  "has_followup",
+  "section_break_meta",
+  "help_text",
+  "followup_prompt",
+  "section_break_options",
+  "options"
+ ],
+ "fields": [
+  {
+   "fieldname": "question_text",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Question Text",
+   "reqd": 1
+  },
+  {
+   "default": "Single Choice",
+   "fieldname": "question_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Question Type",
+   "options": "Single Choice\nMultiple Choice\nNarrative\nYes/No\nAction Matrix",
+   "reqd": 1
+  },
+  {
+   "default": "Both",
+   "fieldname": "phase",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Phase",
+   "options": "Both\nPre\nPost"
+  },
+  {
+   "fieldname": "display_order",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Display Order"
+  },
+  {
+   "fieldname": "column_break_cfg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_scored",
+   "fieldtype": "Check",
+   "label": "Is Scored"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_required",
+   "fieldtype": "Check",
+   "label": "Is Required"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_followup",
+   "fieldtype": "Check",
+   "label": "Has Follow-up"
+  },
+  {
+   "fieldname": "section_break_meta",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Helper text shown under the question (e.g. \"Select all that apply\").",
+   "fieldname": "help_text",
+   "fieldtype": "Small Text",
+   "label": "Help Text"
+  },
+  {
+   "depends_on": "eval:doc.has_followup",
+   "description": "Prompt shown when the follow-up narrative is revealed (e.g. \"If yes, please explain why\").",
+   "fieldname": "followup_prompt",
+   "fieldtype": "Small Text",
+   "label": "Follow-up Prompt"
+  },
+  {
+   "depends_on": "eval:['Single Choice','Multiple Choice','Yes/No'].includes(doc.question_type)",
+   "fieldname": "section_break_options",
+   "fieldtype": "Section Break",
+   "label": "Options"
+  },
+  {
+   "description": "For Single/Multiple Choice questions. Set a score and tick \"Is Correct\" on the right answers.",
+   "fieldname": "options",
+   "fieldtype": "Table",
+   "label": "Options",
+   "options": "FS Assessment Option"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-28 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "FS Assessment Question",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH FS Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "LH Admin"
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "display_order",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "question_text",
+ "track_changes": 1
+}
