@@ -17,6 +17,9 @@ import {
   MessageSquare,
   GraduationCap,
   Settings,
+  TrendingUp,
+  ClipboardList,
+  FileText,
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
 import { useFrappeGetCall } from "frappe-react-sdk";
@@ -47,6 +50,12 @@ export default function DashboardLayout() {
     { path: "/create/event", label: t('navigation:event'), icon: Calendar, adminOnly: true },
   ];
 
+  const fsItems = [
+    { path: "/financial-sustainability", label: "Dashboard", icon: TrendingUp, exact: true, managerOnly: true },
+    { path: "/financial-sustainability/responses", label: "Responses", icon: ClipboardList, managerOnly: true },
+    { path: "/fs-assessment", label: "Take Assessment", icon: FileText, external: true, newTab: true },
+  ];
+
   const managementItems = [
     { path: "/users", label: t('navigation:users'), icon: Users },
     { path: "/faqs", label: t('navigation:faqs'), icon: HelpCircle },
@@ -71,6 +80,11 @@ export default function DashboardLayout() {
     userRoles.includes("LH Manager") ||
     userRoles.includes("System Manager");
 
+  // Financial Sustainability admin pages are limited to FS managers.
+  const isFsManager =
+    userRoles.includes("LH FS Manager") ||
+    userRoles.includes("System Manager");
+
   // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
@@ -82,7 +96,7 @@ export default function DashboardLayout() {
       : location.pathname === item.path ||
         location.pathname.startsWith(item.path + "/");
 
-  const allNavItems = [...navItems, ...createItems, ...managementItems];
+  const allNavItems = [...navItems, ...fsItems, ...createItems, ...managementItems];
   const currentPage =
     allNavItems.find((n) => isActive(n))?.label ?? "Overview";
 
@@ -208,6 +222,73 @@ export default function DashboardLayout() {
           {/* Language Switcher in Navbar */}
           <div className="px-3 py-2">
             <LanguageSwitcher />
+          </div>
+
+          {/* Financial Sustainability Section */}
+          <div className="space-y-0.5">
+            {!collapsed && (
+              <div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-white/40">
+                Financial Sustainability
+              </div>
+            )}
+            {fsItems
+              .filter((item: any) => !item.managerOnly || isFsManager)
+              .map((item) => {
+                const active = isActive(item);
+                const className = [
+                  "group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150",
+                  active
+                    ? "bg-dash-red/20 text-white"
+                    : "text-white/60 hover:bg-white/8 hover:text-white",
+                  collapsed ? "justify-center px-0" : "",
+                ].join(" ");
+
+                const content = (
+                  <>
+                    {active && (
+                      <span className="absolute left-0 h-6 w-0.5 rounded-r bg-dash-red" />
+                    )}
+                    <item.icon
+                      className={[
+                        "h-4.5 w-4.5 shrink-0 transition-colors",
+                        active ? "text-dash-red" : "text-white/50 group-hover:text-white/80",
+                      ].join(" ")}
+                      style={{ height: "1.125rem", width: "1.125rem" }}
+                    />
+                    {!collapsed && <span className="truncate">{item.label}</span>}
+                    {active && !collapsed && (
+                      <span className="ml-auto h-1.5 w-1.5 rounded-full bg-dash-red" />
+                    )}
+                  </>
+                );
+
+                // The public assessment form is a separate Frappe page → open in a new tab
+                if ((item as any).external) {
+                  return (
+                    <a
+                      key={item.path}
+                      href={item.path}
+                      target={(item as any).newTab ? "_blank" : undefined}
+                      rel={(item as any).newTab ? "noopener noreferrer" : undefined}
+                      title={collapsed ? item.label : undefined}
+                      className={className}
+                    >
+                      {content}
+                    </a>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    title={collapsed ? item.label : undefined}
+                    className={className}
+                  >
+                    {content}
+                  </Link>
+                );
+              })}
           </div>
 
           {/* Create Section */}

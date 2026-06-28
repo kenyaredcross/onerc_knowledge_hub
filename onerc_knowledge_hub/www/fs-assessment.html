@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Financial Sustainability Assessment</title>
+	<link rel="icon" type="image/jpeg" href="/assets/onerc_knowledge_hub/ans-hub/logo.jpg" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet" />
+	<style>
+		:root {
+			--navy: #011E41;
+			--red: #ee2435;
+			--red-dark: #d41e2a;
+			--bg: #f0f2f5;
+			--border: #e5e7eb;
+			--text: #1f2937;
+			--muted: #6b7280;
+			--radius: 4px;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body {
+			background: var(--bg);
+			color: var(--text);
+			font-family: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+			line-height: 1.55;
+		}
+		h1, h2, h3 { letter-spacing: -0.02em; }
+		a { color: inherit; }
+
+		header.site {
+			background: var(--navy);
+			color: #fff;
+			padding: 18px 24px;
+		}
+		header.site .inner {
+			max-width: 820px; margin: 0 auto;
+			display: flex; align-items: center; gap: 14px;
+		}
+		header.site img { width: 40px; height: 40px; border-radius: var(--radius); object-fit: cover; background: #fff; }
+		header.site .titles { display: flex; flex-direction: column; }
+		header.site .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #ff8a80; font-weight: 600; }
+		header.site .name { font-size: 16px; font-weight: 600; }
+
+		main { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+
+		.card {
+			background: #fff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 28px;
+			box-shadow: 0 1px 3px rgba(0,0,0,.06);
+			margin-bottom: 20px;
+		}
+		.hero { background: linear-gradient(135deg, #0a2540 0%, var(--navy) 55%, var(--red) 140%); color: #fff; border: none; }
+		.hero h1 { font-size: 28px; margin-bottom: 10px; }
+		.hero p { color: rgba(255,255,255,.85); max-width: 620px; }
+
+		.phase-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+		@media (max-width: 600px) { .phase-grid { grid-template-columns: 1fr; } }
+		.phase-card {
+			display: block; text-decoration: none;
+			border: 1px solid var(--border); border-radius: var(--radius);
+			padding: 22px; background: #fff; transition: box-shadow .2s, transform .2s, border-color .2s;
+		}
+		.phase-card:hover { box-shadow: 0 10px 30px -12px rgba(1,30,65,.4); transform: translateY(-2px); border-color: var(--navy); }
+		.phase-card .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--red); margin-bottom: 8px; }
+		.phase-card h3 { font-size: 18px; margin-bottom: 6px; }
+		.phase-card p { font-size: 14px; color: var(--muted); }
+
+		.section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--navy); margin-bottom: 16px; }
+
+		label.field-label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+		.req { color: var(--red); }
+		input[type=text], input[type=email], select, textarea {
+			width: 100%; font-family: inherit; font-size: 14px; color: var(--text);
+			padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
+			background: #fff; outline: none; transition: border-color .15s, box-shadow .15s;
+		}
+		input:focus, select:focus, textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(1,30,65,.12); }
+		textarea { min-height: 92px; resize: vertical; }
+		.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+		@media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+		.field { margin-bottom: 18px; }
+
+		.q { padding: 22px 0; border-top: 1px solid var(--border); }
+		.q:first-child { border-top: none; padding-top: 4px; }
+		.q .q-head { display: flex; gap: 10px; margin-bottom: 4px; }
+		.q .q-num { flex: 0 0 auto; width: 26px; height: 26px; border-radius: var(--radius); background: var(--navy); color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+		.q .q-text { font-weight: 600; font-size: 15px; }
+		.q .q-help { font-size: 13px; color: var(--muted); margin: 4px 0 12px 36px; }
+		.q .q-body { margin-left: 36px; }
+		.opt { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; cursor: pointer; transition: border-color .15s, background .15s; }
+		.opt:hover { border-color: var(--navy); background: #fafbfc; }
+		.opt input { margin-top: 3px; accent-color: var(--red); }
+		.opt span { font-size: 14px; }
+
+		.matrix { width: 100%; border-collapse: collapse; }
+		.matrix th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 6px 6px; }
+		.matrix td { padding: 4px; vertical-align: top; }
+		.matrix input { font-size: 13px; padding: 8px; }
+
+		.btn { font-family: inherit; font-weight: 500; font-size: 15px; border: none; border-radius: var(--radius); padding: 12px 24px; cursor: pointer; transition: background .15s; }
+		.btn-primary { background: var(--red); color: #fff; }
+		.btn-primary:hover { background: var(--red-dark); }
+		.btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+		.btn-ghost { background: transparent; color: var(--navy); border: 1px solid var(--border); }
+
+		.err { color: var(--red); font-size: 13px; margin-top: 6px; display: none; }
+		.q.invalid .q-text { color: var(--red); }
+		#form-error { background: #fbeef0; border: 1px solid #f5c2c7; color: #991b1b; padding: 12px 14px; border-radius: var(--radius); font-size: 14px; margin-bottom: 16px; display: none; }
+
+		.success { text-align: center; padding: 48px 28px; }
+		.success .check { width: 64px; height: 64px; border-radius: 50%; background: #e7f6ee; color: #1f8a5b; display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 18px; }
+		.success h2 { font-size: 22px; margin-bottom: 8px; }
+		.success .score { display: inline-block; margin-top: 18px; background: var(--navy); color: #fff; padding: 16px 28px; border-radius: var(--radius); }
+		.success .score .pct { font-size: 34px; font-weight: 700; }
+		.success .score .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; opacity: .8; }
+		.muted-note { color: var(--muted); font-size: 13px; margin-top: 20px; }
+	</style>
+</head>
+<body>
+	<header class="site">
+		<div class="inner">
+			<img src="/assets/onerc_knowledge_hub/ans-hub/logo.jpg" alt="Logo" onerror="this.style.display='none'" />
+			<div class="titles">
+				<span class="eyebrow">Peer Learning</span>
+				<span class="name">Financial Sustainability Assessment</span>
+			</div>
+		</div>
+	</header>
+
+	<main>
+		{% if not phase %}
+		<!-- Landing -->
+		<div class="card hero">
+			<h1>Financial Sustainability Peer-Learning Assessment</h1>
+			<p>A short assessment to gauge understanding of the strategic, systemic nature of financial
+			sustainability for National Societies. Choose the assessment you have been invited to complete.</p>
+		</div>
+		<div class="card">
+			<div class="phase-grid">
+				<a class="phase-card" href="/fs-assessment?phase=pre">
+					<span class="tag">Before the engagement</span>
+					<h3>Start Pre-Assessment</h3>
+					<p>Complete this before the peer-learning dialogue begins.</p>
+				</a>
+				<a class="phase-card" href="/fs-assessment?phase=post">
+					<span class="tag">After the engagement</span>
+					<h3>Start Post-Assessment</h3>
+					<p>Complete this after the engagement, including your action plan.</p>
+				</a>
+			</div>
+		</div>
+		{% else %}
+		<!-- Form -->
+		<form id="assessment-form" novalidate>
+			<div class="card">
+				<div class="section-title">{{ phase }}-Assessment &middot; Your details</div>
+				<div id="form-error"></div>
+				<div class="grid-2">
+					<div class="field">
+						<label class="field-label" for="respondent_name">Full name <span class="req">*</span></label>
+						<input type="text" id="respondent_name" name="respondent_name" autocomplete="name" />
+					</div>
+					<div class="field">
+						<label class="field-label" for="email">Email</label>
+						<input type="email" id="email" name="email" autocomplete="email" />
+					</div>
+				</div>
+				<div class="field">
+					<label class="field-label" for="national_society">Your National Society</label>
+					<select id="national_society" name="national_society">
+						<option value="">— Select —</option>
+						{% for ns in national_societies %}
+						<option value="{{ ns.name }}">{{ ns.national_society_name }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="section-title">Questions</div>
+				<div id="questions"></div>
+			</div>
+
+			<button type="submit" class="btn btn-primary" id="submit-btn">Submit Assessment</button>
+		</form>
+
+		<div class="card success" id="success" style="display:none;">
+			<div class="check">&#10003;</div>
+			<h2>Response recorded</h2>
+			<p class="muted-note" style="margin-top:0;">Thank you for completing the {{ phase }}-assessment.</p>
+			<div class="score" id="score-box" style="display:none;">
+				<div class="pct" id="score-pct">0%</div>
+				<div class="lbl">Your score</div>
+			</div>
+			<div><a href="/fs-assessment" class="btn btn-ghost" style="margin-top:24px; display:inline-block; text-decoration:none;">Back to start</a></div>
+		</div>
+		{% endif %}
+	</main>
+
+	{% if phase %}
+	<script>window.csrf_token = "{{ frappe.session.csrf_token }}";</script>
+	<script>window.__QUESTIONS__ = {{ questions_json | safe }};</script>
+	<script>
+	(function () {
+		var PHASE = "{{ phase }}";
+		var questions = window.__QUESTIONS__ || [];
+		var container = document.getElementById("questions");
+
+		function el(tag, attrs, children) {
+			var n = document.createElement(tag);
+			attrs = attrs || {};
+			Object.keys(attrs).forEach(function (k) {
+				if (k === "class") n.className = attrs[k];
+				else if (k === "html") n.innerHTML = attrs[k];
+				else if (k === "text") n.textContent = attrs[k];
+				else n.setAttribute(k, attrs[k]);
+			});
+			(children || []).forEach(function (c) { if (c) n.appendChild(c); });
+			return n;
+		}
+
+		questions.forEach(function (q, i) {
+			var wrap = el("div", { class: "q", "data-qid": q.name, "data-type": q.question_type, "data-required": q.is_required ? "1" : "0" });
+			var head = el("div", { class: "q-head" }, [
+				el("div", { class: "q-num", text: String(i + 1) }),
+				el("div", { class: "q-text", text: q.question_text })
+			]);
+			wrap.appendChild(head);
+			if (q.help_text) wrap.appendChild(el("div", { class: "q-help", text: q.help_text }));
+
+			var body = el("div", { class: "q-body" });
+			var name = "q_" + q.name;
+
+			if (q.question_type === "Single Choice" || q.question_type === "Multiple Choice") {
+				var type = q.question_type === "Single Choice" ? "radio" : "checkbox";
+				(q.options || []).forEach(function (opt) {
+					var input = el("input", { type: type, name: name, value: opt });
+					body.appendChild(el("label", { class: "opt" }, [input, el("span", { text: opt })]));
+				});
+			} else if (q.question_type === "Yes/No") {
+				["Yes", "No"].forEach(function (opt) {
+					var input = el("input", { type: "radio", name: name, value: opt });
+					body.appendChild(el("label", { class: "opt" }, [input, el("span", { text: opt })]));
+				});
+				if (q.has_followup) {
+					var fu = el("textarea", { class: "followup", placeholder: q.followup_prompt || "Please explain", style: "margin-top:8px;" });
+					body.appendChild(fu);
+				}
+			} else if (q.question_type === "Action Matrix") {
+				var table = el("table", { class: "matrix" });
+				table.innerHTML = "<thead><tr><th>Action Item</th><th>Timeline</th><th>Expected Outcome</th></tr></thead>";
+				var tbody = el("tbody");
+				for (var r = 0; r < 3; r++) {
+					var tr = el("tr", { class: "matrix-row" });
+					["action_item", "timeline", "expected_outcome"].forEach(function (f) {
+						var td = el("td");
+						td.appendChild(el("input", { type: "text", "data-mx": f, placeholder: "" }));
+						tr.appendChild(td);
+					});
+					tbody.appendChild(tr);
+				}
+				table.appendChild(tbody);
+				body.appendChild(table);
+			} else { // Narrative
+				body.appendChild(el("textarea", { class: "narrative", placeholder: "Your answer" }));
+			}
+
+			body.appendChild(el("div", { class: "err", text: "This question is required." }));
+			wrap.appendChild(body);
+			container.appendChild(wrap);
+		});
+
+		function collect() {
+			var answers = [], action_plan = [], firstInvalid = null;
+			var blocks = container.querySelectorAll(".q");
+			blocks.forEach(function (block) {
+				block.classList.remove("invalid");
+				var errEl = block.querySelector(".err");
+				if (errEl) errEl.style.display = "none";
+
+				var qid = block.getAttribute("data-qid");
+				var type = block.getAttribute("data-type");
+				var required = block.getAttribute("data-required") === "1";
+				var selected = [], narrative = "", answered = false;
+
+				if (type === "Single Choice" || type === "Multiple Choice" || type === "Yes/No") {
+					block.querySelectorAll("input:checked").forEach(function (inp) { selected.push(inp.value); });
+					answered = selected.length > 0;
+					var fu = block.querySelector(".followup");
+					if (fu) narrative = fu.value.trim();
+					answers.push({ question: qid, selected_options: selected, narrative_answer: narrative });
+				} else if (type === "Narrative") {
+					var ta = block.querySelector(".narrative");
+					narrative = ta ? ta.value.trim() : "";
+					answered = narrative.length > 0;
+					answers.push({ question: qid, selected_options: [], narrative_answer: narrative });
+				} else if (type === "Action Matrix") {
+					block.querySelectorAll(".matrix-row").forEach(function (row) {
+						var item = {};
+						row.querySelectorAll("input").forEach(function (inp) { item[inp.getAttribute("data-mx")] = inp.value.trim(); });
+						if (item.action_item || item.timeline || item.expected_outcome) { action_plan.push(item); answered = true; }
+					});
+				}
+
+				if (required && !answered && !firstInvalid) {
+					firstInvalid = block;
+					block.classList.add("invalid");
+					if (errEl) errEl.style.display = "block";
+				} else if (required && !answered) {
+					block.classList.add("invalid");
+					if (errEl) errEl.style.display = "block";
+				}
+			});
+
+			return { answers: answers, action_plan: action_plan, firstInvalid: firstInvalid };
+		}
+
+		var form = document.getElementById("assessment-form");
+		var formError = document.getElementById("form-error");
+		var submitBtn = document.getElementById("submit-btn");
+
+		form.addEventListener("submit", function (e) {
+			e.preventDefault();
+			formError.style.display = "none";
+
+			var name = document.getElementById("respondent_name").value.trim();
+			if (!name) {
+				formError.textContent = "Please enter your name.";
+				formError.style.display = "block";
+				window.scrollTo({ top: 0, behavior: "smooth" });
+				return;
+			}
+
+			var data = collect();
+			if (data.firstInvalid) {
+				formError.textContent = "Please answer all required questions.";
+				formError.style.display = "block";
+				data.firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+				return;
+			}
+
+			var payload = {
+				respondent_name: name,
+				email: document.getElementById("email").value.trim(),
+				national_society: document.getElementById("national_society").value,
+				phase: PHASE,
+				answers: data.answers,
+				action_plan: data.action_plan
+			};
+
+			submitBtn.disabled = true;
+			submitBtn.textContent = "Submitting…";
+
+			fetch("/api/method/onerc_knowledge_hub.api.assessment.submit_assessment", {
+				method: "POST",
+				headers: { "Content-Type": "application/json", "X-Frappe-CSRF-Token": window.csrf_token },
+				body: JSON.stringify({ payload: JSON.stringify(payload) })
+			})
+				.then(function (res) { return res.json().then(function (j) { return { ok: res.ok, body: j }; }); })
+				.then(function (r) {
+					if (!r.ok) throw new Error((r.body && (r.body._server_messages || r.body.message)) || "Submission failed");
+					var result = r.body.message || {};
+					form.style.display = "none";
+					document.getElementById("success").style.display = "block";
+					if (result.max_score && result.max_score > 0) {
+						document.getElementById("score-pct").textContent = (result.percentage != null ? result.percentage : 0) + "%";
+						document.getElementById("score-box").style.display = "inline-block";
+					}
+					window.scrollTo({ top: 0, behavior: "smooth" });
+				})
+				.catch(function (err) {
+					submitBtn.disabled = false;
+					submitBtn.textContent = "Submit Assessment";
+					formError.textContent = "Something went wrong. Please try again.";
+					formError.style.display = "block";
+				});
+		});
+	})();
+	</script>
+	{% endif %}
+</body>
+</html>

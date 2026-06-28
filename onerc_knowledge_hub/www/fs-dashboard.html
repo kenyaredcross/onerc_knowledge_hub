@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>FS Assessment Dashboard</title>
+	<link rel="icon" type="image/jpeg" href="/assets/onerc_knowledge_hub/ans-hub/logo.jpg" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+	<style>
+		:root {
+			--navy: #011E41;
+			--red: #ee2435;
+			--green: #1f8a5b;
+			--bg: #f0f2f5;
+			--border: #e5e7eb;
+			--text: #1f2937;
+			--muted: #6b7280;
+			--radius: 4px;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body { background: var(--bg); color: var(--text); font-family: "Google Sans Flex", system-ui, -apple-system, sans-serif; line-height: 1.5; }
+		h1, h2, h3 { letter-spacing: -0.02em; }
+
+		header.site { background: var(--navy); color: #fff; padding: 16px 24px; }
+		header.site .inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 14px; }
+		header.site img { width: 38px; height: 38px; border-radius: var(--radius); object-fit: cover; background: #fff; }
+		header.site .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #ff8a80; font-weight: 600; }
+		header.site .name { font-size: 16px; font-weight: 600; }
+		header.site .spacer { flex: 1; }
+		header.site .open-form { color: #fff; text-decoration: none; font-size: 13px; border: 1px solid rgba(255,255,255,.3); padding: 7px 14px; border-radius: var(--radius); }
+		header.site .open-form:hover { background: rgba(255,255,255,.1); }
+
+		main { max-width: 1180px; margin: 0 auto; padding: 24px 20px 80px; }
+
+		.filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 22px; }
+		.filters .f { display: flex; flex-direction: column; gap: 4px; }
+		.filters label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+		.filters select { font-family: inherit; font-size: 14px; padding: 9px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; min-width: 200px; }
+
+		.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+		@media (max-width: 880px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+		.stat { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+		.stat .v { font-size: 30px; font-weight: 700; color: var(--navy); }
+		.stat .l { font-size: 13px; color: var(--muted); margin-top: 2px; }
+		.stat.accent { border-top: 3px solid var(--red); }
+
+		.section-h { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--navy); margin: 28px 0 14px; }
+
+		.q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+		@media (max-width: 880px) { .q-grid { grid-template-columns: 1fr; } }
+		.card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+		.card .q-title { display: flex; gap: 8px; align-items: start; margin-bottom: 4px; }
+		.card .q-title .txt { font-weight: 600; font-size: 14px; }
+		.badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+		.badge.pre { background: #eaf2fb; color: #1e5fa8; }
+		.badge.post { background: #fbeef0; color: #b3253a; }
+		.badge.both { background: #eef0f3; color: #4b5563; }
+		.card .meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+		.chart-wrap { position: relative; height: 200px; }
+
+		.qual { list-style: none; max-height: 260px; overflow-y: auto; }
+		.qual li { padding: 10px 0; border-top: 1px solid var(--border); font-size: 13px; }
+		.qual li:first-child { border-top: none; }
+		.qual .ns { font-size: 11px; font-weight: 600; color: var(--navy); display: inline-block; margin-bottom: 2px; }
+		.empty { color: var(--muted); font-size: 13px; font-style: italic; padding: 8px 0; }
+
+		table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+		table.tbl th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--border); }
+		table.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+		table.tbl tr:hover td { background: #fafbfc; }
+		.pill { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #eef0f3; color: var(--navy); }
+
+		#loading { text-align: center; color: var(--muted); padding: 60px; }
+	</style>
+</head>
+<body>
+	<header class="site">
+		<div class="inner">
+			<img src="/assets/onerc_knowledge_hub/ans-hub/logo.jpg" alt="Logo" onerror="this.style.display='none'" />
+			<div>
+				<div class="eyebrow">Peer Learning</div>
+				<div class="name">FS Assessment Dashboard</div>
+			</div>
+			<div class="spacer"></div>
+			<a class="open-form" href="/fs-assessment" target="_blank">Open public form &#8599;</a>
+		</div>
+	</header>
+
+	<main>
+		<div class="filters">
+			<div class="f">
+				<label for="f-ns">National Society</label>
+				<select id="f-ns"><option value="">All National Societies</option></select>
+			</div>
+			<div class="f">
+				<label for="f-phase">Phase</label>
+				<select id="f-phase">
+					<option value="">Pre &amp; Post</option>
+					<option value="Pre">Pre-Assessment</option>
+					<option value="Post">Post-Assessment</option>
+				</select>
+			</div>
+		</div>
+
+		<div id="loading">Loading dashboard…</div>
+		<div id="content" style="display:none;">
+			<div class="stats" id="stats"></div>
+
+			<div class="section-h">Question Analytics</div>
+			<div class="q-grid" id="questions"></div>
+
+			<div class="section-h">Action Plans</div>
+			<div class="card"><div id="actions"></div></div>
+
+			<div class="section-h">Recent Submissions</div>
+			<div class="card" style="padding:0; overflow:hidden;">
+				<table class="tbl">
+					<thead><tr><th>Respondent</th><th>National Society</th><th>Phase</th><th>Score</th><th>Submitted</th></tr></thead>
+					<tbody id="recent"></tbody>
+				</table>
+			</div>
+		</div>
+	</main>
+
+	<script>window.csrf_token = "{{ frappe.session.csrf_token }}";</script>
+	<script>
+	(function () {
+		var charts = [];
+		var nsSel = document.getElementById("f-ns");
+		var phaseSel = document.getElementById("f-phase");
+		var nsLoaded = false;
+
+		function esc(s) { var d = document.createElement("div"); d.textContent = s == null ? "" : s; return d.innerHTML; }
+
+		function load() {
+			document.getElementById("loading").style.display = "block";
+			document.getElementById("content").style.display = "none";
+			var params = new URLSearchParams();
+			if (nsSel.value) params.set("national_society", nsSel.value);
+			if (phaseSel.value) params.set("phase", phaseSel.value);
+
+			fetch("/api/method/onerc_knowledge_hub.api.assessment.get_dashboard_data?" + params.toString(), {
+				headers: { "X-Frappe-CSRF-Token": window.csrf_token }
+			})
+				.then(function (r) { return r.json(); })
+				.then(function (j) { render(j.message || {}); })
+				.catch(function () { document.getElementById("loading").textContent = "Failed to load dashboard data."; });
+		}
+
+		function render(data) {
+			charts.forEach(function (c) { c.destroy(); });
+			charts = [];
+
+			if (!nsLoaded) {
+				(data.national_societies || []).forEach(function (ns) {
+					var o = document.createElement("option");
+					o.value = ns.name; o.textContent = ns.national_society_name;
+					nsSel.appendChild(o);
+				});
+				nsLoaded = true;
+			}
+
+			var s = data.stats || {};
+			var stats = [
+				{ v: s.total_responses || 0, l: "Total Responses", accent: true },
+				{ v: (s.average_percentage || 0) + "%", l: "Average Score" },
+				{ v: (s.pre_average || 0) + "%", l: "Pre-Assessment Avg (" + (s.pre_count || 0) + ")" },
+				{ v: (s.post_average || 0) + "%", l: "Post-Assessment Avg (" + (s.post_count || 0) + ")" }
+			];
+			document.getElementById("stats").innerHTML = stats.map(function (x) {
+				return '<div class="stat' + (x.accent ? ' accent' : '') + '"><div class="v">' + esc(x.v) + '</div><div class="l">' + esc(x.l) + '</div></div>';
+			}).join("");
+
+			var qWrap = document.getElementById("questions");
+			qWrap.innerHTML = "";
+			(data.questions || []).forEach(function (q, i) {
+				var card = document.createElement("div");
+				card.className = "card";
+				var phaseClass = (q.phase || "Both").toLowerCase();
+				var header = '<div class="q-title"><span class="badge ' + phaseClass + '">' + esc(q.phase || "Both") +
+					'</span><span class="txt">' + (i + 1) + '. ' + esc(q.question_text) + '</span></div>' +
+					'<div class="meta">' + (q.response_count || 0) + ' response(s)' + (q.is_scored ? ' · scored' : '') + '</div>';
+
+				if (q.distribution) {
+					if (q.distribution.length === 0) {
+						card.innerHTML = header + '<div class="empty">No answers yet.</div>';
+					} else {
+						var cid = "chart-" + i;
+						card.innerHTML = header + '<div class="chart-wrap"><canvas id="' + cid + '"></canvas></div>';
+						qWrap.appendChild(card);
+						var ctx = document.getElementById(cid).getContext("2d");
+						charts.push(new Chart(ctx, {
+							type: "bar",
+							data: {
+								labels: q.distribution.map(function (d) { return d.label + (d.is_correct ? "  ✓" : ""); }),
+								datasets: [{
+									data: q.distribution.map(function (d) { return d.count; }),
+									backgroundColor: q.distribution.map(function (d) { return d.is_correct ? "#1f8a5b" : "#011E41"; }),
+									borderRadius: 3,
+									barThickness: 18
+								}]
+							},
+							options: {
+								indexAxis: "y",
+								responsive: true, maintainAspectRatio: false,
+								plugins: { legend: { display: false } },
+								scales: { x: { beginAtZero: true, ticks: { precision: 0 } } }
+							}
+						}));
+						return;
+					}
+				} else {
+					var items = (q.qualitative || []);
+					if (items.length === 0) {
+						card.innerHTML = header + '<div class="empty">No responses yet.</div>';
+					} else {
+						card.innerHTML = header + '<ul class="qual">' + items.map(function (it) {
+							return '<li>' + (it.national_society ? '<span class="ns">' + esc(it.national_society) + (it.phase ? ' · ' + esc(it.phase) : '') + '</span><br>' : '') + esc(it.text) + '</li>';
+						}).join("") + '</ul>';
+					}
+				}
+				qWrap.appendChild(card);
+			});
+
+			var actions = data.action_items || [];
+			document.getElementById("actions").innerHTML = actions.length === 0
+				? '<div class="empty">No action plans submitted yet.</div>'
+				: '<table class="tbl"><thead><tr><th>National Society</th><th>Action Item</th><th>Timeline</th><th>Expected Outcome</th></tr></thead><tbody>' +
+					actions.map(function (a) {
+						return '<tr><td><span class="pill">' + esc(a.national_society || "—") + '</span></td><td>' + esc(a.action_item) + '</td><td>' + esc(a.timeline) + '</td><td>' + esc(a.expected_outcome) + '</td></tr>';
+					}).join("") + '</tbody></table>';
+
+			var recent = data.recent || [];
+			document.getElementById("recent").innerHTML = recent.length === 0
+				? '<tr><td colspan="5" class="empty" style="padding:16px;">No submissions yet.</td></tr>'
+				: recent.map(function (r) {
+					var score = r.max_score > 0 ? (r.percentage + "%") : "—";
+					return '<tr><td>' + esc(r.respondent_name) + '</td><td>' + esc(r.national_society || "—") + '</td><td><span class="badge ' + (r.phase || "").toLowerCase() + '">' + esc(r.phase) + '</span></td><td>' + score + '</td><td>' + esc((r.submitted_on || "").substring(0, 16).replace("T", " ")) + '</td></tr>';
+				}).join("");
+
+			document.getElementById("loading").style.display = "none";
+			document.getElementById("content").style.display = "block";
+		}
+
+		nsSel.addEventListener("change", load);
+		phaseSel.addEventListener("change", load);
+		load();
+	})();
+	</script>
+</body>
+</html>
