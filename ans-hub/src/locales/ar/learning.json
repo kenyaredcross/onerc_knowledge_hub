@@ -1,0 +1,17 @@
+{
+  "pageTitle": "مركز التعلم",
+  "pageSubtitle": "المعرفة والموارد",
+  "totalResources": "إجمالي الموارد",
+  "filterByPillar": "تصفية حسب المحور",
+  "allPillars": "جميع المحاور",
+  "searchPlaceholder": "البحث في الدورات أو المواضيع أو المنصات…",
+  "viewGrid": "عرض شبكي",
+  "viewList": "عرض قائمة",
+  "views": "مشاهدات",
+  "newResource": "مورد جديد",
+  "errorLoading": "فشل تحميل الموارد. حاول مرة أخرى.",
+  "noResources": "لم يتم العثور على موارد تعليمية",
+  "visitPlatform": "زيارة المنصة",
+  "viewDetails": "عرض التفاصيل",
+  "close": "إغلاق"
+}

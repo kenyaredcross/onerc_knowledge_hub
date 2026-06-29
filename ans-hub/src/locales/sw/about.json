@@ -1,0 +1,98 @@
+{
+  "aboutAlliance": "Kuhusu Muungano",
+  "heroTitle": "Safari kuelekea kujitegemea kwa Jumuiya za Kitaifa",
+  "heroTitleEmphasis": "kujitegemea.",
+  "heroDescription": "Kituo cha Ujanibishaji kinaunganisha Jumuiya za Kitaifa za Afrika zilizojitolea kujenga mifumo ya kibinadamu na maendeleo yenye nguvu na inayoongozwa kwa ndani — kupitia uongozi ulioratibiwa, dira shirikishi, na hatua zilizoratibiwa.",
+
+  "membership": "Uanachama",
+  "localisationAllianceMembers": "Wanachama wa Muungano wa Ujanibishaji",
+  "consortiumPartners": "Wadau wa Muungano",
+  "oneAlliance": "Muungano Mmoja",
+  "membershipDescription": "Uongozi ulioratibiwa na hatua zilizoratibiwa zinazoongeza kasi ya ujanibishaji katika bara zima.",
+  "africanNationalSocieties": "Jumuiya za Kitaifa za Afrika",
+
+  "governance": "Utawala",
+  "steeringGroupTitle": "Kikundi cha Uongozi na Usimamizi",
+  "steeringGroupDescription": "Muungano unafanya kazi kupitia Kikundi cha Uongozi cha viongozi wa kujitolea kutoka Jumuiya za Kitaifa zinazoshiriki, wakitoa mwelekeo wa kimkakati, uratibu na usimamizi.",
+
+  "implementingArm": "Tawi la Utekelezaji",
+  "localisationHubTitle": "Kituo cha Ujanibishaji",
+  "localisationHubDescription": "Kikiwa chini ya Jumuiya ya Msalaba Mwekundu ya Kenya (KRCS), Kituo hutekeleza dira ya Muungano kupitia uratibu, msaada wa kiufundi, uwezeshaji wa kujifunza na utekelezaji wa miradi — ikiwa ni pamoja na uundaji na uhifadhi wa jukwaa hili.",
+
+  "digitalTransformationTitle": "Mageuzi ya Kidijitali na Ubunifu",
+  "digitalTransformationDesc": "Kujenga jukwaa hili la kujifunza kati ya wenzao na kusaidia kuimarisha mifumo katika Jumuiya za Kitaifa za Afrika.",
+
+  "impactMeasurementTitle": "Athari na Upimaji",
+  "impactMeasurementDesc": "Tafiti za Athari za Uendelevu wa Kifedha na mfumo wa upimaji uliotengenezwa kwa mazingira ya Afrika.",
+
+  "capacityBuildingTitle": "Ujenzi wa Uwezo",
+  "capacityBuildingDesc": "Kikundi Kazi cha NSD barani Afrika na zana za tathmini ya kujifunza kati ya wenzao.",
+
+  "fourPillarFramework": "Mfumo wa Nguzo Nne",
+  "fourPillarTitle": "Safari kamili kuelekea kujitegemea",
+  "fourPillarDescription": "Kazi ya Muungano imepangwa katika nguzo nne za kiufundi, kila moja ikiongozwa na mdau maalum. Rasilimali, zana na taarifa za jukwaa zimepangwa kwa rangi ya nguzo kwa uzoefu thabiti.",
+
+  "leadershipPillar": "Uongozi",
+  "leadershipGovernanceName": "Uongozi na Utawala",
+  "leadershipDesc": "Kujenga uadilifu, utawala bora na uongozi madhubuti na wazi.",
+  "leadershipLead": "IFRC",
+
+  "branchPillar": "Tawi",
+  "branchDevelopmentName": "Maendeleo ya Tawi",
+  "branchDesc": "Kuimarisha mifumo ya matawi, mipango na mapato yanayotengenezwa kwa ndani.",
+  "branchLead": "IFRC",
+
+  "resourcePillar": "Rasilimali",
+  "resourceMobilisationName": "Uhamasishaji wa Rasilimali za Ndani",
+  "resourceDesc": "Kubadilisha vyanzo vya mapato, ikiwa ni pamoja na mipango ya Huduma ya Kwanza Mahali pa Kazi.",
+  "resourceLead": "Msalaba Mwekundu wa Uswisi na Uholanzi",
+
+  "financePillar": "Fedha",
+  "financeDevelopmentName": "Maendeleo ya Fedha",
+  "financeDesc": "Ufadhili wa gharama za msingi, mifumo thabiti ya fedha na uthabiti wa muda mrefu.",
+  "financeLead": "Msalaba Mwekundu wa Norway",
+
+  "technicalLead": "Kiongozi wa Kiufundi",
+
+  "indicatorTracking": "Ufuatiliaji wa Viashiria",
+  "financialSustainabilityIndicators": "Viashiria vya Uendelevu wa Kifedha",
+  "indicatorDescription": "Jukwaa limeundwa kuunganisha viashiria vya uendelevu wa kifedha vya Muungano — kutoka kwa hesabu zilizokaguliwa hadi mipango ya NSD na nyaraka za mali.",
+
+  "pillarColumn": "Nguzo",
+  "principleColumn": "Kanuni ya kupima",
+  "indicatorsColumn": "Viashiria",
+
+  "guidingPrinciples": "Kanuni Zinazoongoza",
+  "anchoredInValues": "Zinazoegemea kwenye thamani shirikishi.",
+
+  "locallyLedTitle": "Maamuzi yanayoongozwa kwa ndani",
+  "locallyLedDesc": "Uwajibikaji wa pamoja katika Muungano.",
+
+  "sustainabilityTitle": "Uendelevu na ushirikiano kati ya wenzao",
+  "sustainabilityDesc": "Ushirikiano unaodumu zaidi ya mradi mmoja.",
+
+  "institutionalCapacityTitle": "Uwezo wa Kitaasisi",
+  "institutionalCapacityDesc": "Kuimarisha uongozi na utawala.",
+
+  "primaryFocusAreas": "Maeneo Makuu ya Kuzingatia",
+  "whereWeDirectEnergy": "Mahali tunapoelekeza nguvu zetu.",
+
+  "financialSustainabilityTitle": "Uendelevu wa Kifedha",
+  "financialSustainabilityDesc": "Uhamasishaji wa rasilimali, mseto na uthabiti wa muda mrefu.",
+
+  "institutionalDevelopmentTitle": "Maendeleo ya Kitaasisi",
+  "institutionalDevelopmentDesc": "Kuimarisha uongozi, utawala na mageuzi ya kidijitali.",
+
+  "knowledgeSharingTitle": "Kushiriki Maarifa",
+  "knowledgeSharingDesc": "Kujifunza kikanda na uandikaji wa zana zilizotengenezwa.",
+
+  "ctaTitle": "Zaidi ya mradi — ni vuguvugu kuelekea hatua za kibinadamu zinazoongozwa kwa ndani.",
+  "explorePlatform": "Chunguza jukwaa",
+
+  "home": "Nyumbani",
+  "login": "Ingia",
+  "signUp": "Jisajili",
+  "goToDashboard": "Enda kwenye Dashibodi",
+
+  "copyright": "© {{year}} {{organizationName}}"
+}

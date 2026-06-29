@@ -1,0 +1,22 @@
+{
+  "pageTitle": "Matukio na Mikutano",
+  "pageSubtitle": "Kuunganisha mtandao",
+  "upcoming": "Yanayokuja",
+  "past": "Yaliyopita",
+  "noUpcomingEvents": "Hakuna matukio yanayokuja yaliyopatikana.",
+  "noPastEvents": "Hakuna matukio yaliyopita",
+  "eventDetails": "Maelezo ya Tukio",
+  "date": "Tarehe",
+  "time": "Muda",
+  "venue": "Eneo",
+  "register": "Jisajili",
+  "addToCalendar": "Ongeza kwenye Kalenda",
+  "participants": "Washiriki",
+  "organizer": "Mratibu",
+  "featuredEvent": "Tukio Maalum",
+  "featuredSpeakers": "Wasemaji Maalum",
+  "readMore": "Soma zaidi",
+  "newEvent": "Tukio Jipya",
+  "upcomingEvents": "Matukio Yanayokuja",
+  "showPastEvents": "Onyesha Matukio Yaliyopita"
+}
