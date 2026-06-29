@@ -42,6 +42,32 @@ import ptNews from './locales/pt/news.json';
 import ptLearning from './locales/pt/learning.json';
 import ptSocieties from './locales/pt/societies.json';
 
+import arCommon from './locales/ar/common.json';
+import arNav from './locales/ar/navigation.json';
+import arAuth from './locales/ar/auth.json';
+import arAbout from './locales/ar/about.json';
+import arForms from './locales/ar/forms.json';
+import arDashboard from './locales/ar/dashboard.json';
+import arFaqs from './locales/ar/faqs.json';
+import arKnowledge from './locales/ar/knowledge.json';
+import arEvents from './locales/ar/events.json';
+import arNews from './locales/ar/news.json';
+import arLearning from './locales/ar/learning.json';
+import arSocieties from './locales/ar/societies.json';
+
+import swCommon from './locales/sw/common.json';
+import swNav from './locales/sw/navigation.json';
+import swAuth from './locales/sw/auth.json';
+import swAbout from './locales/sw/about.json';
+import swForms from './locales/sw/forms.json';
+import swDashboard from './locales/sw/dashboard.json';
+import swFaqs from './locales/sw/faqs.json';
+import swKnowledge from './locales/sw/knowledge.json';
+import swEvents from './locales/sw/events.json';
+import swNews from './locales/sw/news.json';
+import swLearning from './locales/sw/learning.json';
+import swSocieties from './locales/sw/societies.json';
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -88,6 +114,34 @@ i18n
         news: ptNews,
         learning: ptLearning,
         societies: ptSocieties,
+      },
+      ar: {
+        common: arCommon,
+        navigation: arNav,
+        auth: arAuth,
+        about: arAbout,
+        forms: arForms,
+        dashboard: arDashboard,
+        faqs: arFaqs,
+        knowledge: arKnowledge,
+        events: arEvents,
+        news: arNews,
+        learning: arLearning,
+        societies: arSocieties,
+      },
+      sw: {
+        common: swCommon,
+        navigation: swNav,
+        auth: swAuth,
+        about: swAbout,
+        forms: swForms,
+        dashboard: swDashboard,
+        faqs: swFaqs,
+        knowledge: swKnowledge,
+        events: swEvents,
+        news: swNews,
+        learning: swLearning,
+        societies: swSocieties,
       },
     },
     fallbackLng: 'en',
