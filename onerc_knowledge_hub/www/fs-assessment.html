@@ -201,7 +201,7 @@
 				<div class="field">
 					<label class="field-label" for="national_society">Your National Society</label>
 					<select id="national_society" name="national_society">
-						<option value="">— Select —</option>
+						<option value="">Select</option>
 						{% for ns in national_societies %}
 						<option value="{{ ns.name }}" {% if prefill.get('national_society') == ns.name %}selected{% endif %}>{{ ns.national_society_name }}</option>
 						{% endfor %}

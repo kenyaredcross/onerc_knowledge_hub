@@ -15,6 +15,7 @@ import EventsIndex from "./components/events/EventsIndex.tsx";
 import NewEvent from "./components/events/NewEvent.tsx";
 import FAQs from "./components/faqs/FAQs.tsx";
 import FinancialSustainabilityDashboard from "./components/financial-sustainability/FinancialSustainabilityDashboard.tsx";
+import FSActivities from "./components/financial-sustainability/FSActivities.tsx";
 import FSResponses from "./components/financial-sustainability/FSResponses.tsx";
 import Knowledge from "./components/knowledge/Knowledge.tsx";
 import KnowledgeDetail from "./components/knowledge/KnowledgeDetail.tsx";
@@ -53,6 +54,10 @@ const AppRouter = () => {
             <Route
               path="/financial-sustainability"
               element={<FinancialSustainabilityDashboard />}
+            />
+            <Route
+              path="/financial-sustainability/activities"
+              element={<FSActivities />}
             />
             <Route
               path="/financial-sustainability/responses"
