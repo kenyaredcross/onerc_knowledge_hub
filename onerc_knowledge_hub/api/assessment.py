@@ -586,6 +586,116 @@ def _activity_options():
 	)
 
 
+# --------------------------------------------------------------------------- #
+# Admin: activity CRUD (role-gated, used by the ans-hub Activities page)
+# --------------------------------------------------------------------------- #
+
+@frappe.whitelist()
+def list_activities():
+	"""List activities with participant + completion counts (role-gated)."""
+	_check_dashboard_access()
+	activities = frappe.get_all(
+		"FS Activity",
+		fields=["name", "activity_name", "country", "activity_date", "status", "creation"],
+		order_by="activity_date desc, creation desc",
+	)
+	for a in activities:
+		parts = frappe.get_all(
+			"FS Activity Participant",
+			filters={"parent": a.name, "parenttype": "FS Activity"},
+			fields=["pre_completed", "post_completed"],
+		)
+		a["participant_count"] = len(parts)
+		a["pre_completed"] = sum(1 for p in parts if p.pre_completed)
+		a["post_completed"] = sum(1 for p in parts if p.post_completed)
+		a["activity_date"] = str(a.activity_date) if a.activity_date else None
+	return {"activities": activities}
+
+
+@frappe.whitelist()
+def get_activity(name):
+	"""Return one activity with its participant rows (role-gated)."""
+	_check_dashboard_access()
+	doc = frappe.get_doc("FS Activity", name)
+	return {
+		"name": doc.name,
+		"activity_name": doc.activity_name,
+		"country": doc.country,
+		"activity_date": str(doc.activity_date) if doc.activity_date else None,
+		"description": doc.description,
+		"notification_email": doc.notification_email,
+		"status": doc.status,
+		"participants": [
+			{
+				"participant_name": p.participant_name,
+				"email": p.email,
+				"national_society": p.national_society,
+				"pre_invited": p.pre_invited,
+				"pre_completed": p.pre_completed,
+				"post_invited": p.post_invited,
+				"post_completed": p.post_completed,
+			}
+			for p in doc.participants
+		],
+	}
+
+
+@frappe.whitelist()
+def save_activity(payload):
+	"""Create or update an activity and its participants (role-gated).
+
+	Each participant's invited/completed flags are carried over by email, so
+	editing an activity after invitations were sent never resets progress.
+	"""
+	_check_dashboard_access()
+	data = payload if isinstance(payload, dict) else json.loads(payload or "{}")
+
+	activity_name = (data.get("activity_name") or "").strip()
+	activity_date = data.get("activity_date") or None
+	if not activity_name:
+		frappe.throw(_("Activity name is required"))
+	if not activity_date:
+		frappe.throw(_("Activity date is required"))
+
+	name = data.get("name")
+	if name and frappe.db.exists("FS Activity", name):
+		doc = frappe.get_doc("FS Activity", name)
+	else:
+		doc = frappe.new_doc("FS Activity")
+
+	# Snapshot existing participant progress (keyed by lower-cased email).
+	existing = {(p.email or "").strip().lower(): p for p in doc.get("participants", [])}
+
+	doc.activity_name = activity_name
+	doc.country = data.get("country") or None
+	doc.activity_date = activity_date
+	doc.description = data.get("description") or None
+	doc.notification_email = (data.get("notification_email") or "").strip() or None
+
+	doc.set("participants", [])
+	for row in data.get("participants") or []:
+		email = (row.get("email") or "").strip()
+		if not email:
+			continue
+		prev = existing.get(email.lower())
+		doc.append(
+			"participants",
+			{
+				"participant_name": row.get("participant_name"),
+				"email": email,
+				"national_society": row.get("national_society") or None,
+				"pre_invited": prev.pre_invited if prev else 0,
+				"pre_completed": prev.pre_completed if prev else 0,
+				"post_invited": prev.post_invited if prev else 0,
+				"post_completed": prev.post_completed if prev else 0,
+			},
+		)
+
+	doc.save(ignore_permissions=True)
+	frappe.db.commit()
+	return {"name": doc.name, "activity_name": doc.activity_name}
+
+
 def _parse_selected(raw):
 	if not raw:
 		return []

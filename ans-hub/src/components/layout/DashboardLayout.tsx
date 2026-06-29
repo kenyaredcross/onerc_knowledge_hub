@@ -52,6 +52,7 @@ export default function DashboardLayout() {
 
   const fsItems = [
     { path: "/financial-sustainability", label: "Dashboard", icon: TrendingUp, exact: true, managerOnly: true },
+    { path: "/financial-sustainability/activities", label: "Activities", icon: Calendar, managerOnly: true },
     { path: "/financial-sustainability/responses", label: "Responses", icon: ClipboardList, managerOnly: true },
     { path: "/fs-assessment", label: "Take Assessment", icon: FileText, external: true, newTab: true },
   ];
