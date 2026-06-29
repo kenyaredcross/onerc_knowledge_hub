@@ -39,7 +39,7 @@ MUTED = "#6b7280"
 def get_public_questions(phase):
 	"""Return the (sanitised) questions for a phase, ordered by display order.
 
-	Scores and the `is_correct` flag are deliberately stripped — guests must
+	Scores and the `is_correct` flag are deliberately stripped, because guests must
 	never see the answer key.
 	"""
 	return _public_questions(phase)
@@ -152,7 +152,7 @@ def submit_assessment(payload):
 	doc.insert(ignore_permissions=True)
 	frappe.db.commit()
 
-	# Post-processing — each step is best-effort so a failure never prevents the
+	# Post-processing. Each step is best-effort so a failure never prevents the
 	# respondent from getting their "recorded" confirmation in the browser.
 	comparison = _apply_score_comparison(doc)
 	_record_participant_progress(doc)
@@ -712,9 +712,9 @@ def _action_plan_html(doc):
 	rows = []
 	for row in doc.action_plan:
 		cells = [
-			escape_html(row.action_item or "—"),
-			escape_html(row.timeline or "—"),
-			escape_html(row.expected_outcome or "—"),
+			escape_html(row.action_item or "-"),
+			escape_html(row.timeline or "-"),
+			escape_html(row.expected_outcome or "-"),
 		]
 		tds = "".join(
 			f'<td style="padding:10px;border:1px solid {BORDER};vertical-align:top;">{c}</td>' for c in cells
@@ -836,7 +836,7 @@ def _build_admin_html(doc, comparison):
 
 	rows = [
 		(_("Respondent"), escape_html(doc.respondent_name or "")),
-		(_("Email"), escape_html(doc.email or "—")),
+		(_("Email"), escape_html(doc.email or "-")),
 		(_("Phase"), escape_html(phase_label)),
 	]
 	if doc.activity:
