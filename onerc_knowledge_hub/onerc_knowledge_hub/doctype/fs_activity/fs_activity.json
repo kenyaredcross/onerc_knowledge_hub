@@ -1,0 +1,132 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:FSA-{YYYY}-{#####}",
+ "creation": "2026-06-29 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "activity_name",
+  "country",
+  "activity_date",
+  "column_break_cfg",
+  "status",
+  "notification_email",
+  "section_break_desc",
+  "description",
+  "section_break_participants",
+  "participants"
+ ],
+ "fields": [
+  {
+   "fieldname": "activity_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Activity Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "activity_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Activity Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_cfg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nPre-Assessment Sent\nIn Progress\nCompleted"
+  },
+  {
+   "description": "Where submission notifications are sent. Defaults to the activity owner if left blank.",
+   "fieldname": "notification_email",
+   "fieldtype": "Data",
+   "label": "Notification Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "section_break_desc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_break_participants",
+   "fieldtype": "Section Break",
+   "label": "Participants"
+  },
+  {
+   "description": "Add the people invited to this engagement, then use the buttons at the top of the form to email them the pre/post assessment links.",
+   "fieldname": "participants",
+   "fieldtype": "Table",
+   "label": "Participants",
+   "options": "FS Activity Participant"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-29 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "FS Activity",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH FS Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "LH Admin"
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "activity_date",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "activity_name",
+ "track_changes": 1
+}
