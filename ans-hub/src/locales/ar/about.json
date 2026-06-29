@@ -1,0 +1,98 @@
+{
+  "aboutAlliance": "عن التحالف",
+  "heroTitle": "رحلة نحو اعتماد الجمعية الوطنية على نفسها",
+  "heroTitleEmphasis": "ذاتيًا.",
+  "heroDescription": "يجمع مركز التوطين الجمعيات الوطنية الأفريقية الملتزمة بأنظمة إنسانية وتنموية أقوى يقودها المجتمع المحلي — من خلال قيادة متماسكة، ورؤية مشتركة، وعمل منسق.",
+
+  "membership": "العضوية",
+  "localisationAllianceMembers": "أعضاء تحالف التوطين",
+  "consortiumPartners": "شركاء الائتلاف",
+  "oneAlliance": "تحالف واحد",
+  "membershipDescription": "قيادة متماسكة وعمل منسق يسرّعان التوطين في القارة.",
+  "africanNationalSocieties": "الجمعيات الوطنية الأفريقية",
+
+  "governance": "الحوكمة",
+  "steeringGroupTitle": "المجموعة التوجيهية والقيادة",
+  "steeringGroupDescription": "يعمل التحالف من خلال مجموعة توجيهية من القادة المتطوعين من الجمعيات الوطنية المشاركة، يقدمون التوجيه الاستراتيجي والتنسيق والإشراف.",
+
+  "implementingArm": "الجهة المنفذة",
+  "localisationHubTitle": "مركز التوطين",
+  "localisationHubDescription": "تستضيفه جمعية الصليب الأحمر الكينية (KRCS)، ويترجم المركز رؤية التحالف إلى ممارسة من خلال التنسيق والدعم التقني وتيسير التعلم وتنفيذ المشاريع — بما في ذلك تطوير واستضافة هذه المنصة.",
+
+  "digitalTransformationTitle": "التحول الرقمي والابتكار",
+  "digitalTransformationDesc": "بناء هذه المنصة للتعلم من نظير إلى نظير ودعم تعزيز الأنظمة في الجمعيات الوطنية الأفريقية.",
+
+  "impactMeasurementTitle": "الأثر والقياس",
+  "impactMeasurementDesc": "دراسات أثر الاستدامة المالية وإطار قياس مصمم خصيصًا للسياقات الأفريقية.",
+
+  "capacityBuildingTitle": "بناء القدرات",
+  "capacityBuildingDesc": "مجموعة عمل لتطوير الجمعيات الوطنية في أفريقيا وأدوات تقييم التعلم من نظير إلى نظير.",
+
+  "fourPillarFramework": "إطار العمل الرباعي المحاور",
+  "fourPillarTitle": "رحلة شاملة نحو الاعتماد على الذات",
+  "fourPillarDescription": "يُنظَّم عمل التحالف في أربعة محاور فنية، يقود كل منها شريك محدد. تُصنَّف موارد المنصة وأدواتها وتحديثاتها بألوان المحاور لتجربة متسقة.",
+
+  "leadershipPillar": "القيادة",
+  "leadershipGovernanceName": "القيادة والحوكمة",
+  "leadershipDesc": "بناء النزاهة والحوكمة الرشيدة والقيادة الفعالة والشفافة.",
+  "leadershipLead": "الاتحاد الدولي لجمعيات الصليب الأحمر والهلال الأحمر",
+
+  "branchPillar": "الفروع",
+  "branchDevelopmentName": "تطوير الفروع",
+  "branchDesc": "تعزيز أطر عمل الفروع وخططها وتوليد الدخل المحلي.",
+  "branchLead": "الاتحاد الدولي لجمعيات الصليب الأحمر والهلال الأحمر",
+
+  "resourcePillar": "الموارد",
+  "resourceMobilisationName": "تعبئة الموارد المحلية",
+  "resourceDesc": "تنويع مصادر الدخل، بما في ذلك مبادرات الإسعافات الأولية في مكان العمل.",
+  "resourceLead": "الصليب الأحمر السويسري والهولندي",
+
+  "financePillar": "التمويل",
+  "financeDevelopmentName": "تطوير التمويل",
+  "financeDesc": "تغطية التكاليف الأساسية، وأنظمة مالية قوية، ومرونة طويلة الأمد.",
+  "financeLead": "الصليب الأحمر النرويجي",
+
+  "technicalLead": "القائد التقني",
+
+  "indicatorTracking": "تتبع المؤشرات",
+  "financialSustainabilityIndicators": "مؤشرات الاستدامة المالية",
+  "indicatorDescription": "صُممت المنصة لدمج مؤشرات الاستدامة المالية للتحالف — من الحسابات المدققة إلى خطط تطوير الجمعيات الوطنية وتوثيق الأصول.",
+
+  "pillarColumn": "المحور",
+  "principleColumn": "المبدأ المراد قياسه",
+  "indicatorsColumn": "المؤشرات",
+
+  "guidingPrinciples": "المبادئ التوجيهية",
+  "anchoredInValues": "مرتكزة على قيم مشتركة.",
+
+  "locallyLedTitle": "صنع القرار بقيادة محلية",
+  "locallyLedDesc": "مساءلة متبادلة عبر التحالف.",
+
+  "sustainabilityTitle": "الاستدامة والتعاون من نظير إلى نظير",
+  "sustainabilityDesc": "تعاون يستمر بعد انتهاء أي مشروع منفرد.",
+
+  "institutionalCapacityTitle": "القدرة المؤسسية",
+  "institutionalCapacityDesc": "تعزيز القيادة والحوكمة.",
+
+  "primaryFocusAreas": "مجالات التركيز الأساسية",
+  "whereWeDirectEnergy": "أين نوجّه طاقتنا.",
+
+  "financialSustainabilityTitle": "الاستدامة المالية",
+  "financialSustainabilityDesc": "تعبئة الموارد وتنويعها ومرونة طويلة الأمد.",
+
+  "institutionalDevelopmentTitle": "التطوير المؤسسي",
+  "institutionalDevelopmentDesc": "تعزيز القيادة والحوكمة والتحول الرقمي.",
+
+  "knowledgeSharingTitle": "تبادل المعرفة",
+  "knowledgeSharingDesc": "التعلم الإقليمي وتوثيق الأدوات المطورة.",
+
+  "ctaTitle": "أكثر من مجرد مشروع — إنها حركة نحو عمل إنساني بقيادة محلية.",
+  "explorePlatform": "استكشف المنصة",
+
+  "home": "الرئيسية",
+  "login": "تسجيل الدخول",
+  "signUp": "إنشاء حساب",
+  "goToDashboard": "الذهاب إلى لوحة التحكم",
+
+  "copyright": "© {{year}} {{organizationName}}"
+}

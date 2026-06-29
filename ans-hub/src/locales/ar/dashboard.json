@@ -1,0 +1,18 @@
+{
+  "dashboardOverview": "نظرة عامة على لوحة التحكم",
+  "welcomeBack": "مرحبًا بعودتك، {{name}}!",
+  "heroDescription": "تمكين الجمعيات الوطنية في أفريقيا من خلال التعلم من النظراء، والموارد المشتركة، والنمو التعاوني",
+  "recentNews": "آخر الأخبار والقصص",
+  "latestUpdates": "آخر التحديثات من الشبكة",
+  "upcomingEvents": "الفعاليات القادمة",
+  "quickActions": "إجراءات سريعة",
+  "addKnowledgeResource": "إضافة مورد معرفي",
+  "shareNewsStory": "مشاركة قصة إخبارية",
+  "featuredResources": "موارد مميزة",
+  "toolsReportsLearning": "أدوات وتقارير ومواد تعليمية",
+  "noRecentNews": "لا توجد أخبار حديثة متاحة",
+  "noUpcomingEvents": "لا توجد فعاليات قادمة",
+  "noFeaturedResources": "لا توجد موارد مميزة متاحة",
+  "checkBackLater": "تحقق مرة أخرى لاحقًا للحصول على موارد معرفية",
+  "resource": "مورد"
+}

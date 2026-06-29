@@ -1,0 +1,18 @@
+{
+  "dashboardOverview": "Muhtasari wa Dashibodi",
+  "welcomeBack": "Karibu tena, {{name}}!",
+  "heroDescription": "Kuwezesha Jumuiya za Kitaifa katika Afrika kupitia kujifunza kati ya wenzao, rasilimali shirikishi, na ukuaji wa ushirikiano",
+  "recentNews": "Habari na Hadithi za Hivi Karibuni",
+  "latestUpdates": "Taarifa za hivi karibuni kutoka kwa mtandao",
+  "upcomingEvents": "Matukio Yanayokuja",
+  "quickActions": "Vitendo vya Haraka",
+  "addKnowledgeResource": "Ongeza Rasilimali ya Maarifa",
+  "shareNewsStory": "Shiriki Hadithi ya Habari",
+  "featuredResources": "Rasilimali Maalum",
+  "toolsReportsLearning": "Zana, ripoti na vifaa vya kujifunza",
+  "noRecentNews": "Hakuna habari za hivi karibuni zinazopatikana",
+  "noUpcomingEvents": "Hakuna matukio yanayokuja",
+  "noFeaturedResources": "Hakuna rasilimali maalum zinazopatikana",
+  "checkBackLater": "Rudi tena baadaye kwa rasilimali za maarifa",
+  "resource": "Rasilimali"
+}

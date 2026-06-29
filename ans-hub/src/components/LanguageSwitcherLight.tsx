@@ -6,6 +6,8 @@ const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'pt', name: 'Português', flag: '🇵🇹' },
+  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+  { code: 'sw', name: 'Kiswahili', flag: '🇰🇪' },
 ];
 
 export default function LanguageSwitcherLight() {
@@ -39,7 +41,7 @@ export default function LanguageSwitcherLight() {
           />
 
           {/* Dropdown menu */}
-          <div className="absolute right-0 top-full mt-2 z-50 w-48 rounded-lg border border-border bg-background shadow-lg overflow-hidden">
+          <div className="absolute right-0 top-full mt-2 z-50 w-56 rounded-lg border border-border bg-background shadow-lg overflow-hidden">
             {languages.map((lang) => (
               <button
                 key={lang.code}

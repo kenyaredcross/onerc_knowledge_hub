@@ -1,0 +1,22 @@
+{
+  "pageTitle": "الفعاليات واللقاءات",
+  "pageSubtitle": "جمع الشبكة معًا",
+  "upcoming": "القادمة",
+  "past": "السابقة",
+  "noUpcomingEvents": "لم يتم العثور على فعاليات قادمة.",
+  "noPastEvents": "لا توجد فعاليات سابقة",
+  "eventDetails": "تفاصيل الفعالية",
+  "date": "التاريخ",
+  "time": "الوقت",
+  "venue": "المكان",
+  "register": "تسجيل",
+  "addToCalendar": "إضافة إلى التقويم",
+  "participants": "المشاركون",
+  "organizer": "المنظم",
+  "featuredEvent": "فعالية مميزة",
+  "featuredSpeakers": "المتحدثون المميزون",
+  "readMore": "قراءة المزيد",
+  "newEvent": "فعالية جديدة",
+  "upcomingEvents": "الفعاليات القادمة",
+  "showPastEvents": "عرض الفعاليات السابقة"
+}
