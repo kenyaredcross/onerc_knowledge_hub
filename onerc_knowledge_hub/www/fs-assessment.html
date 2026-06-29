@@ -100,6 +100,10 @@
 		.matrix th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 6px 6px; }
 		.matrix td { padding: 4px; vertical-align: top; }
 		.matrix input { font-size: 13px; padding: 8px; }
+		.matrix-rm-cell { width: 40px; text-align: center; vertical-align: middle; }
+		.matrix-rm { background: transparent; border: none; color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer; padding: 4px 8px; border-radius: var(--radius); }
+		.matrix-rm:hover { color: var(--red); background: #fbeef0; }
+		.matrix-add { margin-top: 8px; font-size: 13px; padding: 8px 14px; }
 
 		.btn { font-family: inherit; font-weight: 500; font-size: 15px; border: none; border-radius: var(--radius); padding: 12px 24px; cursor: pointer; transition: background .15s; }
 		.btn-primary { background: var(--red); color: #fff; }
@@ -196,6 +200,7 @@
 				<div class="pct" id="score-pct">0%</div>
 				<div class="lbl">Your score</div>
 			</div>
+			<p class="muted-note" id="email-note" style="display:none;"></p>
 			<div><a href="/fs-assessment" class="btn btn-ghost" style="margin-top:24px; display:inline-block; text-decoration:none;">Back to start</a></div>
 		</div>
 		{% endif %}
@@ -252,19 +257,39 @@
 				}
 			} else if (q.question_type === "Action Matrix") {
 				var table = el("table", { class: "matrix" });
-				table.innerHTML = "<thead><tr><th>Action Item</th><th>Timeline</th><th>Expected Outcome</th></tr></thead>";
+				table.innerHTML = "<thead><tr><th>Action Item</th><th>Timeline</th><th>Expected Outcome</th><th aria-label=\"Remove\"></th></tr></thead>";
 				var tbody = el("tbody");
-				for (var r = 0; r < 3; r++) {
+
+				function addMatrixRow() {
 					var tr = el("tr", { class: "matrix-row" });
 					["action_item", "timeline", "expected_outcome"].forEach(function (f) {
 						var td = el("td");
 						td.appendChild(el("input", { type: "text", "data-mx": f, placeholder: "" }));
 						tr.appendChild(td);
 					});
+					var rmTd = el("td", { class: "matrix-rm-cell" });
+					var rm = el("button", { type: "button", class: "matrix-rm", "aria-label": "Remove row", title: "Remove row", html: "&times;" });
+					rm.addEventListener("click", function () {
+						if (tbody.querySelectorAll(".matrix-row").length > 1) tr.remove();
+						else tr.querySelectorAll("input").forEach(function (inp) { inp.value = ""; });
+					});
+					rmTd.appendChild(rm);
+					tr.appendChild(rmTd);
 					tbody.appendChild(tr);
+					return tr;
 				}
+
+				for (var r = 0; r < 3; r++) { addMatrixRow(); }
 				table.appendChild(tbody);
 				body.appendChild(table);
+
+				var addBtn = el("button", { type: "button", class: "btn btn-ghost matrix-add", text: "+ Add row" });
+				addBtn.addEventListener("click", function () {
+					var row = addMatrixRow();
+					var firstInput = row.querySelector("input");
+					if (firstInput) firstInput.focus();
+				});
+				body.appendChild(addBtn);
 			} else { // Narrative
 				body.appendChild(el("textarea", { class: "narrative", placeholder: "Your answer" }));
 			}
@@ -366,9 +391,14 @@
 					var result = r.body.message || {};
 					form.style.display = "none";
 					document.getElementById("success").style.display = "block";
-					if (result.max_score && result.max_score > 0) {
+					if (PHASE === "Post" && result.max_score && result.max_score > 0) {
 						document.getElementById("score-pct").textContent = (result.percentage != null ? result.percentage : 0) + "%";
 						document.getElementById("score-box").style.display = "inline-block";
+					}
+					if (result.email_sent && payload.email) {
+						var emailNote = document.getElementById("email-note");
+						emailNote.textContent = "A copy of your responses has been sent to " + payload.email + ".";
+						emailNote.style.display = "block";
 					}
 					window.scrollTo({ top: 0, behavior: "smooth" });
 				})
