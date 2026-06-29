@@ -11,7 +11,7 @@ import json
 
 import frappe
 from frappe import _
-from frappe.utils import flt
+from frappe.utils import escape_html, flt, get_url
 
 DASHBOARD_ROLES = {"LH FS Manager", "System Manager"}
 VALID_PHASES = ("Pre", "Post")
@@ -129,11 +129,14 @@ def submit_assessment(payload):
 	doc.insert(ignore_permissions=True)
 	frappe.db.commit()
 
+	email_sent = _send_confirmation_email(doc)
+
 	return {
 		"name": doc.name,
 		"total_score": doc.total_score,
 		"max_score": doc.max_score,
 		"percentage": round(flt(doc.percentage), 1),
+		"email_sent": email_sent,
 	}
 
 
@@ -405,6 +408,182 @@ def _national_society_options():
 		fields=["name", "national_society_name"],
 		order_by="national_society_name asc",
 	)
+
+
+# --------------------------------------------------------------------------- #
+# Public: confirmation email
+# --------------------------------------------------------------------------- #
+
+NAVY = "#011E41"
+RED = "#ee2435"
+BORDER = "#e5e7eb"
+
+
+def _send_confirmation_email(doc):
+	"""Email the respondent a formatted copy of their answers and score.
+
+	Best-effort: returns True if an email was queued. A mail failure must never
+	break the public submission, so everything is wrapped and logged.
+	"""
+	if not doc.email:
+		return False
+
+	try:
+		phase_label = "Pre-Assessment" if doc.phase == "Pre" else "Post-Assessment"
+		frappe.sendmail(
+			recipients=[doc.email],
+			subject=_("Your Financial Sustainability {0} response").format(phase_label),
+			message=_build_confirmation_html(doc, phase_label),
+			reference_doctype=doc.doctype,
+			reference_name=doc.name,
+			delayed=False,
+		)
+		return True
+	except Exception:
+		frappe.log_error(
+			title="FS assessment confirmation email failed",
+			message=frappe.get_traceback(),
+		)
+		return False
+
+
+def _fmt_num(value):
+	"""Render scores without a trailing ``.0`` for whole numbers."""
+	value = flt(value)
+	return int(value) if value == int(value) else round(value, 1)
+
+
+def _build_confirmation_html(doc, phase_label):
+	"""Build the responsive, email-safe HTML body for the confirmation mail."""
+	logo_url = get_url("/assets/onerc_knowledge_hub/ans-hub/logo.jpg")
+	ns_name = (
+		frappe.db.get_value("National Society", doc.national_society, "national_society_name")
+		if doc.national_society
+		else None
+	)
+	name = escape_html(doc.respondent_name or "there")
+
+	# Intro line differs by phase.
+	if doc.phase == "Pre":
+		intro = _(
+			"Thank you for completing the pre-assessment. We'll revisit these "
+			"themes together during the peer-learning engagement. Here is a copy "
+			"of your responses for your records."
+		)
+	else:
+		intro = _(
+			"Thank you for completing the post-assessment and sharing your action "
+			"plan. Here is a copy of your responses for your records."
+		)
+
+	# Score badge — shown for the post-assessment only, so respondents don't
+	# see how they scored before the peer-learning engagement.
+	score_html = ""
+	if doc.phase == "Post" and flt(doc.max_score) > 0:
+		pct = _fmt_num(doc.percentage)
+		score_html = f"""
+		<div style="text-align:center;margin:4px 0 28px;">
+			<div style="display:inline-block;background:{NAVY};color:#ffffff;border-radius:8px;padding:18px 40px;">
+				<div style="font-size:38px;font-weight:700;line-height:1;">{pct}%</div>
+				<div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-top:8px;">{escape_html(_('Your score'))}</div>
+				<div style="font-size:12px;opacity:.7;margin-top:6px;">{_fmt_num(doc.total_score)} {escape_html(_('of'))} {_fmt_num(doc.max_score)} {escape_html(_('points'))}</div>
+			</div>
+		</div>"""
+
+	# Answer blocks, in the order the questions were presented.
+	answer_blocks = []
+	num = 0
+	for ans in doc.answers:
+		num += 1
+		q_text = escape_html(ans.question_text or "")
+		selected = _parse_selected(ans.selected_options)
+		if selected:
+			answer_html = ", ".join(escape_html(s) for s in selected)
+			if ans.narrative_answer:
+				answer_html += (
+					f"<div style=\"color:#6b7280;margin-top:4px;\">{escape_html(ans.narrative_answer)}</div>"
+				)
+		elif ans.narrative_answer:
+			answer_html = escape_html(ans.narrative_answer).replace("\n", "<br>")
+		else:
+			answer_html = f"<span style=\"color:#9ca3af;\">{escape_html(_('No answer provided'))}</span>"
+
+		answer_blocks.append(f"""
+		<div style="padding:16px 0;border-top:1px solid {BORDER};">
+			<div style="color:#111827;font-weight:600;font-size:15px;margin-bottom:6px;">
+				<span style="display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;background:{NAVY};color:#ffffff;border-radius:4px;font-size:12px;margin-right:8px;">{num}</span>{q_text}
+			</div>
+			<div style="color:#4b5563;font-size:14px;line-height:1.6;padding-left:32px;">{answer_html}</div>
+		</div>""")
+
+	answers_section = ""
+	if answer_blocks:
+		answers_section = f"""
+		<div style="background:#ffffff;border:1px solid {BORDER};border-radius:6px;padding:8px 24px 24px;margin-top:24px;">
+			<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:{NAVY};padding-top:20px;">{escape_html(_('Your responses'))}</div>
+			{''.join(answer_blocks)}
+		</div>"""
+
+	# Action plan table (Q13) — only present for the post-assessment.
+	action_section = ""
+	if doc.action_plan:
+		rows = []
+		for row in doc.action_plan:
+			cells = [
+				escape_html(row.action_item or "—"),
+				escape_html(row.timeline or "—"),
+				escape_html(row.expected_outcome or "—"),
+			]
+			tds = "".join(
+				f"<td style=\"padding:10px;border:1px solid {BORDER};vertical-align:top;\">{c}</td>"
+				for c in cells
+			)
+			rows.append(f"<tr>{tds}</tr>")
+		headers = "".join(
+			f"<th style=\"text-align:left;padding:10px;border:1px solid {BORDER};font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#6b7280;\">{escape_html(h)}</th>"
+			for h in (_("Action Item"), _("Timeline"), _("Expected Outcome"))
+		)
+		action_section = f"""
+		<div style="background:#ffffff;border:1px solid {BORDER};border-radius:6px;padding:24px;margin-top:20px;">
+			<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:{NAVY};margin-bottom:14px;">{escape_html(_('Your action plan'))}</div>
+			<table width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;font-size:13px;color:#4b5563;">
+				<thead style="background:#f3f4f6;"><tr>{headers}</tr></thead>
+				<tbody>{''.join(rows)}</tbody>
+			</table>
+		</div>"""
+
+	meta_bits = [escape_html(phase_label)]
+	if ns_name:
+		meta_bits.append(escape_html(ns_name))
+	meta_line = " &middot; ".join(meta_bits)
+
+	return f"""
+	<div style="font-family:'Google Sans',system-ui,-apple-system,sans-serif;max-width:640px;margin:0 auto;background:#f0f2f5;padding:24px;">
+		<div style="background:{NAVY};padding:24px 28px;border-radius:6px 6px 0 0;">
+			<table cellspacing="0" cellpadding="0"><tr>
+				<td style="padding-right:14px;"><img src="{logo_url}" alt="" width="40" height="40" style="display:block;border-radius:4px;background:#ffffff;" /></td>
+				<td>
+					<div style="color:#ff8a80;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;">{escape_html(_('Peer Learning'))}</div>
+					<div style="color:#ffffff;font-size:16px;font-weight:600;">{escape_html(_('Financial Sustainability Assessment'))}</div>
+				</td>
+			</tr></table>
+		</div>
+
+		<div style="background:#ffffff;border:1px solid {BORDER};border-top:none;padding:32px 28px;">
+			<h1 style="font-size:22px;font-weight:700;color:#111827;margin:0 0 6px;">{escape_html(_('Response recorded'))}</h1>
+			<div style="color:#6b7280;font-size:13px;margin-bottom:18px;">{meta_line}</div>
+			<p style="color:#4b5563;line-height:1.6;margin:0 0 8px;">{escape_html(_('Dear {0},')).format(name)}</p>
+			<p style="color:#4b5563;line-height:1.6;margin:0 0 8px;">{escape_html(intro)}</p>
+			{score_html}
+			{answers_section}
+			{action_section}
+		</div>
+
+		<div style="background:#f9fafb;padding:20px 28px;text-align:center;border:1px solid {BORDER};border-top:none;border-radius:0 0 6px 6px;">
+			<p style="color:#9ca3af;font-size:12px;margin:0;">© 2026 Kenya Red Cross Society &middot; Africa Localisation Hub</p>
+		</div>
+	</div>
+	"""
 
 
 def _parse_selected(raw):
