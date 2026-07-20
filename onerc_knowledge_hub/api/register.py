@@ -90,6 +90,102 @@ def register_localisation_hub_user(
 	}
 
 
+@frappe.whitelist()
+def create_hub_user(
+	first_name,
+	national_society,
+	company_email,
+	middle_name=None,
+	last_name=None,
+	salutation=None,
+	gender=None,
+	prefered_contact_email=None,
+	phone_number=None,
+	position=None,
+	personnel_type=None,
+	primary_language=None,
+	bio=None,
+	is_steering_group=0,
+):
+	"""
+	Admin-only: create a Localisation Hub User, Frappe User, and send activation email
+	in one shot. Mirrors the register → approve flow so emails and user_id are always set.
+	"""
+	frappe.only_for(["LH Admin", "System Manager"])
+
+	# Derive the canonical contact email the same way registration does
+	email = prefered_contact_email or company_email
+	if not email:
+		frappe.throw(frappe._("Email is required"))
+
+	validate_email_address(email, True)
+
+	# Prevent duplicate contact email
+	existing = frappe.db.get_value(
+		"Localisation Hub User",
+		{"prefered_contact_email": email},
+		"name",
+	)
+	if existing:
+		frappe.throw(
+			frappe._("A user with email {0} already exists ({1}).").format(email, existing)
+		)
+
+	# Also check company_email if it differs from contact email
+	if company_email and company_email != email:
+		existing_company = frappe.db.get_value(
+			"Localisation Hub User",
+			{"company_email": company_email},
+			"name",
+		)
+		if existing_company:
+			frappe.throw(
+				frappe._("A user with company email {0} already exists ({1}).").format(
+					company_email, existing_company
+				)
+			)
+
+	# Insert the LHU as Approved with prefered_contact_email set correctly.
+	# The LocalisationHubUser.on_update hook will detect status==Approved + no user_id
+	# and automatically call create_user(), which creates the Frappe User and db_sets user_id.
+	lhu = frappe.get_doc({
+		"doctype": "Localisation Hub User",
+		"salutation": salutation,
+		"first_name": first_name,
+		"middle_name": middle_name or "",
+		"last_name": last_name or "",
+		"gender": gender,
+		"company_email": company_email or email,
+		"prefered_contact_email": email,
+		"phone_number": phone_number or "",
+		"national_society": national_society,
+		"position": position,
+		"personnel_type": personnel_type,
+		"primary_language": primary_language,
+		"bio": bio or "",
+		"is_steering_group": is_steering_group or 0,
+		"status": "Approved",
+	})
+	lhu.insert(ignore_permissions=True)
+	frappe.db.commit()
+
+	# Reload so we have the user_id that on_update set via db_set
+	lhu.reload()
+
+	if not lhu.user_id:
+		frappe.throw(frappe._("User account creation failed. Check error logs."))
+
+	# Send activation email so the user can set their password
+	send_activation_email(lhu)
+
+	return {
+		"localisation_hub_user": lhu.name,
+		"user_id": lhu.user_id,
+		"full_name": lhu.full_name,
+		"message": "User created and activation email sent",
+	}
+
+
 #Frappe User created after admin approves and user sets password
 @frappe.whitelist(allow_guest=True)
 def check_registration_status(email):
