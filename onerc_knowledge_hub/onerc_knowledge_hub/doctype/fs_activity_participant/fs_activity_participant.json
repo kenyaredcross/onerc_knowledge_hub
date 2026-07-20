@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2026-06-29 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "participant_name",
+  "email",
+  "national_society",
+  "pre_invited",
+  "pre_completed",
+  "post_invited",
+  "post_completed"
+ ],
+ "fields": [
+  {
+   "columns": 3,
+   "fieldname": "participant_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name"
+  },
+  {
+   "columns": 3,
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "national_society",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "National Society",
+   "options": "National Society"
+  },
+  {
+   "default": "0",
+   "fieldname": "pre_invited",
+   "fieldtype": "Check",
+   "label": "Pre Invited",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "pre_completed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Pre Done",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "post_invited",
+   "fieldtype": "Check",
+   "label": "Post Invited",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "post_completed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Post Done",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-06-29 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "FS Activity Participant",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

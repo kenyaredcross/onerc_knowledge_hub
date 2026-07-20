@@ -122,6 +122,21 @@
 		.success .score .pct { font-size: 34px; font-weight: 700; }
 		.success .score .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; opacity: .8; }
 		.muted-note { color: var(--muted); font-size: 13px; margin-top: 20px; }
+
+		.activity-card { border-left: 4px solid var(--red); }
+		.activity-card .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+		.activity-card h3 { font-size: 20px; color: var(--navy); margin: 2px 0 10px; }
+		.activity-meta { display: flex; gap: 22px; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+		.activity-meta strong { color: var(--text); font-weight: 600; }
+
+		.compare { margin-top: 18px; }
+		.compare-track { font-size: 15px; color: var(--text); }
+		.compare-track span { font-weight: 600; }
+		.compare-arrow { margin: 0 10px; color: var(--muted); }
+		.compare-pill { display: inline-block; margin-top: 12px; padding: 7px 18px; border-radius: 20px; color: #fff; font-size: 13px; font-weight: 600; }
+		.compare-pill.up { background: #1f8a5b; }
+		.compare-pill.down { background: var(--red); }
+		.compare-pill.flat { background: var(--muted); }
 	</style>
 </head>
 <body>
@@ -159,6 +174,16 @@
 		</div>
 		{% else %}
 		<!-- Form -->
+		{% if activity %}
+		<div class="card activity-card">
+			<span class="tag">{{ phase }}-Assessment</span>
+			<h3>{{ activity.activity_name }}</h3>
+			<div class="activity-meta">
+				{% if activity.country %}<span>Country: <strong>{{ activity.country }}</strong></span>{% endif %}
+				{% if activity.activity_date %}<span>Date: <strong>{{ activity.activity_date }}</strong></span>{% endif %}
+			</div>
+		</div>
+		{% endif %}
 		<form id="assessment-form" novalidate>
 			<div class="card">
 				<div class="section-title">{{ phase }}-Assessment &middot; Your details</div>
@@ -166,19 +191,19 @@
 				<div class="grid-2">
 					<div class="field">
 						<label class="field-label" for="respondent_name">Full name <span class="req">*</span></label>
-						<input type="text" id="respondent_name" name="respondent_name" autocomplete="name" />
+						<input type="text" id="respondent_name" name="respondent_name" autocomplete="name" value="{{ prefill.get('respondent_name', '') or '' }}" />
 					</div>
 					<div class="field">
 						<label class="field-label" for="email">Email</label>
-						<input type="email" id="email" name="email" autocomplete="email" />
+						<input type="email" id="email" name="email" autocomplete="email" value="{{ prefill.get('email', '') or '' }}" {% if prefill.get('email') %}readonly{% endif %} />
 					</div>
 				</div>
 				<div class="field">
 					<label class="field-label" for="national_society">Your National Society</label>
 					<select id="national_society" name="national_society">
-						<option value="">— Select —</option>
+						<option value="">Select</option>
 						{% for ns in national_societies %}
-						<option value="{{ ns.name }}">{{ ns.national_society_name }}</option>
+						<option value="{{ ns.name }}" {% if prefill.get('national_society') == ns.name %}selected{% endif %}>{{ ns.national_society_name }}</option>
 						{% endfor %}
 					</select>
 				</div>
@@ -200,6 +225,14 @@
 				<div class="pct" id="score-pct">0%</div>
 				<div class="lbl">Your score</div>
 			</div>
+			<div class="compare" id="compare-box" style="display:none;">
+				<div class="compare-track">
+					<span id="compare-pre">Pre 0%</span>
+					<span class="compare-arrow">&rarr;</span>
+					<span id="compare-post">Post 0%</span>
+				</div>
+				<div class="compare-pill" id="compare-pill"></div>
+			</div>
 			<p class="muted-note" id="email-note" style="display:none;"></p>
 			<div><a href="/fs-assessment" class="btn btn-ghost" style="margin-top:24px; display:inline-block; text-decoration:none;">Back to start</a></div>
 		</div>
@@ -212,6 +245,7 @@
 	<script>
 	(function () {
 		var PHASE = "{{ phase }}";
+		var ACTIVITY = "{{ activity.name if activity else '' }}";
 		var questions = window.__QUESTIONS__ || [];
 		var container = document.getElementById("questions");
 
@@ -372,6 +406,7 @@
 				respondent_name: name,
 				email: document.getElementById("email").value.trim(),
 				national_society: document.getElementById("national_society").value,
+				activity: ACTIVITY || null,
 				phase: PHASE,
 				answers: data.answers,
 				action_plan: data.action_plan
@@ -391,9 +426,26 @@
 					var result = r.body.message || {};
 					form.style.display = "none";
 					document.getElementById("success").style.display = "block";
-					if (PHASE === "Post" && result.max_score && result.max_score > 0) {
+					if (result.max_score && result.max_score > 0) {
 						document.getElementById("score-pct").textContent = (result.percentage != null ? result.percentage : 0) + "%";
 						document.getElementById("score-box").style.display = "inline-block";
+					}
+					if (PHASE === "Post" && result.baseline_percentage != null && result.score_change != null) {
+						var change = result.score_change;
+						document.getElementById("compare-pre").textContent = "Pre " + result.baseline_percentage + "%";
+						document.getElementById("compare-post").textContent = "Post " + (result.percentage != null ? result.percentage : 0) + "%";
+						var pill = document.getElementById("compare-pill");
+						if (change > 0) {
+							pill.className = "compare-pill up";
+							pill.textContent = "▲ Improved by " + change + " pts";
+						} else if (change < 0) {
+							pill.className = "compare-pill down";
+							pill.textContent = "▼ Declined by " + Math.abs(change) + " pts";
+						} else {
+							pill.className = "compare-pill flat";
+							pill.textContent = "No change since the pre-assessment";
+						}
+						document.getElementById("compare-box").style.display = "block";
 					}
 					if (result.email_sent && payload.email) {
 						var emailNote = document.getElementById("email-note");
