@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useFrappePostCall, useFrappeGetCall, useFrappeCreateDoc } from "frappe-react-sdk";
+import { useFrappePostCall } from "frappe-react-sdk";
 import toast from "react-hot-toast";
 import {
   Users,
@@ -52,7 +52,7 @@ export default function UsersManagement() {
   const { call: rejectUser } = useFrappePostCall("onerc_knowledge_hub.api.register.reject_localisation_hub_user");
   const { call: resendActivationEmail } = useFrappePostCall("onerc_knowledge_hub.api.user_management.resend_activation_email");
   const { call: sendPasswordResetEmail } = useFrappePostCall("onerc_knowledge_hub.api.user_management.send_password_reset_email");
-  const { createDoc } = useFrappeCreateDoc();
+  const { call: createHubUser } = useFrappePostCall("onerc_knowledge_hub.api.register.create_hub_user");
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -267,32 +267,28 @@ export default function UsersManagement() {
     setIsSubmitting(true);
 
     try {
-      const doc: any = {
-        doctype: "Localisation Hub User",
+      const payload: Record<string, any> = {
         first_name: formData.first_name,
         company_email: formData.company_email,
         national_society: formData.national_society,
-        status: "Approved", // Auto-approve admin-created users
       };
 
-      // Add optional fields
-      if (formData.middle_name) doc.middle_name = formData.middle_name;
-      if (formData.last_name) doc.last_name = formData.last_name;
-      if (formData.salutation) doc.salutation = formData.salutation;
-      if (formData.gender) doc.gender = formData.gender;
-      if (formData.prefered_contact_email) doc.prefered_contact_email = formData.prefered_contact_email;
-      if (formData.phone_number) doc.phone_number = formData.phone_number;
-      if (formData.position) doc.position = formData.position;
-      if (formData.personnel_type) doc.personnel_type = formData.personnel_type;
-      if (formData.primary_language) doc.primary_language = formData.primary_language;
-      if (formData.bio) doc.bio = formData.bio;
-      if (formData.is_steering_group) doc.is_steering_group = formData.is_steering_group;
+      if (formData.middle_name) payload.middle_name = formData.middle_name;
+      if (formData.last_name) payload.last_name = formData.last_name;
+      if (formData.salutation) payload.salutation = formData.salutation;
+      if (formData.gender) payload.gender = formData.gender;
+      if (formData.prefered_contact_email) payload.prefered_contact_email = formData.prefered_contact_email;
+      if (formData.phone_number) payload.phone_number = formData.phone_number;
+      if (formData.position) payload.position = formData.position;
+      if (formData.personnel_type) payload.personnel_type = formData.personnel_type;
+      if (formData.primary_language) payload.primary_language = formData.primary_language;
+      if (formData.bio) payload.bio = formData.bio;
+      if (formData.is_steering_group) payload.is_steering_group = formData.is_steering_group;
 
-      await createDoc("Localisation Hub User", doc);
+      await createHubUser(payload);
 
-      toast.success("User created successfully!");
+      toast.success("User created and activation email sent!");
 
-      // Reset form and close
       setFormData({
         first_name: "",
         middle_name: "",
@@ -310,8 +306,6 @@ export default function UsersManagement() {
         is_steering_group: 0,
       });
       setShowCreateForm(false);
-
-      // Refresh users list
       fetchUsers();
     } catch (error: any) {
       console.error("Error creating user:", error);
