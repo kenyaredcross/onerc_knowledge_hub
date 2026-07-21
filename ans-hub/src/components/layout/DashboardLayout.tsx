@@ -59,16 +59,6 @@ export default function DashboardLayout() {
     { path: "/fs-assessment", label: "Take Assessment", icon: FileText, external: true, newTab: true },
   ];
 
-  const isAdmin =
-    userRoles.includes("LH Admin") ||
-    userRoles.includes("System Manager");
-
-  const managementItems = [
-    { path: "/users", label: t('navigation:users'), icon: Users },
-    { path: "/feedback/admin", label: t('navigation:feedbackAdmin'), icon: ClipboardList, adminOnly: true },
-    { path: "/faqs", label: t('navigation:faqs'), icon: HelpCircle },
-    { path: "/app", label: t('navigation:desk'), icon: Settings, external: true },
-  ];
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -87,6 +77,17 @@ export default function DashboardLayout() {
     userRoles.includes("LH Admin") ||
     userRoles.includes("LH Manager") ||
     userRoles.includes("System Manager");
+
+  const isAdmin =
+    userRoles.includes("LH Admin") ||
+    userRoles.includes("System Manager");
+
+  const managementItems = [
+    { path: "/users", label: t('navigation:users'), icon: Users },
+    { path: "/feedback/admin", label: t('navigation:feedbackAdmin'), icon: ClipboardList, adminOnly: true },
+    { path: "/faqs", label: t('navigation:faqs'), icon: HelpCircle },
+    { path: "/app", label: t('navigation:desk'), icon: Settings, external: true },
+  ];
 
   // Financial Sustainability admin pages are limited to FS managers.
   const isFsManager =
