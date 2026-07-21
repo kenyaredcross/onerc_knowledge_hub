@@ -101,7 +101,7 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
       <div className="ma-root">
         {/* Editorial corner marks (hidden on mobile) */}
         <div className="ma-mark ma-mark--tl">Knowledge Hub&nbsp;/&nbsp;Est. 2026</div>
-        <div className="ma-mark ma-mark--tr">Localization</div>
+        <div className="ma-mark ma-mark--tr">Localisation</div>
         <div className="ma-mark ma-mark--bl">Allways There</div>
 
         <div className={`ma-main ${isSignIn ? "is-signin" : ""}`}>
