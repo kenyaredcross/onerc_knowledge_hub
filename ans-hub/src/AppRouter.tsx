@@ -33,6 +33,8 @@ import PendingApprovalPage from "./components/pending-approval/PendingApproval.t
 import Pillars from "./components/pillars/Pillars.tsx";
 import Profile from "./components/profile/Profile.tsx";
 import UsersManagement from "./components/users/UsersManagement.tsx";
+import FeedbackSubmit from "./components/feedback/FeedbackSubmit.tsx";
+import FeedbackAdmin from "./components/feedback/FeedbackAdmin.tsx";
 
 const AppRouter = () => {
   return (
@@ -86,6 +88,8 @@ const AppRouter = () => {
             <Route path="/pillars" element={<Pillars />} />
             <Route path="/connect" element={<Connect />} />
             <Route path="/users" element={<UsersManagement />} />
+            <Route path="/feedback" element={<FeedbackSubmit />} />
+            <Route path="/feedback/admin" element={<FeedbackAdmin />} />
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<ErrorPage404 />} />

@@ -20,6 +20,7 @@ import {
   TrendingUp,
   ClipboardList,
   FileText,
+  MessageSquarePlus,
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
 import { useFrappeGetCall } from "frappe-react-sdk";
@@ -41,6 +42,7 @@ export default function DashboardLayout() {
     { path: "/national-societies", label: t('navigation:nationalSocieties'), icon: Globe2 },
     { path: "/pillars", label: t('navigation:pillars'), icon: Layers },
     { path: "/connect", label: t('navigation:connect'), icon: MessageSquare },
+    { path: "/feedback", label: t('navigation:feedback'), icon: MessageSquarePlus },
   ];
 
   const createItems = [
@@ -57,11 +59,6 @@ export default function DashboardLayout() {
     { path: "/fs-assessment", label: "Take Assessment", icon: FileText, external: true, newTab: true },
   ];
 
-  const managementItems = [
-    { path: "/users", label: t('navigation:users'), icon: Users },
-    { path: "/faqs", label: t('navigation:faqs'), icon: HelpCircle },
-    { path: "/app", label: t('navigation:desk'), icon: Settings, external: true },
-  ];
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -80,6 +77,17 @@ export default function DashboardLayout() {
     userRoles.includes("LH Admin") ||
     userRoles.includes("LH Manager") ||
     userRoles.includes("System Manager");
+
+  const isAdmin =
+    userRoles.includes("LH Admin") ||
+    userRoles.includes("System Manager");
+
+  const managementItems = [
+    { path: "/users", label: t('navigation:users'), icon: Users },
+    { path: "/feedback/admin", label: t('navigation:feedbackAdmin'), icon: ClipboardList, adminOnly: true },
+    { path: "/faqs", label: t('navigation:faqs'), icon: HelpCircle },
+    { path: "/app", label: t('navigation:desk'), icon: Settings, external: true },
+  ];
 
   // Financial Sustainability admin pages are limited to FS managers.
   const isFsManager =
@@ -345,12 +353,9 @@ export default function DashboardLayout() {
               </div>
             )}
             {managementItems
-              .filter((item) => {
-                // Show "Users" and "Desk" only to admins and managers
-                if (item.path === "/users" || item.path.startsWith("/app")) {
-                  return isAdminOrManager;
-                }
-                // Show other management items (FAQs) to everyone
+              .filter((item: any) => {
+                if (item.adminOnly) return isAdmin;
+                if (item.path === "/users" || item.path.startsWith("/app")) return isAdminOrManager;
                 return true;
               })
               .map((item) => {
