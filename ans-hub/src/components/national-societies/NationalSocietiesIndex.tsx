@@ -145,6 +145,14 @@ export default function NationalSocietiesIndex() {
     () => societies.filter((ns) => ns.type !== "Consortium Partner").length,
     [societies],
   );
+  const totalBranches = useMemo(
+    () => societies.reduce((sum, ns) => sum + (ns.active_branches ?? 0), 0),
+    [societies],
+  );
+  const totalVolunteers = useMemo(
+    () => societies.reduce((sum, ns) => sum + (ns.active_vonteers ?? 0), 0),
+    [societies],
+  );
 
   return (
     <div className="min-h-full bg-gray-50">
@@ -188,6 +196,28 @@ export default function NationalSocietiesIndex() {
                       <Skeleton className="h-4 w-8" />
                     ) : (
                       <span className="font-bold text-dash-red">{consortiumPartners}</span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-1.5 text-gray-600">
+                      <GitBranch className="h-3.5 w-3.5 text-gray-400" />
+                      {t('societies:totalBranches')}
+                    </span>
+                    {isLoading ? (
+                      <Skeleton className="h-4 w-10" />
+                    ) : (
+                      <span className="font-bold text-dash-red">{totalBranches.toLocaleString()}</span>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="flex items-center gap-1.5 text-gray-600">
+                      <Users className="h-3.5 w-3.5 text-gray-400" />
+                      {t('societies:totalVolunteers')}
+                    </span>
+                    {isLoading ? (
+                      <Skeleton className="h-4 w-10" />
+                    ) : (
+                      <span className="font-bold text-dash-red">{totalVolunteers.toLocaleString()}</span>
                     )}
                   </div>
                 </div>
