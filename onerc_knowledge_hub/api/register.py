@@ -357,8 +357,13 @@ def approve_localisation_hub_user(name):
 	if lhu.user_id:
 		frappe.throw(frappe._("User account already exists for this person"))
 
+	# Resolve canonical email — prefer prefered_contact_email, fall back to company_email
+	email = (lhu.prefered_contact_email or lhu.company_email or "").strip()
+	if not email:
+		frappe.throw(frappe._("No email address found on this Localisation Hub User record"))
+
 	# Check if a User with this email already exists
-	existing_user = frappe.db.get_value("User", {"email": lhu.prefered_contact_email}, "name")
+	existing_user = frappe.db.get_value("User", {"email": email}, "name")
 
 	if existing_user:
 		# User already exists, just link it to the Localisation Hub User
@@ -367,7 +372,7 @@ def approve_localisation_hub_user(name):
 		# Create inactive User account
 		user = frappe.get_doc({
 			"doctype": "User",
-			"email": lhu.prefered_contact_email,
+			"email": email,
 			"first_name": lhu.first_name,
 			"last_name": lhu.last_name or "",
 			"enabled": 0,  # Account is disabled until password is set
