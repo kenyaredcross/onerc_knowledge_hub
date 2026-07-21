@@ -33,7 +33,8 @@ import PendingApprovalPage from "./components/pending-approval/PendingApproval.t
 import Pillars from "./components/pillars/Pillars.tsx";
 import Profile from "./components/profile/Profile.tsx";
 import UsersManagement from "./components/users/UsersManagement.tsx";
-import { FeedbackSubmit, FeedbackAdmin } from "./components/feedback/Feedback.tsx";
+import FeedbackSubmit from "./components/feedback/FeedbackSubmit.tsx";
+import FeedbackAdmin from "./components/feedback/FeedbackAdmin.tsx";
 
 const AppRouter = () => {
   return (
