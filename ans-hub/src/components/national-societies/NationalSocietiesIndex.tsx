@@ -19,6 +19,7 @@ interface NSSociety {
   name: string;
   national_society_name: string;
   abbreviation: string;
+  type: string | null;
   logo: string | null;
   country: string;
   region_name: string | null;
@@ -32,7 +33,7 @@ interface NSSociety {
   active_vonteers: number | null;
   active_branches: number | null;
   organization_size_update_date: string | null;
-  pillars: string[]; // list of pillar names e.g. ["Leadership", "Finance"]
+  pillars: string[];
 }
 
 // ── Pillar styling helpers ──────────────────────────────────────────────────
@@ -136,12 +137,12 @@ export default function NationalSocietiesIndex() {
     });
   }, [societies, activeRegion, query]);
 
-  const totalVolunteers = useMemo(
-    () => societies.reduce((s, ns) => s + (ns.active_vonteers || 0), 0),
+  const consortiumPartners = useMemo(
+    () => societies.filter((ns) => ns.type === "Consortium Partner").length,
     [societies],
   );
-  const totalBranches = useMemo(
-    () => societies.reduce((s, ns) => s + (ns.active_branches || 0), 0),
+  const nationalSocietiesCount = useMemo(
+    () => societies.filter((ns) => ns.type !== "Consortium Partner").length,
     [societies],
   );
 
@@ -166,7 +167,7 @@ export default function NationalSocietiesIndex() {
 
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">{t('societies:memberSocieties')}</span>
+                    <span className="text-gray-600">{t('societies:allianceMembers')}</span>
                     {isLoading ? (
                       <Skeleton className="h-4 w-8" />
                     ) : (
@@ -174,25 +175,19 @@ export default function NationalSocietiesIndex() {
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">{t('societies:totalVolunteers')}</span>
+                    <span className="text-gray-600">{t('societies:nationalSocieties')}</span>
                     {isLoading ? (
-                      <Skeleton className="h-4 w-12" />
+                      <Skeleton className="h-4 w-8" />
                     ) : (
-                      <span className="font-bold text-dash-red">
-                        {totalVolunteers > 0
-                          ? `${(totalVolunteers / 1000).toFixed(0)}k+`
-                          : "—"}
-                      </span>
+                      <span className="font-bold text-dash-red">{nationalSocietiesCount}</span>
                     )}
                   </div>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">{t('societies:totalBranches')}</span>
+                    <span className="text-gray-600">{t('societies:consortiumPartners')}</span>
                     {isLoading ? (
-                      <Skeleton className="h-4 w-10" />
+                      <Skeleton className="h-4 w-8" />
                     ) : (
-                      <span className="font-bold text-dash-red">
-                        {totalBranches > 0 ? totalBranches : "—"}
-                      </span>
+                      <span className="font-bold text-dash-red">{consortiumPartners}</span>
                     )}
                   </div>
                 </div>
