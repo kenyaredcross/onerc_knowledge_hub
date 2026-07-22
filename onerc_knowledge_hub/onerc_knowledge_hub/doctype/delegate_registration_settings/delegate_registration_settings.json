@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-07-22 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "event_title",
+  "section_break_boma",
+  "boma_hotel_email",
+  "boma_hotel_url",
+  "column_break_boma",
+  "krcs_admin_email",
+  "notification_email"
+ ],
+ "fields": [
+  {
+   "default": "Delegate Registration",
+   "description": "Shown as the heading on the public registration form and in emails.",
+   "fieldname": "event_title",
+   "fieldtype": "Data",
+   "label": "Event Title"
+  },
+  {
+   "fieldname": "section_break_boma",
+   "fieldtype": "Section Break",
+   "label": "Boma Hotel & Notifications"
+  },
+  {
+   "description": "Accommodation requests are emailed here when a delegate opts in. Leave blank to disable the Boma email.",
+   "fieldname": "boma_hotel_email",
+   "fieldtype": "Data",
+   "label": "Boma Hotel Email",
+   "options": "Email"
+  },
+  {
+   "description": "Public link to the Boma Hotel shown next to the accommodation question.",
+   "fieldname": "boma_hotel_url",
+   "fieldtype": "Data",
+   "label": "Boma Hotel URL",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_boma",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "CC'd on the Boma accommodation request for follow-up.",
+   "fieldname": "krcs_admin_email",
+   "fieldtype": "Data",
+   "label": "KRCS Admin Email",
+   "options": "Email"
+  },
+  {
+   "description": "Receives a notification for every registration submitted. Leave blank to disable.",
+   "fieldname": "notification_email",
+   "fieldtype": "Data",
+   "label": "Notification Email",
+   "options": "Email"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-07-22 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "Delegate Registration Settings",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "LH Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
