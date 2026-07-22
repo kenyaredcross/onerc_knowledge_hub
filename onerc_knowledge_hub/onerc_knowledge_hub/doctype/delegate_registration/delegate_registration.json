@@ -26,8 +26,14 @@
   "phone_number",
   "section_break_travel",
   "arrival_date",
+  "arrival_time",
+  "arrival_flight",
   "column_break_travel",
   "departure_date",
+  "departure_time",
+  "departure_flight",
+  "section_break_additional",
+  "additional_information",
   "section_break_accommodation",
   "accommodation_boma",
   "boma_requested",
@@ -158,6 +164,17 @@
    "label": "Date of Arrival in Kenya"
   },
   {
+   "fieldname": "arrival_time",
+   "fieldtype": "Time",
+   "label": "Arrival Time"
+  },
+  {
+   "description": "Flight number / airline for arrival.",
+   "fieldname": "arrival_flight",
+   "fieldtype": "Data",
+   "label": "Arrival Flight Details"
+  },
+  {
    "fieldname": "column_break_travel",
    "fieldtype": "Column Break"
   },
@@ -165,6 +182,28 @@
    "fieldname": "departure_date",
    "fieldtype": "Date",
    "label": "Date of Departure from Kenya"
+  },
+  {
+   "fieldname": "departure_time",
+   "fieldtype": "Time",
+   "label": "Departure Time"
+  },
+  {
+   "description": "Flight number / airline for departure.",
+   "fieldname": "departure_flight",
+   "fieldtype": "Data",
+   "label": "Departure Flight Details"
+  },
+  {
+   "fieldname": "section_break_additional",
+   "fieldtype": "Section Break",
+   "label": "Additional Information"
+  },
+  {
+   "description": "Anything the organisers should know before the delegate arrives (dietary needs, accessibility, special requests, etc.).",
+   "fieldname": "additional_information",
+   "fieldtype": "Small Text",
+   "label": "Additional Information"
   },
   {
    "fieldname": "section_break_accommodation",
@@ -259,7 +298,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "LH Admin",
+   "role": "Delegate Manager",
    "share": 1,
    "write": 1
   }

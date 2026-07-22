@@ -15,6 +15,8 @@ def get_context(context):
 	settings = frappe.get_cached_doc("Delegate Registration Settings")
 	context.event_title = (settings.get("event_title") or "").strip() or "Delegate Registration"
 	context.boma_hotel_url = (settings.get("boma_hotel_url") or "").strip()
+	# The sessions section can be hidden entirely from the public form via settings.
+	context.show_sessions = bool(settings.get("show_sessions"))
 
 	context.national_societies = frappe.get_all(
 		"National Society",
@@ -24,16 +26,18 @@ def get_context(context):
 
 	context.countries = frappe.get_all("Country", pluck="name", order_by="name asc")
 
-	sessions = frappe.get_all(
-		"Summit Session",
-		filters={"is_published": 1},
-		fields=["name", "session_title", "session_date", "start_time", "end_time", "venue", "description"],
-		order_by="display_order asc, session_date asc, start_time asc",
-	)
-	for s in sessions:
-		s["session_date"] = formatdate(s["session_date"]) if s.get("session_date") else None
-		s["start_time"] = _fmt_time(s.get("start_time"))
-		s["end_time"] = _fmt_time(s.get("end_time"))
+	sessions = []
+	if context.show_sessions:
+		sessions = frappe.get_all(
+			"Summit Session",
+			filters={"is_published": 1},
+			fields=["name", "session_title", "session_date", "start_time", "end_time", "venue", "description"],
+			order_by="display_order asc, session_date asc, start_time asc",
+		)
+		for s in sessions:
+			s["session_date"] = formatdate(s["session_date"]) if s.get("session_date") else None
+			s["start_time"] = _fmt_time(s.get("start_time"))
+			s["end_time"] = _fmt_time(s.get("end_time"))
 	context.sessions = sessions
 	# `</` is escaped so the JSON can be embedded safely inside a <script> tag.
 	context.sessions_json = json.dumps(sessions).replace("</", "<\\/")

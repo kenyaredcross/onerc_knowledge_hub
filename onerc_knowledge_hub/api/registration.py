@@ -23,7 +23,7 @@ import frappe
 from frappe import _
 from frappe.utils import escape_html, formatdate, get_url, now_datetime
 
-ADMIN_ROLES = {"LH Admin", "System Manager"}
+ADMIN_ROLES = {"Delegate Manager", "System Manager"}
 
 # Passport copies are sensitive PII, so the upload is tightly bounded.
 ALLOWED_EXTENSIONS = {"pdf", "jpg", "jpeg", "png"}
@@ -96,7 +96,12 @@ def submit_registration(payload):
 			"email": email,
 			"phone_number": (data.get("phone_number") or "").strip() or None,
 			"arrival_date": data.get("arrival_date") or None,
+			"arrival_time": data.get("arrival_time") or None,
+			"arrival_flight": (data.get("arrival_flight") or "").strip() or None,
 			"departure_date": data.get("departure_date") or None,
+			"departure_time": data.get("departure_time") or None,
+			"departure_flight": (data.get("departure_flight") or "").strip() or None,
+			"additional_information": (data.get("additional_information") or "").strip() or None,
 			"accommodation_boma": 1 if data.get("accommodation_boma") else 0,
 			"status": "New",
 		}
@@ -354,7 +359,21 @@ def _sessions_html(doc):
 	</div>"""
 
 
+def _when(date, time):
+	"""Combine a date and optional time into "12 Aug 2026, 14:30"."""
+	parts = []
+	if date:
+		parts.append(formatdate(date))
+	t = _fmt_time(time)
+	if t:
+		parts.append(t)
+	return ", ".join(parts)
+
+
 def _delegate_detail_rows(doc):
+	additional = ""
+	if doc.additional_information:
+		additional = escape_html(doc.additional_information).replace("\n", "<br>")
 	return [
 		(_("Name"), escape_html(_full_name(doc))),
 		(_("National Society"), escape_html(_ns_name(doc) or "")),
@@ -363,8 +382,11 @@ def _delegate_detail_rows(doc):
 		(_("Passport Number"), escape_html(doc.passport_number or "")),
 		(_("Email"), escape_html(doc.email or "")),
 		(_("Phone"), escape_html(doc.phone_number or "")),
-		(_("Arrival in Kenya"), escape_html(formatdate(doc.arrival_date) if doc.arrival_date else "")),
-		(_("Departure from Kenya"), escape_html(formatdate(doc.departure_date) if doc.departure_date else "")),
+		(_("Arrival in Kenya"), escape_html(_when(doc.arrival_date, doc.arrival_time))),
+		(_("Arrival flight"), escape_html(doc.arrival_flight or "")),
+		(_("Departure from Kenya"), escape_html(_when(doc.departure_date, doc.departure_time))),
+		(_("Departure flight"), escape_html(doc.departure_flight or "")),
+		(_("Additional information"), additional),
 		(
 			_("Boma Hotel accommodation"),
 			escape_html(_("Requested") if doc.accommodation_boma else _("Not requested")),
@@ -453,8 +475,8 @@ def _send_boma_request(doc, force=False):
 			(_("Guest"), escape_html(_full_name(doc))),
 			(_("Organisation"), escape_html(_ns_name(doc) or "")),
 			(_("Designation"), escape_html(_designation_label(doc))),
-			(_("Check-in"), escape_html(formatdate(doc.arrival_date) if doc.arrival_date else _("To be confirmed"))),
-			(_("Check-out"), escape_html(formatdate(doc.departure_date) if doc.departure_date else _("To be confirmed"))),
+			(_("Check-in"), escape_html(_when(doc.arrival_date, doc.arrival_time) or _("To be confirmed"))),
+			(_("Check-out"), escape_html(_when(doc.departure_date, doc.departure_time) or _("To be confirmed"))),
 			(_("Guest email"), escape_html(doc.email or "")),
 			(_("Guest phone"), escape_html(doc.phone_number or "")),
 		]
