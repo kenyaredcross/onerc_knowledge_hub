@@ -1,0 +1,274 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:DREG-{YYYY}-{#####}",
+ "creation": "2026-07-22 12:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "surname",
+  "given_names",
+  "national_society",
+  "column_break_identity",
+  "designation",
+  "designation_other",
+  "nationality",
+  "passport_number",
+  "section_break_passport",
+  "date_of_birth",
+  "passport_issue_date",
+  "column_break_passport",
+  "passport_expiry_date",
+  "passport_copy",
+  "section_break_contact",
+  "email",
+  "column_break_contact",
+  "phone_number",
+  "section_break_travel",
+  "arrival_date",
+  "column_break_travel",
+  "departure_date",
+  "section_break_accommodation",
+  "accommodation_boma",
+  "boma_requested",
+  "boma_requested_on",
+  "section_break_sessions",
+  "sessions",
+  "section_break_meta",
+  "status",
+  "column_break_meta",
+  "submitted_on"
+ ],
+ "fields": [
+  {
+   "fieldname": "surname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Surname",
+   "reqd": 1
+  },
+  {
+   "description": "Given names exactly as they appear on the passport.",
+   "fieldname": "given_names",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Given Names",
+   "reqd": 1
+  },
+  {
+   "fieldname": "national_society",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "National Society",
+   "options": "National Society",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Designation",
+   "options": "\nSecretary General\nDeputy Secretary General\nOfficer\nOther"
+  },
+  {
+   "depends_on": "eval:doc.designation=='Other'",
+   "fieldname": "designation_other",
+   "fieldtype": "Data",
+   "label": "Designation (Other)"
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Link",
+   "label": "Nationality",
+   "options": "Country"
+  },
+  {
+   "fieldname": "passport_number",
+   "fieldtype": "Data",
+   "label": "Passport Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_passport",
+   "fieldtype": "Section Break",
+   "label": "Passport"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "passport_issue_date",
+   "fieldtype": "Date",
+   "label": "Date of Passport Issue"
+  },
+  {
+   "fieldname": "column_break_passport",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "passport_expiry_date",
+   "fieldtype": "Date",
+   "label": "Date of Expiry"
+  },
+  {
+   "description": "Copy of the passport biodata page (private).",
+   "fieldname": "passport_copy",
+   "fieldtype": "Attach",
+   "label": "Copy of Passport",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_contact",
+   "fieldtype": "Section Break",
+   "label": "Contact"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_contact",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "section_break_travel",
+   "fieldtype": "Section Break",
+   "label": "Travel"
+  },
+  {
+   "fieldname": "arrival_date",
+   "fieldtype": "Date",
+   "label": "Date of Arrival in Kenya"
+  },
+  {
+   "fieldname": "column_break_travel",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "departure_date",
+   "fieldtype": "Date",
+   "label": "Date of Departure from Kenya"
+  },
+  {
+   "fieldname": "section_break_accommodation",
+   "fieldtype": "Section Break",
+   "label": "Accommodation"
+  },
+  {
+   "default": "0",
+   "description": "Delegate requested a room at the Boma Hotel.",
+   "fieldname": "accommodation_boma",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Boma Hotel Accommodation"
+  },
+  {
+   "default": "0",
+   "description": "Whether the accommodation request email has been sent to the Boma Hotel.",
+   "fieldname": "boma_requested",
+   "fieldtype": "Check",
+   "label": "Boma Request Sent",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.boma_requested",
+   "fieldname": "boma_requested_on",
+   "fieldtype": "Datetime",
+   "label": "Boma Request Sent On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_sessions",
+   "fieldtype": "Section Break",
+   "label": "Sessions"
+  },
+  {
+   "fieldname": "sessions",
+   "fieldtype": "Table",
+   "label": "Sessions Attending",
+   "options": "Delegate Session"
+  },
+  {
+   "fieldname": "section_break_meta",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "New",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "New\nConfirmed\nCancelled"
+  },
+  {
+   "fieldname": "column_break_meta",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "submitted_on",
+   "fieldtype": "Datetime",
+   "label": "Submitted On",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-22 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "Delegate Registration",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "surname",
+ "track_changes": 1
+}
