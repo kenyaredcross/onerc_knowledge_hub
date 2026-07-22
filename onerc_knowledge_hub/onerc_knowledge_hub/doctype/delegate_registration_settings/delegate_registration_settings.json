@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "event_title",
+  "show_sessions",
   "section_break_boma",
   "boma_hotel_email",
   "boma_hotel_url",
@@ -20,6 +21,13 @@
    "fieldname": "event_title",
    "fieldtype": "Data",
    "label": "Event Title"
+  },
+  {
+   "default": "1",
+   "description": "Show the \"Sessions\" section on the public registration form.",
+   "fieldname": "show_sessions",
+   "fieldtype": "Check",
+   "label": "Show Sessions Section"
   },
   {
    "fieldname": "section_break_boma",
@@ -87,6 +95,16 @@
    "print": 1,
    "read": 1,
    "role": "LH Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Delegate Manager",
    "share": 1,
    "write": 1
   }

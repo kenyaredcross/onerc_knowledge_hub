@@ -62,12 +62,13 @@
 		label.field-label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
 		.req { color: var(--red); }
 		.hint { font-size: 12px; color: var(--muted); font-weight: 400; }
-		input[type=text], input[type=email], input[type=tel], input[type=date], select, textarea {
+		input[type=text], input[type=email], input[type=tel], input[type=date], input[type=time], select, textarea {
 			width: 100%; font-family: inherit; font-size: 14px; color: var(--text);
 			padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius);
 			background: #fff; outline: none; transition: border-color .15s, box-shadow .15s;
 		}
 		input:focus, select:focus, textarea:focus { border-color: var(--navy); box-shadow: 0 0 0 3px rgba(1,30,65,.12); }
+		textarea { min-height: 88px; resize: vertical; }
 		input[type=file] {
 			width: 100%; font-family: inherit; font-size: 14px;
 			padding: 9px 12px; border: 1px dashed var(--border); border-radius: var(--radius); background: #fafbfc;
@@ -216,14 +217,42 @@
 			<div class="card">
 				<div class="section-title">Travel</div>
 				<div class="grid-2">
-					<div class="field">
-						<label class="field-label" for="arrival_date">Date of Arrival in Kenya</label>
-						<input type="date" id="arrival_date" />
+					<div>
+						<div class="field">
+							<label class="field-label" for="arrival_date">Date of Arrival in Kenya</label>
+							<input type="date" id="arrival_date" />
+						</div>
+						<div class="field">
+							<label class="field-label" for="arrival_time">Arrival Time</label>
+							<input type="time" id="arrival_time" />
+						</div>
+						<div class="field">
+							<label class="field-label" for="arrival_flight">Arrival Flight Details <span class="hint">(flight no. / airline)</span></label>
+							<input type="text" id="arrival_flight" placeholder="e.g. KQ100 from Addis Ababa" />
+						</div>
 					</div>
-					<div class="field">
-						<label class="field-label" for="departure_date">Date of Departure from Kenya</label>
-						<input type="date" id="departure_date" />
+					<div>
+						<div class="field">
+							<label class="field-label" for="departure_date">Date of Departure from Kenya</label>
+							<input type="date" id="departure_date" />
+						</div>
+						<div class="field">
+							<label class="field-label" for="departure_time">Departure Time</label>
+							<input type="time" id="departure_time" />
+						</div>
+						<div class="field">
+							<label class="field-label" for="departure_flight">Departure Flight Details <span class="hint">(flight no. / airline)</span></label>
+							<input type="text" id="departure_flight" placeholder="e.g. KQ101 to Addis Ababa" />
+						</div>
 					</div>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="section-title">Additional Information</div>
+				<div class="field">
+					<label class="field-label" for="additional_information">Anything we should know before you arrive?</label>
+					<textarea id="additional_information" placeholder="Dietary needs, accessibility requirements, special requests, or anything else the organisers should know."></textarea>
 				</div>
 			</div>
 
@@ -242,6 +271,7 @@
 				</div>
 			</div>
 
+			{% if show_sessions %}
 			<div class="card">
 				<div class="section-title">Sessions</div>
 				{% if sessions %}
@@ -266,6 +296,7 @@
 				<p class="empty-note">Sessions will be published soon. You can still complete your registration now.</p>
 				{% endif %}
 			</div>
+			{% endif %}
 
 			<button type="submit" class="btn btn-primary" id="submit-btn">Submit Registration</button>
 		</form>
@@ -378,7 +409,12 @@
 				email: val("email"),
 				phone_number: val("phone_number") || null,
 				arrival_date: val("arrival_date") || null,
+				arrival_time: val("arrival_time") || null,
+				arrival_flight: val("arrival_flight") || null,
 				departure_date: val("departure_date") || null,
+				departure_time: val("departure_time") || null,
+				departure_flight: val("departure_flight") || null,
+				additional_information: val("additional_information") || null,
 				accommodation_boma: wantsBoma,
 				sessions: sessions,
 				passport_file_name: fileName,
