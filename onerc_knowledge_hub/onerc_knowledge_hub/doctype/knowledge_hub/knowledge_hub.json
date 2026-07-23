@@ -72,7 +72,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Resource type",
-   "options": "\nPublication\nReport\nTools & Templates",
+   "options": "\nPublication\nReport\nTools & Templates\nUser Manual",
    "reqd": 1
   },
   {

@@ -167,6 +167,7 @@ export default function NewKnowledge() {
                   <option value="Publication">{t('forms:publication')}</option>
                   <option value="Report">{t('forms:report')}</option>
                   <option value="Tools & Templates">{t('forms:toolsTemplates')}</option>
+                  <option value="User Manual">{t('forms:userManual')}</option>
                 </select>
               </div>
 
