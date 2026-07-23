@@ -149,7 +149,7 @@
 				</div>
 				<div class="grid-2">
 					<div class="field">
-						<label class="field-label" for="designation">Designation</label>
+						<label class="field-label" for="designation">Designation <span class="req">*</span></label>
 						<select id="designation">
 							<option value="">Select</option>
 							<option value="Secretary General">Secretary General (SG)</option>
@@ -159,13 +159,13 @@
 						</select>
 					</div>
 					<div class="field" id="designation-other-wrap" style="display:none;">
-						<label class="field-label" for="designation_other">Please specify</label>
+						<label class="field-label" for="designation_other">Please specify <span class="req">*</span></label>
 						<input type="text" id="designation_other" />
 					</div>
 				</div>
 				<div class="grid-2">
 					<div class="field">
-						<label class="field-label" for="nationality">Nationality</label>
+						<label class="field-label" for="nationality">Nationality <span class="req">*</span></label>
 						<select id="nationality">
 							<option value="">Select</option>
 							{% for c in countries %}
@@ -180,17 +180,17 @@
 				</div>
 				<div class="grid-2">
 					<div class="field">
-						<label class="field-label" for="date_of_birth">Date of Birth</label>
+						<label class="field-label" for="date_of_birth">Date of Birth <span class="req">*</span></label>
 						<input type="date" id="date_of_birth" />
 					</div>
 					<div class="field">
-						<label class="field-label" for="passport_issue_date">Date of Passport Issue</label>
+						<label class="field-label" for="passport_issue_date">Date of Passport Issue <span class="req">*</span></label>
 						<input type="date" id="passport_issue_date" />
 					</div>
 				</div>
 				<div class="grid-2">
 					<div class="field">
-						<label class="field-label" for="passport_expiry_date">Date of Expiry</label>
+						<label class="field-label" for="passport_expiry_date">Date of Expiry <span class="req">*</span></label>
 						<input type="date" id="passport_expiry_date" />
 					</div>
 					<div class="field" data-req>
@@ -208,7 +208,7 @@
 						<input type="email" id="email" autocomplete="email" />
 					</div>
 					<div class="field">
-						<label class="field-label" for="phone_number">Phone Number</label>
+						<label class="field-label" for="phone_number">Phone Number <span class="req">*</span></label>
 						<input type="tel" id="phone_number" autocomplete="tel" />
 					</div>
 				</div>
@@ -219,29 +219,29 @@
 				<div class="grid-2">
 					<div>
 						<div class="field">
-							<label class="field-label" for="arrival_date">Date of Arrival in Kenya</label>
+							<label class="field-label" for="arrival_date">Date of Arrival in Kenya <span class="req">*</span></label>
 							<input type="date" id="arrival_date" />
 						</div>
 						<div class="field">
-							<label class="field-label" for="arrival_time">Arrival Time</label>
+							<label class="field-label" for="arrival_time">Arrival Time <span class="req">*</span></label>
 							<input type="time" id="arrival_time" />
 						</div>
 						<div class="field">
-							<label class="field-label" for="arrival_flight">Arrival Flight Details <span class="hint">(flight no. / airline)</span></label>
+							<label class="field-label" for="arrival_flight">Arrival Flight Details <span class="req">*</span> <span class="hint">(flight no. / airline)</span></label>
 							<input type="text" id="arrival_flight" placeholder="e.g. KQ100 from Addis Ababa" />
 						</div>
 					</div>
 					<div>
 						<div class="field">
-							<label class="field-label" for="departure_date">Date of Departure from Kenya</label>
+							<label class="field-label" for="departure_date">Date of Departure from Kenya <span class="req">*</span></label>
 							<input type="date" id="departure_date" />
 						</div>
 						<div class="field">
-							<label class="field-label" for="departure_time">Departure Time</label>
+							<label class="field-label" for="departure_time">Departure Time <span class="req">*</span></label>
 							<input type="time" id="departure_time" />
 						</div>
 						<div class="field">
-							<label class="field-label" for="departure_flight">Departure Flight Details <span class="hint">(flight no. / airline)</span></label>
+							<label class="field-label" for="departure_flight">Departure Flight Details <span class="req">*</span> <span class="hint">(flight no. / airline)</span></label>
 							<input type="text" id="departure_flight" placeholder="e.g. KQ101 to Addis Ababa" />
 						</div>
 					</div>
@@ -275,7 +275,7 @@
 			<div class="card">
 				<div class="section-title">Sessions</div>
 				{% if sessions %}
-				<p class="hint" style="margin-bottom:14px;">Select the sessions you plan to attend.</p>
+				<p class="hint" style="margin-bottom:14px;">Select at least one session you plan to attend. <span class="req">*</span></p>
 				{% for s in sessions %}
 				<label class="opt">
 					<input type="checkbox" name="session" value="{{ s.name }}" />
@@ -344,20 +344,34 @@
 			formError.style.display = "none";
 			clearInvalid();
 
-			// Required text/select fields.
-			var required = [
-				["surname", "Please enter your surname."],
-				["given_names", "Please enter your given names."],
-				["national_society", "Please select your National Society."],
-				["passport_number", "Please enter your passport number."],
-				["email", "Please enter your email address."]
+			// Required fields (everything except Additional Information).
+			var checks = [
+				{ id: "surname", msg: "Please enter your surname." },
+				{ id: "given_names", msg: "Please enter your given names (as on your passport)." },
+				{ id: "national_society", msg: "Please select your National Society." },
+				{ id: "designation", msg: "Please select your designation." },
+				{ id: "designation_other", msg: "Please specify your designation.", when: function () { return val("designation") === "Other"; } },
+				{ id: "nationality", msg: "Please select your nationality." },
+				{ id: "passport_number", msg: "Please enter your passport number." },
+				{ id: "date_of_birth", msg: "Please enter your date of birth." },
+				{ id: "passport_issue_date", msg: "Please enter your date of passport issue." },
+				{ id: "passport_expiry_date", msg: "Please enter your date of passport expiry." },
+				{ id: "email", msg: "Please enter your email address." },
+				{ id: "phone_number", msg: "Please enter your phone number." },
+				{ id: "arrival_date", msg: "Please enter your date of arrival in Kenya." },
+				{ id: "arrival_time", msg: "Please enter your arrival time." },
+				{ id: "arrival_flight", msg: "Please enter your arrival flight details." },
+				{ id: "departure_date", msg: "Please enter your date of departure from Kenya." },
+				{ id: "departure_time", msg: "Please enter your departure time." },
+				{ id: "departure_flight", msg: "Please enter your departure flight details." }
 			];
-			for (var i = 0; i < required.length; i++) {
-				var id = required[i][0];
-				if (!val(id)) {
-					var el = document.getElementById(id);
+			for (var i = 0; i < checks.length; i++) {
+				var c = checks[i];
+				if (c.when && !c.when()) continue;
+				if (!val(c.id)) {
+					var el = document.getElementById(c.id);
 					if (el && el.closest(".field")) el.closest(".field").classList.add("invalid");
-					showError(required[i][1], el);
+					showError(c.msg, el);
 					return;
 				}
 			}
@@ -379,6 +393,13 @@
 			if (file.size > MAX_BYTES) {
 				fileInput.closest(".field").classList.add("invalid");
 				showError("The passport copy must be 5 MB or smaller.", fileInput);
+				return;
+			}
+
+			// At least one session, when the sessions section is shown with options.
+			var sessionInputs = form.querySelectorAll('input[name="session"]');
+			if (sessionInputs.length > 0 && form.querySelectorAll('input[name="session"]:checked').length === 0) {
+				showError("Please select at least one session you plan to attend.", sessionInputs[0].closest(".card"));
 				return;
 			}
 

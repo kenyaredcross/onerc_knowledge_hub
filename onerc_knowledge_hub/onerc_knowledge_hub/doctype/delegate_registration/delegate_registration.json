@@ -79,19 +79,22 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Designation",
-   "options": "\nSecretary General\nDeputy Secretary General\nOfficer\nOther"
+   "options": "\nSecretary General\nDeputy Secretary General\nOfficer\nOther",
+   "reqd": 1
   },
   {
    "depends_on": "eval:doc.designation=='Other'",
    "fieldname": "designation_other",
    "fieldtype": "Data",
-   "label": "Designation (Other)"
+   "label": "Designation (Other)",
+   "mandatory_depends_on": "eval:doc.designation=='Other'"
   },
   {
    "fieldname": "nationality",
    "fieldtype": "Link",
    "label": "Nationality",
-   "options": "Country"
+   "options": "Country",
+   "reqd": 1
   },
   {
    "fieldname": "passport_number",
@@ -107,12 +110,14 @@
   {
    "fieldname": "date_of_birth",
    "fieldtype": "Date",
-   "label": "Date of Birth"
+   "label": "Date of Birth",
+   "reqd": 1
   },
   {
    "fieldname": "passport_issue_date",
    "fieldtype": "Date",
-   "label": "Date of Passport Issue"
+   "label": "Date of Passport Issue",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_passport",
@@ -121,7 +126,8 @@
   {
    "fieldname": "passport_expiry_date",
    "fieldtype": "Date",
-   "label": "Date of Expiry"
+   "label": "Date of Expiry",
+   "reqd": 1
   },
   {
    "description": "Copy of the passport biodata page (private).",
@@ -151,7 +157,8 @@
    "fieldname": "phone_number",
    "fieldtype": "Data",
    "label": "Phone Number",
-   "options": "Phone"
+   "options": "Phone",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_travel",
@@ -161,18 +168,21 @@
   {
    "fieldname": "arrival_date",
    "fieldtype": "Date",
-   "label": "Date of Arrival in Kenya"
+   "label": "Date of Arrival in Kenya",
+   "reqd": 1
   },
   {
    "fieldname": "arrival_time",
    "fieldtype": "Time",
-   "label": "Arrival Time"
+   "label": "Arrival Time",
+   "reqd": 1
   },
   {
    "description": "Flight number / airline for arrival.",
    "fieldname": "arrival_flight",
    "fieldtype": "Data",
-   "label": "Arrival Flight Details"
+   "label": "Arrival Flight Details",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_travel",
@@ -181,18 +191,21 @@
   {
    "fieldname": "departure_date",
    "fieldtype": "Date",
-   "label": "Date of Departure from Kenya"
+   "label": "Date of Departure from Kenya",
+   "reqd": 1
   },
   {
    "fieldname": "departure_time",
    "fieldtype": "Time",
-   "label": "Departure Time"
+   "label": "Departure Time",
+   "reqd": 1
   },
   {
    "description": "Flight number / airline for departure.",
    "fieldname": "departure_flight",
    "fieldtype": "Data",
-   "label": "Departure Flight Details"
+   "label": "Departure Flight Details",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_additional",

@@ -47,36 +47,68 @@ def submit_registration(payload):
 	"""Create a Delegate Registration from a public submission."""
 	data = payload if isinstance(payload, dict) else json.loads(payload or "{}")
 
+	# Collect + normalise the submitted values.
 	surname = (data.get("surname") or "").strip()
 	given_names = (data.get("given_names") or "").strip()
 	national_society = data.get("national_society") or None
+	designation = data.get("designation") or None
+	designation_other = (data.get("designation_other") or "").strip()
+	nationality = data.get("nationality") or None
 	passport_number = (data.get("passport_number") or "").strip()
+	date_of_birth = data.get("date_of_birth") or None
+	passport_issue_date = data.get("passport_issue_date") or None
+	passport_expiry_date = data.get("passport_expiry_date") or None
 	email = (data.get("email") or "").strip().lower()
-
-	if not surname or not given_names:
-		frappe.throw(_("Surname and given names are required"))
-	if not national_society or not frappe.db.exists("National Society", national_society):
-		frappe.throw(_("Please select a valid National Society"))
-	if not passport_number:
-		frappe.throw(_("Passport number is required"))
-	if not email:
-		frappe.throw(_("Email is required"))
-
+	phone_number = (data.get("phone_number") or "").strip()
+	arrival_date = data.get("arrival_date") or None
+	arrival_time = data.get("arrival_time") or None
+	arrival_flight = (data.get("arrival_flight") or "").strip()
+	departure_date = data.get("departure_date") or None
+	departure_time = data.get("departure_time") or None
+	departure_flight = (data.get("departure_flight") or "").strip()
+	additional_information = (data.get("additional_information") or "").strip()
+	session_ids = _clean_session_ids(data.get("sessions"))
 	file_name = data.get("passport_file_name")
 	file_data = data.get("passport_file_data")
-	if not file_data:
-		frappe.throw(_("A copy of the passport biodata page is required"))
+
+	# Every field is required except Additional Information.
+	for value, message in (
+		(surname, _("Surname is required")),
+		(given_names, _("Given names are required")),
+		(national_society, _("National Society is required")),
+		(designation, _("Designation is required")),
+		(nationality, _("Nationality is required")),
+		(passport_number, _("Passport number is required")),
+		(date_of_birth, _("Date of birth is required")),
+		(passport_issue_date, _("Date of passport issue is required")),
+		(passport_expiry_date, _("Date of passport expiry is required")),
+		(email, _("Email is required")),
+		(phone_number, _("Phone number is required")),
+		(arrival_date, _("Date of arrival in Kenya is required")),
+		(arrival_time, _("Arrival time is required")),
+		(arrival_flight, _("Arrival flight details are required")),
+		(departure_date, _("Date of departure from Kenya is required")),
+		(departure_time, _("Departure time is required")),
+		(departure_flight, _("Departure flight details are required")),
+		(file_data, _("A copy of the passport biodata page is required")),
+	):
+		if not value:
+			frappe.throw(message)
+
+	if not frappe.db.exists("National Society", national_society):
+		frappe.throw(_("Please select a valid National Society"))
+	if designation not in DESIGNATIONS:
+		frappe.throw(_("Invalid designation"))
+	if designation == "Other" and not designation_other:
+		frappe.throw(_("Please specify your designation"))
+	if not frappe.db.exists("Country", nationality):
+		frappe.throw(_("Please select a valid nationality"))
+	if _sessions_required() and not session_ids:
+		frappe.throw(_("Please select at least one session"))
+
 	# Validate + decode the passport up-front so we never insert a registration
 	# for an invalid file (bad type, oversized, or corrupt base64).
 	passport_bytes, passport_ext = _decode_passport(file_name, file_data)
-
-	designation = data.get("designation") or None
-	if designation and designation not in DESIGNATIONS:
-		frappe.throw(_("Invalid designation"))
-
-	nationality = data.get("nationality") or None
-	if nationality and not frappe.db.exists("Country", nationality):
-		nationality = None
 
 	doc = frappe.get_doc(
 		{
@@ -85,29 +117,27 @@ def submit_registration(payload):
 			"given_names": given_names,
 			"national_society": national_society,
 			"designation": designation,
-			"designation_other": (data.get("designation_other") or "").strip() or None
-			if designation == "Other"
-			else None,
+			"designation_other": designation_other or None if designation == "Other" else None,
 			"nationality": nationality,
 			"passport_number": passport_number,
-			"date_of_birth": data.get("date_of_birth") or None,
-			"passport_issue_date": data.get("passport_issue_date") or None,
-			"passport_expiry_date": data.get("passport_expiry_date") or None,
+			"date_of_birth": date_of_birth,
+			"passport_issue_date": passport_issue_date,
+			"passport_expiry_date": passport_expiry_date,
 			"email": email,
-			"phone_number": (data.get("phone_number") or "").strip() or None,
-			"arrival_date": data.get("arrival_date") or None,
-			"arrival_time": data.get("arrival_time") or None,
-			"arrival_flight": (data.get("arrival_flight") or "").strip() or None,
-			"departure_date": data.get("departure_date") or None,
-			"departure_time": data.get("departure_time") or None,
-			"departure_flight": (data.get("departure_flight") or "").strip() or None,
-			"additional_information": (data.get("additional_information") or "").strip() or None,
+			"phone_number": phone_number or None,
+			"arrival_date": arrival_date,
+			"arrival_time": arrival_time,
+			"arrival_flight": arrival_flight or None,
+			"departure_date": departure_date,
+			"departure_time": departure_time,
+			"departure_flight": departure_flight or None,
+			"additional_information": additional_information or None,
 			"accommodation_boma": 1 if data.get("accommodation_boma") else 0,
 			"status": "New",
 		}
 	)
 
-	for session_id in _clean_session_ids(data.get("sessions")):
+	for session_id in session_ids:
 		title = frappe.db.get_value("Summit Session", session_id, "session_title")
 		doc.append("sessions", {"session": session_id, "session_title": title})
 
@@ -228,6 +258,14 @@ def resend_boma_request(name):
 
 def _settings():
 	return frappe.get_cached_doc("Delegate Registration Settings")
+
+
+def _sessions_required():
+	"""A session must be chosen only when the section is shown on the form AND at
+	least one published session exists (otherwise there is nothing to select)."""
+	if not _settings().get("show_sessions"):
+		return False
+	return frappe.db.count("Summit Session", {"is_published": 1}) > 0
 
 
 def _event_title():
