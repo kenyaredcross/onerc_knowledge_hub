@@ -36,6 +36,8 @@ const resourceStyles: Record<string, string> = {
     "bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-emerald-100",
   "Tools & Templates":
     "bg-purple-50 text-purple-700 border border-purple-200 shadow-purple-100",
+  "User Manual":
+    "bg-orange-50 text-orange-700 border border-orange-200 shadow-orange-100",
 };
 
 export default function KnowledgeFiltered() {
@@ -59,6 +61,8 @@ export default function KnowledgeFiltered() {
         return "Report";
       case "templates":
         return "Tools & Templates";
+      case "manuals":
+        return "User Manual";
       default:
         return "All";
     }
@@ -72,6 +76,8 @@ export default function KnowledgeFiltered() {
         return "Reports";
       case "templates":
         return "Tools & Templates";
+      case "manuals":
+        return "User Manuals";
       default:
         return "All Resources";
     }

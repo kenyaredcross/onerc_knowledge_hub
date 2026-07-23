@@ -43,6 +43,8 @@ const getResourceIcon = (type: string) => {
       return FileText;
     case "Tools & Templates":
       return Folder;
+    case "User Manual":
+      return BookOpen;
     default:
       return FileText;
   }
@@ -56,6 +58,8 @@ const getResourceColor = (type: string) => {
       return "text-emerald-600 bg-emerald-50";
     case "Tools & Templates":
       return "text-purple-600 bg-purple-50";
+    case "User Manual":
+      return "text-orange-600 bg-orange-50";
     default:
       return "text-gray-600 bg-gray-50";
   }
@@ -87,7 +91,7 @@ export default function Knowledge() {
 
   // Get folder types for filtering
   const folderTypes = useMemo(() => {
-    const types = ["Publication", "Report", "Tools & Templates"];
+    const types = ["Publication", "Report", "Tools & Templates", "User Manual"];
     return types.map((type) => ({
       name: type,
       count: entries.filter((e) => e.resource_type === type).length,
