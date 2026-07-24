@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Delegate Dashboard</title>
+	<link rel="icon" type="image/jpeg" href="/assets/onerc_knowledge_hub/ans-hub/logo.jpg" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet" />
+	<!-- Leaflet ships with Frappe, so the map needs no CDN. -->
+	<link rel="stylesheet" href="/assets/frappe/js/lib/leaflet/leaflet.css" />
+	<style>
+		:root {
+			--navy: #011E41;
+			--red: #ee2435;
+			--red-dark: #d41e2a;
+			--bg: #f0f2f5;
+			--border: #e5e7eb;
+			--text: #1f2937;
+			--muted: #6b7280;
+			--green: #1a9d54;
+			--amber: #b57d00;
+			--radius: 4px;
+		}
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body {
+			background: var(--bg);
+			color: var(--text);
+			font-family: "Google Sans Flex", system-ui, -apple-system, sans-serif;
+			line-height: 1.55;
+		}
+		h1, h2, h3 { letter-spacing: -0.02em; }
+		a { color: inherit; }
+
+		header.site { background: var(--navy); color: #fff; padding: 18px 24px; }
+		header.site .inner {
+			max-width: 1180px; margin: 0 auto;
+			display: flex; align-items: center; gap: 14px;
+		}
+		header.site img { width: 40px; height: 40px; border-radius: var(--radius); object-fit: cover; background: #fff; }
+		header.site .titles { display: flex; flex-direction: column; }
+		header.site .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #ff8a80; font-weight: 600; }
+		header.site .name { font-size: 16px; font-weight: 600; }
+		header.site .spacer { flex: 1; }
+		header.site .who { font-size: 12px; color: rgba(255,255,255,.7); }
+		header.site button {
+			font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+			background: var(--red); color: #fff; border: none;
+			padding: 8px 16px; border-radius: var(--radius);
+			transition: background .15s;
+		}
+		header.site button:hover { background: var(--red-dark); }
+		header.site button[disabled] { opacity: .6; cursor: default; }
+
+		main { max-width: 1180px; margin: 0 auto; padding: 28px 20px 80px; }
+
+		.card {
+			background: #fff; border: 1px solid var(--border);
+			border-radius: var(--radius); padding: 22px;
+			box-shadow: 0 1px 3px rgba(0,0,0,.06); margin-bottom: 20px;
+		}
+		.section-title {
+			font-size: 13px; font-weight: 700; text-transform: uppercase;
+			letter-spacing: .06em; color: var(--navy); margin-bottom: 16px;
+			display: flex; align-items: center; justify-content: space-between; gap: 10px;
+		}
+		.pill {
+			font-size: 11px; font-weight: 700; letter-spacing: 0;
+			text-transform: none; padding: 2px 9px; border-radius: 10px;
+			background: #eef1f4; color: var(--muted);
+		}
+		.pill.red { background: #fde7e9; color: var(--red); }
+		.pill.amber { background: #fdf3dc; color: var(--amber); }
+
+		.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+		@media (max-width: 880px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+		.stat {
+			background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+			padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,.05);
+		}
+		.stat .v { font-size: 30px; font-weight: 700; color: var(--navy); line-height: 1.1; }
+		.stat .l { font-size: 13px; color: var(--muted); margin-top: 2px; }
+		.stat.accent { border-top: 3px solid var(--red); }
+		.stat.accent .v { color: var(--red); }
+		.stat.good { border-top: 3px solid var(--green); }
+		.stat.good .v { color: var(--green); }
+		.stat.warn { border-top: 3px solid var(--amber); }
+		.stat.warn .v { color: var(--amber); }
+
+		.row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+		.row.wide { grid-template-columns: 2fr 1fr; }
+		@media (max-width: 900px) { .row, .row.wide { grid-template-columns: 1fr; } }
+		.row > .card { margin-bottom: 20px; }
+
+		#map { height: 380px; border-radius: var(--radius); background: #e8edf1; }
+		.leaflet-container { font-family: inherit; }
+
+		.bars { display: flex; flex-direction: column; gap: 10px; }
+		.bar-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+		.bar-label { flex: 0 0 42%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+		.bar-track { flex: 1; height: 8px; border-radius: 4px; background: #eef1f4; }
+		.bar-fill { height: 8px; border-radius: 4px; background: var(--navy); }
+		.bar-fill.red { background: var(--red); }
+		.bar-count { flex: 0 0 30px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+		.donut-wrap { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+		.donut { flex: 0 0 148px; }
+		.legend { flex: 1; display: flex; flex-direction: column; gap: 7px; min-width: 130px; }
+		.legend-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+		.legend-dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+		.legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+		.legend-count { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+		table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+		table.tbl th {
+			text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
+			color: var(--muted); padding: 9px 10px; border-bottom: 1px solid var(--border); white-space: nowrap;
+		}
+		table.tbl td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+		table.tbl tr:last-child td { border-bottom: none; }
+		table.tbl tr:hover td { background: #fafbfc; }
+		table.tbl a { color: var(--navy); font-weight: 600; text-decoration: none; }
+		table.tbl a:hover { text-decoration: underline; }
+		.sub { color: var(--muted); font-size: 12px; }
+		.tag { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 10px; background: #fde7e9; color: var(--red); }
+		.table-wrap { overflow-x: auto; }
+
+		.empty { color: var(--muted); font-size: 13px; padding: 22px 0; text-align: center; }
+		.foot { font-size: 12px; color: var(--muted); text-align: right; }
+	</style>
+</head>
+<body>
+	<header class="site">
+		<div class="inner">
+			<img src="/assets/onerc_knowledge_hub/ans-hub/logo.jpg" alt="" />
+			<div class="titles">
+				<span class="eyebrow">Delegate Management</span>
+				<span class="name">Delegate Dashboard</span>
+			</div>
+			<div class="spacer"></div>
+			<span class="who">{{ user }}</span>
+			<button type="button" id="refresh-btn">Refresh</button>
+		</div>
+	</header>
+
+	<main>
+		<div class="stats" id="stats"></div>
+
+		<div class="row wide">
+			<div class="card">
+				<div class="section-title">Where delegates are travelling from</div>
+				<div id="map"></div>
+			</div>
+			<div class="card">
+				<div class="section-title">By designation</div>
+				<div id="designation"></div>
+			</div>
+		</div>
+
+		<div class="row wide">
+			<div class="card">
+				<div class="section-title">Arrivals by date</div>
+				<div id="arrivals"></div>
+			</div>
+			<div class="card">
+				<div class="section-title">Top National Societies</div>
+				<div id="societies"></div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="card">
+				<div class="section-title">Arriving in the next 7 days <span class="pill" id="pill-arrivals">0</span></div>
+				<div id="upcoming"></div>
+			</div>
+			<div class="card">
+				<div class="section-title">Boma rooms not yet requested <span class="pill red" id="pill-boma">0</span></div>
+				<div id="boma"></div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="card">
+				<div class="section-title">Passport expiring within 6 months <span class="pill amber" id="pill-passport">0</span></div>
+				<div id="passports"></div>
+			</div>
+			<div class="card">
+				<div class="section-title">Session headcount</div>
+				<div id="sessions"></div>
+			</div>
+		</div>
+
+		<div class="foot">Updated <span id="updated"></span></div>
+	</main>
+
+	<script src="/assets/frappe/js/lib/leaflet/leaflet.js"></script>
+	<script>
+		var DATA = {{ dashboard_json }};
+	</script>
+	<script>
+		(function () {
+			var TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+			var TILE_ATTR = '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
+			var DONUT_COLORS = ["#ee2435", "#011E41", "#1a9d54", "#b57d00", "#4b7bb5", "#7c4dff", "#00897b", "#8d6e63"];
+
+			var map = null;
+			var markerLayer = null;
+
+			function esc(s) {
+				return String(s === null || s === undefined ? "" : s)
+					.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+			}
+
+			function el(id) { return document.getElementById(id); }
+
+			function regLink(name, label, sub) {
+				var s = sub ? '<div class="sub">' + esc(sub) + "</div>" : "";
+				return '<a href="/app/delegate-registration/' + encodeURIComponent(name) + '">' + esc(label) + "</a>" + s;
+			}
+
+			function renderStats(k) {
+				var tiles = [
+					{ l: "Delegates", v: k.total },
+					{ l: "Countries", v: k.countries },
+					{ l: "National Societies", v: k.societies },
+					{ l: "Arriving in 7 days", v: k.arriving_soon, cls: "good" },
+					{ l: "Boma rooms requested", v: k.boma_total },
+					{ l: "Boma not yet booked", v: k.boma_pending, cls: "accent" },
+					{ l: "Passport risk", v: k.passport_alerts, cls: "warn" },
+					{ l: "Confirmed", v: k.confirmed, cls: "good" }
+				];
+				el("stats").innerHTML = tiles.map(function (t) {
+					return '<div class="stat ' + (t.cls || "") + '"><div class="v">' + esc(t.v) +
+						'</div><div class="l">' + esc(t.l) + "</div></div>";
+				}).join("");
+			}
+
+			function renderBars(target, items, red) {
+				if (!items || !items.length) {
+					el(target).innerHTML = '<div class="empty">Nothing to show yet.</div>';
+					return;
+				}
+				var max = items.reduce(function (m, i) { return Math.max(m, i.count); }, 1);
+				el(target).innerHTML = '<div class="bars">' + items.map(function (i) {
+					var pct = Math.max(2, Math.round((i.count / max) * 100));
+					return '<div class="bar-row">' +
+						'<div class="bar-label" title="' + esc(i.label) + '">' + esc(i.label) + "</div>" +
+						'<div class="bar-track"><div class="bar-fill' + (red ? " red" : "") + '" style="width:' + pct + '%"></div></div>' +
+						'<div class="bar-count">' + esc(i.count) + "</div></div>";
+				}).join("") + "</div>";
+			}
+
+			function renderArrivals(items) {
+				renderBars("arrivals", (items || []).map(function (a) {
+					return { label: a.date, count: a.count };
+				}), true);
+			}
+
+			// Donut drawn as SVG arcs so the page carries no charting library.
+			function renderDonut(target, items) {
+				if (!items || !items.length) {
+					el(target).innerHTML = '<div class="empty">Nothing to show yet.</div>';
+					return;
+				}
+				var total = items.reduce(function (s, i) { return s + i.count; }, 0) || 1;
+				var r = 56, c = 2 * Math.PI * r, offset = 0;
+				var arcs = items.map(function (i, idx) {
+					var len = (i.count / total) * c;
+					var seg = '<circle cx="74" cy="74" r="' + r + '" fill="none" stroke="' +
+						DONUT_COLORS[idx % DONUT_COLORS.length] + '" stroke-width="20" ' +
+						'stroke-dasharray="' + len + " " + (c - len) + '" ' +
+						'stroke-dashoffset="' + (-offset) + '" transform="rotate(-90 74 74)"></circle>';
+					offset += len;
+					return seg;
+				}).join("");
+				var legend = items.map(function (i, idx) {
+					return '<div class="legend-row">' +
+						'<span class="legend-dot" style="background:' + DONUT_COLORS[idx % DONUT_COLORS.length] + '"></span>' +
+						'<span class="legend-label" title="' + esc(i.label) + '">' + esc(i.label) + "</span>" +
+						'<span class="legend-count">' + esc(i.count) + "</span></div>";
+				}).join("");
+				el(target).innerHTML = '<div class="donut-wrap"><svg class="donut" viewBox="0 0 148 148" width="148" height="148">' +
+					arcs + '<text x="74" y="70" text-anchor="middle" font-size="22" font-weight="700" fill="#011E41">' + total + "</text>" +
+					'<text x="74" y="88" text-anchor="middle" font-size="10" fill="#6b7280">total</text>' +
+					"</svg><div class=\"legend\">" + legend + "</div></div>";
+			}
+
+			function renderTable(target, headers, rows, empty) {
+				if (!rows.length) {
+					el(target).innerHTML = '<div class="empty">' + esc(empty) + "</div>";
+					return;
+				}
+				el(target).innerHTML = '<div class="table-wrap"><table class="tbl"><thead><tr>' +
+					headers.map(function (h) { return "<th>" + esc(h) + "</th>"; }).join("") +
+					"</tr></thead><tbody>" +
+					rows.map(function (cells) {
+						return "<tr>" + cells.map(function (c) { return "<td>" + c + "</td>"; }).join("") + "</tr>";
+					}).join("") +
+					"</tbody></table></div>";
+			}
+
+			function renderMap(points) {
+				if (typeof L === "undefined") { return; }
+				if (!map) {
+					map = L.map("map", { scrollWheelZoom: false }).setView([10, 20], 2);
+					L.tileLayer(TILE_URL, { attribution: TILE_ATTR }).addTo(map);
+				}
+				if (markerLayer) { map.removeLayer(markerLayer); }
+				markerLayer = L.layerGroup().addTo(map);
+
+				if (!points || !points.length) { return; }
+				var max = points.reduce(function (m, p) { return Math.max(m, p.count); }, 1);
+				var bounds = [];
+				points.forEach(function (p) {
+					L.circleMarker([p.lat, p.lng], {
+						radius: 8 + Math.round((p.count / max) * 16),
+						color: "#ee2435", weight: 1,
+						fillColor: "#ee2435", fillOpacity: 0.45
+					}).bindPopup("<b>" + esc(p.country) + "</b><br>" + p.count +
+						(p.count === 1 ? " delegate" : " delegates")).addTo(markerLayer);
+					bounds.push([p.lat, p.lng]);
+				});
+				map.fitBounds(L.latLngBounds(bounds).pad(0.25), { maxZoom: 5 });
+				setTimeout(function () { map.invalidateSize(); }, 200);
+			}
+
+			function render(d) {
+				renderStats(d.kpis);
+				renderMap(d.map);
+				renderDonut("designation", d.by_designation);
+				renderArrivals(d.arrivals_by_date);
+				renderBars("societies", d.top_societies);
+				renderBars("sessions", d.sessions);
+
+				el("pill-arrivals").textContent = d.upcoming_arrivals.length;
+				el("pill-boma").textContent = d.boma_pending.length;
+				el("pill-passport").textContent = d.passport_alerts.length;
+
+				renderTable("upcoming",
+					["Delegate", "When", "Flight", "Phone"],
+					d.upcoming_arrivals.map(function (r) {
+						return [
+							regLink(r.name, r.delegate, r.society),
+							esc(r.date) + (r.time ? " &middot; " + esc(r.time) : ""),
+							esc(r.flight),
+							esc(r.phone)
+						];
+					}),
+					"No arrivals in the next 7 days.");
+
+				renderTable("boma",
+					["Delegate", "Check-in", "Check-out"],
+					d.boma_pending.map(function (r) {
+						return [regLink(r.name, r.delegate, r.society), esc(r.arrival_date), esc(r.departure_date)];
+					}),
+					"Every requested room has been sent to the hotel.");
+
+				renderTable("passports",
+					["Delegate", "Expires"],
+					d.passport_alerts.map(function (r) {
+						return [
+							regLink(r.name, r.delegate, r.society),
+							esc(r.expiry) + (r.expired ? ' <span class="tag">expired</span>' : "")
+						];
+					}),
+					"No passport expiry risks.");
+
+				el("updated").textContent = d.generated_on || "";
+			}
+
+			var btn = el("refresh-btn");
+			btn.addEventListener("click", function () {
+				btn.disabled = true;
+				btn.textContent = "Refreshing...";
+				fetch("/api/method/onerc_knowledge_hub.api.delegate_dashboard.get_dashboard", {
+					method: "GET",
+					headers: { "Accept": "application/json", "X-Frappe-CSRF-Token": window.csrf_token },
+					credentials: "same-origin"
+				})
+					.then(function (r) { return r.json(); })
+					.then(function (out) { if (out && out.message) { render(out.message); } })
+					.catch(function () { /* keep the last good view on screen */ })
+					.then(function () {
+						btn.disabled = false;
+						btn.textContent = "Refresh";
+					});
+			});
+
+			render(DATA);
+		})();
+	</script>
+</body>
+</html>

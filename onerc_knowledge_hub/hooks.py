@@ -20,7 +20,14 @@ add_to_apps_screen = [
 		"title": "Onerc Knowledge Hub",
 		"route": "/onerc_knowledge_hub",
 		"has_permission": "onerc_knowledge_hub.api.permission.has_app_permission",
-	}
+	},
+	{
+		"name": "delegate_management",
+		"logo": "/assets/onerc_knowledge_hub/logo.jpg",
+		"title": "Delegate Management",
+		"route": "/app/delegate-management",
+		"has_permission": "onerc_knowledge_hub.api.permission.has_delegate_app_permission",
+	},
 ]
 
 # Includes in <head>
