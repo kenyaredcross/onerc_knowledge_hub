@@ -35,7 +35,19 @@ RED = "#ee2435"
 BORDER = "#e5e7eb"
 MUTED = "#6b7280"
 
-DESIGNATIONS = {"Secretary General", "Deputy Secretary General", "Officer", "Other"}
+DESIGNATIONS = {
+	"Secretary General",
+	"Deputy Secretary General",
+	"Officer",
+	"Delegate",
+	"IFRC",
+	"ICRC",
+	"Other",
+}
+
+# The catch-all entry in `Delegate National Society`; picking it requires the
+# delegate to name their organisation in `national_society_other`.
+OTHER_SOCIETY = "Other"
 
 
 # --------------------------------------------------------------------------- #
@@ -51,6 +63,7 @@ def submit_registration(payload):
 	surname = (data.get("surname") or "").strip()
 	given_names = (data.get("given_names") or "").strip()
 	national_society = data.get("national_society") or None
+	national_society_other = (data.get("national_society_other") or "").strip()
 	designation = data.get("designation") or None
 	designation_other = (data.get("designation_other") or "").strip()
 	nationality = data.get("nationality") or None
@@ -95,8 +108,10 @@ def submit_registration(payload):
 		if not value:
 			frappe.throw(message)
 
-	if not frappe.db.exists("National Society", national_society):
+	if not frappe.db.exists("Delegate National Society", national_society):
 		frappe.throw(_("Please select a valid National Society"))
+	if national_society == OTHER_SOCIETY and not national_society_other:
+		frappe.throw(_("Please specify your National Society or organisation"))
 	if designation not in DESIGNATIONS:
 		frappe.throw(_("Invalid designation"))
 	if designation == "Other" and not designation_other:
@@ -116,6 +131,9 @@ def submit_registration(payload):
 			"surname": surname,
 			"given_names": given_names,
 			"national_society": national_society,
+			"national_society_other": (
+				national_society_other or None if national_society == OTHER_SOCIETY else None
+			),
 			"designation": designation,
 			"designation_other": designation_other or None if designation == "Other" else None,
 			"nationality": nationality,
@@ -284,9 +302,17 @@ def _designation_label(doc):
 
 
 def _ns_name(doc):
+	"""The organisation as it should read in emails.
+
+	`Delegate National Society` records are named by the society name itself, so the
+	link value is already the label — except for the "Other" catch-all, where the
+	delegate typed their own organisation.
+	"""
 	if not doc.national_society:
 		return None
-	return frappe.db.get_value("National Society", doc.national_society, "national_society_name")
+	if doc.national_society == OTHER_SOCIETY:
+		return (doc.national_society_other or "").strip() or OTHER_SOCIETY
+	return doc.national_society
 
 
 def _sessions_summary(doc):

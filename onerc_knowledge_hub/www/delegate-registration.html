@@ -138,14 +138,20 @@
 						<input type="text" id="given_names" autocomplete="given-name" />
 					</div>
 				</div>
-				<div class="field" data-req>
-					<label class="field-label" for="national_society">National Society <span class="req">*</span></label>
-					<select id="national_society">
-						<option value="">Select your National Society</option>
-						{% for ns in national_societies %}
-						<option value="{{ ns.name }}">{{ ns.national_society_name }}</option>
-						{% endfor %}
-					</select>
+				<div class="grid-2">
+					<div class="field" data-req>
+						<label class="field-label" for="national_society">National Society <span class="req">*</span></label>
+						<select id="national_society">
+							<option value="">Select your National Society</option>
+							{% for ns in national_societies %}
+							<option value="{{ ns.name }}">{{ ns.name }}{% if ns.abbreviation %} ({{ ns.abbreviation }}){% endif %}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="field" id="national-society-other-wrap" style="display:none;">
+						<label class="field-label" for="national_society_other">Please specify <span class="req">*</span></label>
+						<input type="text" id="national_society_other" />
+					</div>
 				</div>
 				<div class="grid-2">
 					<div class="field">
@@ -155,6 +161,9 @@
 							<option value="Secretary General">Secretary General (SG)</option>
 							<option value="Deputy Secretary General">Deputy Secretary General (DSG)</option>
 							<option value="Officer">Officer</option>
+							<option value="Delegate">Delegate</option>
+							<option value="IFRC">IFRC</option>
+							<option value="ICRC">ICRC</option>
 							<option value="Other">Other</option>
 						</select>
 					</div>
@@ -326,6 +335,12 @@
 			otherWrap.style.display = designation.value === "Other" ? "block" : "none";
 		});
 
+		var nationalSociety = document.getElementById("national_society");
+		var nsOtherWrap = document.getElementById("national-society-other-wrap");
+		nationalSociety.addEventListener("change", function () {
+			nsOtherWrap.style.display = nationalSociety.value === "Other" ? "block" : "none";
+		});
+
 		function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; }
 
 		function showError(msg, focusEl) {
@@ -349,6 +364,7 @@
 				{ id: "surname", msg: "Please enter your surname." },
 				{ id: "given_names", msg: "Please enter your given names (as on your passport)." },
 				{ id: "national_society", msg: "Please select your National Society." },
+				{ id: "national_society_other", msg: "Please specify your National Society or organisation.", when: function () { return val("national_society") === "Other"; } },
 				{ id: "designation", msg: "Please select your designation." },
 				{ id: "designation_other", msg: "Please specify your designation.", when: function () { return val("designation") === "Other"; } },
 				{ id: "nationality", msg: "Please select your nationality." },
@@ -420,6 +436,7 @@
 				surname: val("surname"),
 				given_names: val("given_names"),
 				national_society: val("national_society"),
+				national_society_other: val("national_society_other") || null,
 				designation: val("designation") || null,
 				designation_other: val("designation_other") || null,
 				nationality: val("nationality") || null,

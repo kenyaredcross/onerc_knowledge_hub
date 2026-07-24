@@ -9,6 +9,7 @@
   "surname",
   "given_names",
   "national_society",
+  "national_society_other",
   "column_break_identity",
   "designation",
   "designation_other",
@@ -62,13 +63,21 @@
    "reqd": 1
   },
   {
+   "description": "Reference list for the registration form only — not the Localisation Hub member directory.",
    "fieldname": "national_society",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "National Society",
-   "options": "National Society",
+   "options": "Delegate National Society",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.national_society=='Other'",
+   "fieldname": "national_society_other",
+   "fieldtype": "Data",
+   "label": "National Society / Organisation (Other)",
+   "mandatory_depends_on": "eval:doc.national_society=='Other'"
   },
   {
    "fieldname": "column_break_identity",
@@ -79,7 +88,7 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Designation",
-   "options": "\nSecretary General\nDeputy Secretary General\nOfficer\nOther",
+   "options": "\nSecretary General\nDeputy Secretary General\nOfficer\nDelegate\nIFRC\nICRC\nOther",
    "reqd": 1
   },
   {
