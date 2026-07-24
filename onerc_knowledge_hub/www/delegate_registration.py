@@ -18,10 +18,14 @@ def get_context(context):
 	# The sessions section can be hidden entirely from the public form via settings.
 	context.show_sessions = bool(settings.get("show_sessions"))
 
+	# `Delegate National Society` is the reference list for this form (every RCRC
+	# society plus IFRC, ICRC and Other) — deliberately not the `National Society`
+	# doctype, which is the Localisation Hub's own member directory.
 	context.national_societies = frappe.get_all(
-		"National Society",
-		fields=["name", "national_society_name"],
-		order_by="national_society_name asc",
+		"Delegate National Society",
+		filters={"is_active": 1},
+		fields=["name", "abbreviation"],
+		order_by="display_order asc, name asc",
 	)
 
 	context.countries = frappe.get_all("Country", pluck="name", order_by="name asc")
