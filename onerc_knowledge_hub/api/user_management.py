@@ -446,3 +446,43 @@ def send_activation_email(lhu):
 	except Exception as e:
 		frappe.log_error(f"Failed to send activation email to {lhu.prefered_contact_email}: {str(e)}")
 		return False
+
+
+@frappe.whitelist()
+def grant_lh_user_role_to_all():
+	"""
+	Bulk-grant the LH User role to every enabled System User that does not already have it.
+	Restricted to LH Admin and System Manager.
+	"""
+	frappe.only_for(["LH Admin", "System Manager"])
+
+	role = "LH User"
+
+	# All enabled system users except the special built-in accounts
+	users = frappe.get_all(
+		"User",
+		filters={
+			"enabled": 1,
+			"user_type": "System User",
+			"name": ["not in", ["Administrator", "Guest"]],
+		},
+		pluck="name",
+	)
+
+	granted = 0
+	skipped = 0
+
+	for user_name in users:
+		existing = frappe.db.exists("Has Role", {"parent": user_name, "role": role})
+		if existing:
+			skipped += 1
+			continue
+
+		user = frappe.get_doc("User", user_name)
+		user.append("roles", {"role": role})
+		user.save(ignore_permissions=True)
+		granted += 1
+
+	frappe.db.commit()
+
+	return {"granted": granted, "skipped": skipped}
