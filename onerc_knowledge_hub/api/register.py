@@ -366,8 +366,12 @@ def approve_localisation_hub_user(name):
 	existing_user = frappe.db.get_value("User", {"email": email}, "name")
 
 	if existing_user:
-		# User already exists, just link it to the Localisation Hub User
+		# User already exists — link it and ensure the role is present
 		user = frappe.get_doc("User", existing_user)
+		existing_roles = {r.role for r in user.roles}
+		if "LH User" not in existing_roles:
+			user.append("roles", {"role": "LH User"})
+			user.save(ignore_permissions=True)
 	else:
 		# Create inactive User account
 		user = frappe.get_doc({
