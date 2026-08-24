@@ -379,10 +379,9 @@ def approve_localisation_hub_user(name):
 			"send_welcome_email": 0,
 			"user_type": "System User",
 		})
-		user.insert(ignore_permissions=True)
-
-	# Add default role - customize as needed
-	# user.add_roles("Localisation Hub User Role")
+		user.append("roles", {"role": "LH User"})
+		user.flags.ignore_permissions = True
+		user.insert()
 
 	# Update LH User status and link to User account
 	lhu.status = "Approved"
