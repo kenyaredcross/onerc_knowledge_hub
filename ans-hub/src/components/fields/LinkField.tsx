@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useFrappePostCall } from "frappe-react-sdk";
+import { useFrappeGetCall } from "frappe-react-sdk";
 import { Check, ChevronsUpDown, Loader2, Search, X } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
@@ -53,12 +53,11 @@ export const LinkField = ({
 }: LinkFieldProps) => {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
-  const [debouncedSearch, setDebouncedSearch] = React.useState("");
+  const [searchTxt, setSearchTxt] = React.useState("");
   const [options, setOptions] = React.useState<AutoCompleteOption[]>([]);
   const [selected, setSelected] = React.useState<AutoCompleteOption | null>(
     null,
   );
-  const [loading, setLoading] = React.useState(false);
   const [highlightedIndex, setHighlightedIndex] = React.useState(0);
   const [dropdownPosition, setDropdownPosition] = React.useState<
     "top" | "bottom"
@@ -67,9 +66,26 @@ export const LinkField = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const lastSearchRef = React.useRef("");
 
-  const { call } = useFrappePostCall("frappe.desk.search.search_link");
+  // Build filters for get_list: merge caller-supplied filters with search text
+  const listFilters = React.useMemo(() => {
+    const f: Record<string, any> = { ...(filters || {}) };
+    if (searchTxt) f["name"] = ["like", `%${searchTxt}%`];
+    return f;
+  }, [filters, searchTxt]);
+
+  const { data: listData, isLoading: listLoading } = useFrappeGetCall<{ message: any[] }>(
+    "frappe.client.get_list",
+    open
+      ? {
+          doctype,
+          filters: listFilters,
+          fields: ["name"],
+          limit: pageLength,
+          order_by: "name asc",
+        }
+      : null,
+  );
 
   const calculatePosition = React.useCallback(() => {
     if (!buttonRef.current || !open) return;
@@ -127,61 +143,35 @@ export const LinkField = ({
     };
   }, [open, calculatePosition]);
 
+  // Debounce the search input into searchTxt (which drives the get_list query)
   React.useEffect(() => {
-    const t = setTimeout(() => {
-      setDebouncedSearch(search.trim());
-    }, 500);
+    const t = setTimeout(() => setSearchTxt(search.trim()), 400);
     return () => clearTimeout(t);
   }, [search]);
 
-  const fetchOptions = React.useCallback(
-    async (txt: string) => {
-      try {
-        setLoading(true);
-        const res = await call({
-          txt,
-          doctype,
-          page_length: pageLength,
-          filters,
-          ignore_user_permissions: 0,
-        });
-
-        const mapped: AutoCompleteOption[] = (res?.message || []).map(
-          (item: any) => ({
-            label: item.label || item.value,
-            value: item.value,
-            description: item.description || "",
-            extra: item,
-          }),
-        );
-
-        setOptions(mapped);
-
-        if (value && !selected) {
-          const found = mapped.find((x) => x.value === value);
-          if (found) setSelected(found);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [call, doctype, filters, pageLength, value, selected],
-  );
-
+  // Reset search when dropdown opens
   React.useEffect(() => {
     if (!open) return;
     setSearch("");
-    setDebouncedSearch("");
+    setSearchTxt("");
     setHighlightedIndex(0);
-    fetchOptions("");
-  }, [open, fetchOptions]);
+  }, [open]);
 
+  // Map get_list results into options
   React.useEffect(() => {
-    if (!open || !debouncedSearch || debouncedSearch === lastSearchRef.current)
-      return;
-    lastSearchRef.current = debouncedSearch;
-    fetchOptions(debouncedSearch);
-  }, [debouncedSearch, open, fetchOptions]);
+    const rows = listData?.message || [];
+    const mapped: AutoCompleteOption[] = rows.map((item: any) => ({
+      label: item.name,
+      value: item.name,
+      description: item.description || "",
+      extra: item,
+    }));
+    setOptions(mapped);
+    if (value && !selected) {
+      const found = mapped.find((x) => x.value === value);
+      if (found) setSelected(found);
+    }
+  }, [listData]);
 
   React.useEffect(() => {
     if (!value) {
@@ -237,7 +227,7 @@ export const LinkField = ({
             </div>
 
             <div className="max-h-[320px] overflow-y-auto p-2">
-              {loading ? (
+              {listLoading ? (
                 <div className="py-10 text-center text-sm text-gray-500">
                   <Loader2 className="mx-auto mb-2 h-4 w-4 animate-spin" />
                   Loading...
