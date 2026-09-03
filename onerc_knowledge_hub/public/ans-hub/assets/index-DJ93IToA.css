@@ -1949,6 +1949,10 @@ video {
 .border-input {
   border-color: oklch(0.92 0.012 250);
 }
+.border-orange-200 {
+  --tw-border-opacity: 1;
+  border-color: rgb(254 215 170 / var(--tw-border-opacity, 1));
+}
 .border-pillar-branch {
   border-color: oklch(0.605 0.232 27);
 }
@@ -2196,6 +2200,10 @@ video {
 .bg-orange-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(255 237 213 / var(--tw-bg-opacity, 1));
+}
+.bg-orange-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 247 237 / var(--tw-bg-opacity, 1));
 }
 .bg-orange-500 {
   --tw-bg-opacity: 1;
@@ -2968,6 +2976,10 @@ video {
   --tw-text-opacity: 1;
   color: rgb(234 88 12 / var(--tw-text-opacity, 1));
 }
+.text-orange-700 {
+  --tw-text-opacity: 1;
+  color: rgb(194 65 12 / var(--tw-text-opacity, 1));
+}
 .text-pillar-branch-foreground {
   color: oklch(0.98 0 0);
 }
@@ -3173,6 +3185,10 @@ video {
 }
 .shadow-emerald-100 {
   --tw-shadow-color: #d1fae5;
+  --tw-shadow: var(--tw-shadow-colored);
+}
+.shadow-orange-100 {
+  --tw-shadow-color: #ffedd5;
   --tw-shadow: var(--tw-shadow-colored);
 }
 .shadow-purple-100 {
@@ -3736,6 +3752,10 @@ video {
 .hover\:text-accent:hover {
   color: oklch(0.605 0.232 27);
 }
+.hover\:text-blue-700:hover {
+  --tw-text-opacity: 1;
+  color: rgb(29 78 216 / var(--tw-text-opacity, 1));
+}
 .hover\:text-dash-navy:hover {
   --tw-text-opacity: 1;
   color: rgb(1 30 65 / var(--tw-text-opacity, 1));
@@ -3754,6 +3774,10 @@ video {
 .hover\:text-gray-600:hover {
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity, 1));
+}
+.hover\:text-gray-700:hover {
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
 }
 .hover\:text-gray-900:hover {
   --tw-text-opacity: 1;

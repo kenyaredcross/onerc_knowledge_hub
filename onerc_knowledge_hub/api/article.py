@@ -34,50 +34,73 @@ def get_articles_filtered(include_drafts=0):
 
 	frappe.log_error(f"User: {current_user}, Roles: {user_roles}, is_admin: {is_admin}, is_manager: {is_manager}", "Article Filter Debug")
 
-	# Build filters
-	filters = {}
-	if not int(include_drafts):
-		filters["status"] = "Published"
-		filters["docstatus"] = 1
+	is_lh_user = not is_admin and not is_manager
 
-	# For managers AND regular users, filter by national society
-	# Only admins see everything
-	if not is_admin:
-		# Get user's national society
-		user_ns = frappe.db.get_value(
-			"Localisation Hub User",
-			{"user_id": current_user},
-			"national_society"
+	if is_admin:
+		# Admins see everything
+		filters = {}
+		if not int(include_drafts):
+			filters["status"] = "Published"
+			filters["docstatus"] = 1
+
+		return frappe.get_all(
+			"Article",
+			filters=filters,
+			fields=[
+				"name", "title", "slug", "subtitle",
+				"summary", "body", "cover_image",
+				"article_type", "category", "status", "docstatus",
+				"author", "published_on", "read_time",
+				"is_featured", "sort_order", "view_count",
+				"like_count", "comment_count", "owner"
+			],
+			order_by="is_featured desc, published_on desc"
 		)
 
-		frappe.log_error(f"User NS: {user_ns}", "Article Filter Debug")
+	# Resolve the current user's national society (required for managers and LH users)
+	user_ns = frappe.db.get_value(
+		"Localisation Hub User",
+		{"user_id": current_user},
+		"national_society"
+	)
 
-		if user_ns:
-			# Get all users from the same national society
-			ns_users = frappe.get_all(
-				"Localisation Hub User",
-				filters={"national_society": user_ns},
-				pluck="user_id"
-			)
+	if not user_ns:
+		return []
 
-			frappe.log_error(f"NS Users: {ns_users}", "Article Filter Debug")
+	ns_users = frappe.get_all(
+		"Localisation Hub User",
+		filters={"national_society": user_ns},
+		pluck="user_id"
+	)
 
-			# Filter articles by owner - only show articles from same national society
-			if ns_users:
-				filters["owner"] = ["in", ns_users]
-			else:
-				# No users found, return empty
-				frappe.log_error("No users found for NS", "Article Filter Debug")
-				return []
-		else:
-			# User has no national society set, return empty for non-admins
-			frappe.log_error(f"User {current_user} has no national society", "Article Filter Debug")
-			return []
+	if not ns_users:
+		return []
 
-	# Get articles with essential fields
-	articles = frappe.get_all(
+	if is_manager:
+		# Managers see all articles (drafts + published) from their NS
+		filters = {"owner": ["in", ns_users]}
+		if not int(include_drafts):
+			filters["status"] = "Published"
+			filters["docstatus"] = 1
+
+		return frappe.get_all(
+			"Article",
+			filters=filters,
+			fields=[
+				"name", "title", "slug", "subtitle",
+				"summary", "body", "cover_image",
+				"article_type", "category", "status", "docstatus",
+				"author", "published_on", "read_time",
+				"is_featured", "sort_order", "view_count",
+				"like_count", "comment_count", "owner"
+			],
+			order_by="is_featured desc, published_on desc"
+		)
+
+	# LH User: published articles from their NS + their own drafts
+	published = frappe.get_all(
 		"Article",
-		filters=filters,
+		filters={"owner": ["in", ns_users], "status": "Published", "docstatus": 1},
 		fields=[
 			"name", "title", "slug", "subtitle",
 			"summary", "body", "cover_image",
@@ -89,16 +112,82 @@ def get_articles_filtered(include_drafts=0):
 		order_by="is_featured desc, published_on desc"
 	)
 
-	frappe.log_error(f"Filters applied: {filters}, Articles found: {len(articles)}", "Article Filter Debug")
-
-	# Add national society info for debugging
-	for article in articles:
-		owner_ns = frappe.db.get_value(
-			"Localisation Hub User",
-			{"user_id": article["owner"]},
-			"national_society"
+	if int(include_drafts):
+		my_drafts = frappe.get_all(
+			"Article",
+			filters={"owner": current_user, "docstatus": 0},
+			fields=[
+				"name", "title", "slug", "subtitle",
+				"summary", "body", "cover_image",
+				"article_type", "category", "status", "docstatus",
+				"author", "published_on", "read_time",
+				"is_featured", "sort_order", "view_count",
+				"like_count", "comment_count", "owner"
+			],
+			order_by="is_featured desc, published_on desc"
 		)
-		article["owner_national_society"] = owner_ns
-		frappe.log_error(f"Article: {article['title']}, Owner: {article['owner']}, Owner NS: {owner_ns}", "Article Filter Debug")
+		# Merge, deduplicating by name (a user's own published articles appear in both queries)
+		seen = {a["name"] for a in published}
+		for draft in my_drafts:
+			if draft["name"] not in seen:
+				published.append(draft)
 
-	return articles
+	return published
+
+
+ARTICLE_EDITABLE_FIELDS = [
+	"title", "subtitle", "article_type", "category", "pillar", "location",
+	"summary", "body", "cover_image", "source_name", "source_url",
+	"is_featured", "status", "author",
+]
+
+
+@frappe.whitelist()
+def save_article(name, fields):
+	"""Save editable fields on a draft Article. Caller must own it or be LH Admin/Manager."""
+	import json
+	fields = json.loads(fields) if isinstance(fields, str) else fields
+
+	doc = frappe.get_doc("Article", name)
+
+	if doc.docstatus != 0:
+		frappe.throw(frappe._("Only draft articles can be edited"))
+
+	user_roles = frappe.get_roles()
+	is_privileged = "LH Admin" in user_roles or "LH Manager" in user_roles or "System Manager" in user_roles
+	if not is_privileged and doc.owner != frappe.session.user:
+		frappe.throw(frappe._("Not permitted"), frappe.PermissionError)
+
+	for field in ARTICLE_EDITABLE_FIELDS:
+		if field in fields:
+			doc.set(field, fields[field])
+
+	# Always set author to current user if missing
+	if not doc.author:
+		doc.author = frappe.session.user
+
+	doc.save(ignore_permissions=True)
+	return {"name": doc.name, "modified": str(doc.modified)}
+
+
+@frappe.whitelist()
+def publish_article(name):
+	"""Set status=Published and submit a draft Article."""
+	doc = frappe.get_doc("Article", name)
+
+	if doc.docstatus != 0:
+		frappe.throw(frappe._("Only draft articles can be published"))
+
+	user_roles = frappe.get_roles()
+	is_privileged = "LH Admin" in user_roles or "LH Manager" in user_roles or "System Manager" in user_roles
+	if not is_privileged and doc.owner != frappe.session.user:
+		frappe.throw(frappe._("Not permitted"), frappe.PermissionError)
+
+	if not doc.author:
+		doc.author = frappe.session.user
+
+	doc.status = "Published"
+	doc.save(ignore_permissions=True)
+	doc.submit()
+
+	return {"name": doc.name, "status": doc.status}

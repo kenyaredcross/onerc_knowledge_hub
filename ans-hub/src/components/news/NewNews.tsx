@@ -31,6 +31,7 @@ export default function NewNews() {
   const [showForm, setShowForm] = useState(false);
   const [submitAction, setSubmitAction] = useState<"save" | "submit">("save");
   const [activeTab, setActiveTab] = useState<"all" | "my-drafts">("all");
+  const [editingName, setEditingName] = useState<string | null>(null);
 
   // Check if user has admin or manager roles
   const userRoles = (userData as any)?.roles?.map((r: any) => r.role) || [];
@@ -99,28 +100,43 @@ export default function NewNews() {
   } = useFrappePostCall("frappe.client.insert");
 
   const {
-    call: submitArticle,
+    call: publishArticle,
     loading: isSubmittingDoc,
-  } = useFrappePostCall("frappe.client.submit");
+  } = useFrappePostCall("onerc_knowledge_hub.api.article.publish_article");
+
+  const { call: saveArticle } = useFrappePostCall("onerc_knowledge_hub.api.article.save_article");
 
   const { call: getDoc } = useFrappePostCall("frappe.client.get");
 
+  const handleEditClick = async (articleName: string) => {
+    try {
+      const docResponse = await getDoc({ doctype: "Article", name: articleName });
+      const doc = docResponse?.message || docResponse;
+      setForm({
+        title: doc.title || "",
+        subtitle: doc.subtitle || "",
+        article_type: doc.article_type || "",
+        category: doc.category || "",
+        pillar: doc.pillar || "",
+        location: doc.location || "",
+        summary: doc.summary || "",
+        body: doc.body || "",
+        cover_image: doc.cover_image || "",
+        source_name: doc.source_name || "",
+        source_url: doc.source_url || "",
+        status: doc.status || "Draft",
+        is_featured: doc.is_featured || 0,
+      });
+      setEditingName(articleName);
+      setShowForm(true);
+    } catch (err) {
+      console.error("Error loading article for edit:", err);
+    }
+  };
+
   const handlePublishFromList = async (articleName: string) => {
     try {
-      // First, fetch the full document
-      const docResponse = await getDoc({
-        doctype: "Article",
-        name: articleName
-      });
-
-      const doc = docResponse?.message || docResponse;
-
-      // Now submit with the full document
-      await submitArticle({
-        doc: doc
-      });
-
-      // Refresh the list
+      await publishArticle({ name: articleName });
       mutate();
     } catch (error) {
       console.error("Error publishing article:", error);
@@ -141,6 +157,7 @@ export default function NewNews() {
         summary: form.summary,
         body: form.body,
         status: action === "submit" ? "Published" : form.status,
+        author: (userData as any)?.name,
       };
 
       // Add optional fields only if they have values
@@ -166,26 +183,31 @@ export default function NewNews() {
         doc.is_featured = form.is_featured;
       }
 
-      console.log("Submitting doc:", doc);
-      const response = await createArticle({ doc });
-      console.log("Response:", response);
+      let savedName: string;
 
-      const createdDoc = response?.message || response;
+      if (editingName) {
+        // Use backend save_article to avoid system-field conflicts
+        const fields = { ...doc };
+        delete fields.doctype;
+        await saveArticle({ name: editingName, fields: JSON.stringify(fields) });
+        savedName = editingName;
+      } else {
+        // Create new draft
+        const response = await createArticle({ doc });
+        const createdDoc = response?.message || response;
+        savedName = createdDoc?.name;
+      }
 
-      // If action is submit, submit the document to change docstatus
-      if (action === "submit" && createdDoc?.name) {
-        await submitArticle({
-          doc: {
-            doctype: "Article",
-            name: createdDoc.name
-          }
-        });
+      // If action is submit, use backend publish_article
+      if (action === "submit" && savedName) {
+        await publishArticle({ name: savedName });
       }
 
       // Refresh the list
       mutate();
 
       // Reset form and hide it
+      setEditingName(null);
       setForm({
         title: "",
         subtitle: "",
@@ -268,7 +290,7 @@ export default function NewNews() {
         <div className="border-b border-gray-200 bg-white">
           <div className="mx-auto max-w-5xl px-6 py-10">
             <button
-              onClick={() => setShowForm(false)}
+              onClick={() => { setShowForm(false); setEditingName(null); }}
               className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-500 transition-colors hover:text-dash-red"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -279,10 +301,10 @@ export default function NewNews() {
               <div className="max-w-2xl">
                 <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-dash-red/10 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-dash-red">
                   <Newspaper className="h-3.5 w-3.5" />
-                  {t('forms:createResource')}
+                  {editingName ? "Edit Article" : t('forms:createResource')}
                 </div>
                 <h1 className="font-display text-4xl font-bold tracking-tight text-gray-900">
-                  {t('forms:addNew')} News Article
+                  {editingName ? "Edit News Article" : `${t('forms:addNew')} News Article`}
                 </h1>
               </div>
             </div>
@@ -751,6 +773,18 @@ export default function NewNews() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-3">
+                          {/* Edit: own drafts for LH Users; any draft for managers/admins */}
+                          {article.docstatus === 0 && (
+                            article.owner === (userData as any)?.name || canPublish
+                          ) && (
+                            <button
+                              onClick={() => handleEditClick(article.name)}
+                              className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+                            >
+                              <Edit className="h-3.5 w-3.5" />
+                              Edit
+                            </button>
+                          )}
                           {canPublish && article.docstatus === 0 && (
                             <button
                               onClick={() => handlePublishFromList(article.name)}
@@ -761,13 +795,15 @@ export default function NewNews() {
                               Publish
                             </button>
                           )}
-                          <Link
-                            to={`/news/${article.slug}`}
-                            className="inline-flex items-center gap-1.5 text-sm font-semibold text-dash-red hover:text-red-700 transition-colors"
-                          >
-                            View
-                            <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
-                          </Link>
+                          {article.docstatus === 1 && (
+                            <Link
+                              to={`/news/${article.slug}`}
+                              className="inline-flex items-center gap-1.5 text-sm font-semibold text-dash-red hover:text-red-700 transition-colors"
+                            >
+                              View
+                              <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
+                            </Link>
+                          )}
                         </div>
                       </td>
                     </tr>

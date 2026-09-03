@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useFrappeGetCall } from "frappe-react-sdk";
 import { Check, ChevronsUpDown, Loader2, Search, X } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
@@ -66,25 +65,43 @@ export const LinkField = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const [listLoading, setListLoading] = React.useState(false);
 
-  // Build filters for get_list: merge caller-supplied filters with search text
-  const listFilters = React.useMemo(() => {
-    const f: Record<string, any> = { ...(filters || {}) };
-    if (searchTxt) f["name"] = ["like", `%${searchTxt}%`];
-    return f;
-  }, [filters, searchTxt]);
-
-  const { data: listData, isLoading: listLoading } = useFrappeGetCall<{ message: any[] }>(
-    "frappe.client.get_list",
-    open
-      ? {
-          doctype,
-          filters: listFilters,
-          fields: ["name"],
-          limit: pageLength,
+  const fetchOptions = React.useCallback(
+    async (txt: string) => {
+      setListLoading(true);
+      try {
+        const params = new URLSearchParams({
+          fields: JSON.stringify(["name"]),
+          limit_page_length: String(pageLength),
           order_by: "name asc",
+        });
+        if (txt) {
+          params.set("filters", JSON.stringify([["name", "like", `%${txt}%`]]));
         }
-      : null,
+        if (filters && Object.keys(filters).length) {
+          const extra = Object.entries(filters).map(([k, v]) => [k, "=", v]);
+          const existing = txt ? JSON.parse(params.get("filters")!) : [];
+          params.set("filters", JSON.stringify([...existing, ...extra]));
+        }
+        const res = await fetch(`/api/resource/${encodeURIComponent(doctype)}?${params}`);
+        const json = await res.json();
+        const rows: AutoCompleteOption[] = (json.data || []).map((item: any) => ({
+          label: item.name,
+          value: item.name,
+          description: "",
+          extra: item,
+        }));
+        setOptions(rows);
+        if (value && !selected) {
+          const found = rows.find((x) => x.value === value);
+          if (found) setSelected(found);
+        }
+      } finally {
+        setListLoading(false);
+      }
+    },
+    [doctype, filters, pageLength, value, selected],
   );
 
   const calculatePosition = React.useCallback(() => {
@@ -143,35 +160,25 @@ export const LinkField = ({
     };
   }, [open, calculatePosition]);
 
-  // Debounce the search input into searchTxt (which drives the get_list query)
-  React.useEffect(() => {
-    const t = setTimeout(() => setSearchTxt(search.trim()), 400);
-    return () => clearTimeout(t);
-  }, [search]);
-
-  // Reset search when dropdown opens
+  // Load options when dropdown opens
   React.useEffect(() => {
     if (!open) return;
     setSearch("");
     setSearchTxt("");
     setHighlightedIndex(0);
+    fetchOptions("");
   }, [open]);
 
-  // Map get_list results into options
+  // Debounce search input and re-fetch
   React.useEffect(() => {
-    const rows = listData?.message || [];
-    const mapped: AutoCompleteOption[] = rows.map((item: any) => ({
-      label: item.name,
-      value: item.name,
-      description: item.description || "",
-      extra: item,
-    }));
-    setOptions(mapped);
-    if (value && !selected) {
-      const found = mapped.find((x) => x.value === value);
-      if (found) setSelected(found);
-    }
-  }, [listData]);
+    const t = setTimeout(() => setSearchTxt(search.trim()), 400);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    fetchOptions(searchTxt);
+  }, [searchTxt]);
 
   React.useEffect(() => {
     if (!value) {
