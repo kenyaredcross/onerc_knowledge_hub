@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useFrappePostCall } from "frappe-react-sdk";
 import { Check, ChevronsUpDown, Loader2, Search, X } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
@@ -53,12 +52,11 @@ export const LinkField = ({
 }: LinkFieldProps) => {
   const [open, setOpen] = React.useState(false);
   const [search, setSearch] = React.useState("");
-  const [debouncedSearch, setDebouncedSearch] = React.useState("");
+  const [searchTxt, setSearchTxt] = React.useState("");
   const [options, setOptions] = React.useState<AutoCompleteOption[]>([]);
   const [selected, setSelected] = React.useState<AutoCompleteOption | null>(
     null,
   );
-  const [loading, setLoading] = React.useState(false);
   const [highlightedIndex, setHighlightedIndex] = React.useState(0);
   const [dropdownPosition, setDropdownPosition] = React.useState<
     "top" | "bottom"
@@ -67,9 +65,44 @@ export const LinkField = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
-  const lastSearchRef = React.useRef("");
+  const [listLoading, setListLoading] = React.useState(false);
 
-  const { call } = useFrappePostCall("frappe.desk.search.search_link");
+  const fetchOptions = React.useCallback(
+    async (txt: string) => {
+      setListLoading(true);
+      try {
+        const params = new URLSearchParams({
+          fields: JSON.stringify(["name"]),
+          limit_page_length: String(pageLength),
+          order_by: "name asc",
+        });
+        if (txt) {
+          params.set("filters", JSON.stringify([["name", "like", `%${txt}%`]]));
+        }
+        if (filters && Object.keys(filters).length) {
+          const extra = Object.entries(filters).map(([k, v]) => [k, "=", v]);
+          const existing = txt ? JSON.parse(params.get("filters")!) : [];
+          params.set("filters", JSON.stringify([...existing, ...extra]));
+        }
+        const res = await fetch(`/api/resource/${encodeURIComponent(doctype)}?${params}`);
+        const json = await res.json();
+        const rows: AutoCompleteOption[] = (json.data || []).map((item: any) => ({
+          label: item.name,
+          value: item.name,
+          description: "",
+          extra: item,
+        }));
+        setOptions(rows);
+        if (value && !selected) {
+          const found = rows.find((x) => x.value === value);
+          if (found) setSelected(found);
+        }
+      } finally {
+        setListLoading(false);
+      }
+    },
+    [doctype, filters, pageLength, value, selected],
+  );
 
   const calculatePosition = React.useCallback(() => {
     if (!buttonRef.current || !open) return;
@@ -127,61 +160,25 @@ export const LinkField = ({
     };
   }, [open, calculatePosition]);
 
-  React.useEffect(() => {
-    const t = setTimeout(() => {
-      setDebouncedSearch(search.trim());
-    }, 500);
-    return () => clearTimeout(t);
-  }, [search]);
-
-  const fetchOptions = React.useCallback(
-    async (txt: string) => {
-      try {
-        setLoading(true);
-        const res = await call({
-          txt,
-          doctype,
-          page_length: pageLength,
-          filters,
-          ignore_user_permissions: 0,
-        });
-
-        const mapped: AutoCompleteOption[] = (res?.message || []).map(
-          (item: any) => ({
-            label: item.label || item.value,
-            value: item.value,
-            description: item.description || "",
-            extra: item,
-          }),
-        );
-
-        setOptions(mapped);
-
-        if (value && !selected) {
-          const found = mapped.find((x) => x.value === value);
-          if (found) setSelected(found);
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [call, doctype, filters, pageLength, value, selected],
-  );
-
+  // Load options when dropdown opens
   React.useEffect(() => {
     if (!open) return;
     setSearch("");
-    setDebouncedSearch("");
+    setSearchTxt("");
     setHighlightedIndex(0);
     fetchOptions("");
-  }, [open, fetchOptions]);
+  }, [open]);
+
+  // Debounce search input and re-fetch
+  React.useEffect(() => {
+    const t = setTimeout(() => setSearchTxt(search.trim()), 400);
+    return () => clearTimeout(t);
+  }, [search]);
 
   React.useEffect(() => {
-    if (!open || !debouncedSearch || debouncedSearch === lastSearchRef.current)
-      return;
-    lastSearchRef.current = debouncedSearch;
-    fetchOptions(debouncedSearch);
-  }, [debouncedSearch, open, fetchOptions]);
+    if (!open) return;
+    fetchOptions(searchTxt);
+  }, [searchTxt]);
 
   React.useEffect(() => {
     if (!value) {
@@ -237,7 +234,7 @@ export const LinkField = ({
             </div>
 
             <div className="max-h-[320px] overflow-y-auto p-2">
-              {loading ? (
+              {listLoading ? (
                 <div className="py-10 text-center text-sm text-gray-500">
                   <Loader2 className="mx-auto mb-2 h-4 w-4 animate-spin" />
                   Loading...
