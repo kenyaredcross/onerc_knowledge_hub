@@ -106,12 +106,15 @@ export default function NewNews() {
 
   const { call: saveArticle } = useFrappePostCall("onerc_knowledge_hub.api.article.save_article");
 
-  const { call: getDoc } = useFrappePostCall("frappe.client.get");
+  const getDoc = async (doctype: string, name: string) => {
+    const res = await fetch(`/api/resource/${encodeURIComponent(doctype)}/${encodeURIComponent(name)}`);
+    const json = await res.json();
+    return json.data;
+  };
 
   const handleEditClick = async (articleName: string) => {
     try {
-      const docResponse = await getDoc({ doctype: "Article", name: articleName });
-      const doc = docResponse?.message || docResponse;
+      const doc = await getDoc("Article", articleName);
       setForm({
         title: doc.title || "",
         subtitle: doc.subtitle || "",
