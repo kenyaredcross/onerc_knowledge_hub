@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Check, ChevronsUpDown, Loader2, Search, X } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2, Plus, Search, X } from "lucide-react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 
@@ -9,6 +9,12 @@ interface AutoCompleteOption {
   value: string;
   description?: string;
   extra?: any;
+}
+
+interface QuickAddField {
+  fieldname: string;
+  label: string;
+  required?: boolean;
 }
 
 interface LinkFieldProps {
@@ -29,6 +35,7 @@ interface LinkFieldProps {
   activeOptionClassName?: string;
   filters?: Record<string, any>;
   pageLength?: number;
+  quickAdd?: QuickAddField[];
 }
 
 export const LinkField = ({
@@ -49,8 +56,12 @@ export const LinkField = ({
   activeOptionClassName,
   filters,
   pageLength = 20,
+  quickAdd,
 }: LinkFieldProps) => {
   const [open, setOpen] = React.useState(false);
+  const [showQuickAdd, setShowQuickAdd] = React.useState(false);
+  const [quickAddValues, setQuickAddValues] = React.useState<Record<string, string>>({});
+  const [quickAddSaving, setQuickAddSaving] = React.useState(false);
   const [search, setSearch] = React.useState("");
   const [searchTxt, setSearchTxt] = React.useState("");
   const [options, setOptions] = React.useState<AutoCompleteOption[]>([]);
@@ -190,6 +201,32 @@ export const LinkField = ({
     }
   }, [value]);
 
+  const handleQuickAddSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!quickAdd) return;
+    setQuickAddSaving(true);
+    try {
+      const doc: Record<string, any> = { doctype };
+      quickAdd.forEach((f) => { doc[f.fieldname] = quickAddValues[f.fieldname] || ""; });
+      const res = await fetch("/api/resource/" + encodeURIComponent(doctype), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Frappe-CSRF-Token": (window as any).csrf_token || "fetch" },
+        body: JSON.stringify(doc),
+      });
+      const json = await res.json();
+      const newName = json.data?.name;
+      if (newName) {
+        const newOpt: AutoCompleteOption = { label: newName, value: newName };
+        setOptions((prev) => [newOpt, ...prev]);
+        handleSelect(newOpt);
+        setShowQuickAdd(false);
+        setQuickAddValues({});
+      }
+    } finally {
+      setQuickAddSaving(false);
+    }
+  };
+
   const handleSelect = (opt: AutoCompleteOption) => {
     setSelected(opt);
     onChange(opt.value, opt);
@@ -280,10 +317,68 @@ export const LinkField = ({
                 </div>
               )}
             </div>
+            {quickAdd && (
+              <div className="border-t border-gray-100 p-2">
+                <button
+                  type="button"
+                  onMouseDown={(e) => { e.preventDefault(); setOpen(false); setShowQuickAdd(true); }}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold text-dash-red hover:bg-dash-red/5 transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add new {label || doctype}
+                </button>
+              </div>
+            )}
           </div>,
           document.body,
         )
       : null;
+
+  const quickAddModal = showQuickAdd && quickAdd
+    ? createPortal(
+        <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/40">
+          <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl">
+            <h2 className="mb-6 text-lg font-bold text-gray-900">
+              Add new {label || doctype}
+            </h2>
+            <form onSubmit={handleQuickAddSubmit} className="space-y-4">
+              {quickAdd.map((f) => (
+                <div key={f.fieldname}>
+                  <label className="mb-1.5 block text-sm font-semibold text-gray-700">
+                    {f.label}{f.required && <span className="text-red-500 ml-0.5">*</span>}
+                  </label>
+                  <input
+                    type="text"
+                    required={f.required}
+                    value={quickAddValues[f.fieldname] || ""}
+                    onChange={(e) => setQuickAddValues((prev) => ({ ...prev, [f.fieldname]: e.target.value }))}
+                    className="h-11 w-full rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm focus:border-dash-red focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                  />
+                </div>
+              ))}
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => { setShowQuickAdd(false); setQuickAddValues({}); }}
+                  className="flex-1 h-11 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={quickAddSaving}
+                  className="flex-1 h-11 rounded-xl bg-dash-red text-sm font-semibold text-white hover:bg-red-700 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {quickAddSaving && <Loader2 className="h-4 w-4 animate-spin" />}
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body,
+      )
+    : null;
 
   return (
     <div ref={containerRef} className={cn("w-full", className)}>
@@ -336,6 +431,7 @@ export const LinkField = ({
       </Button>
 
       {dropdown}
+      {quickAddModal}
     </div>
   );
 };

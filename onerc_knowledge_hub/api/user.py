@@ -60,13 +60,48 @@ def get_user_details() -> dict:
             ["name", "first_name", "middle_name", "last_name", "full_name",
              "position", "national_society", "personnel_type", "expertise",
              "primary_language", "other_languages", "bio", "phone_number",
-             "company_email", "prefered_contact_email", "status", "is_steering_group"],
+             "company_email", "prefered_contact_email", "status", "is_steering_group",
+             "banner_image"],
             as_dict=True
         )
 
         if lh_user:
+            if lh_user.get("national_society"):
+                lh_user["national_society_name"] = frappe.db.get_value(
+                    "National Society", lh_user["national_society"], "national_society_name"
+                ) or lh_user["national_society"]
             user_dict["lh_user"] = lh_user
     except Exception as e:
         frappe.log_error(f"Error fetching LH User: {str(e)}")
 
     return user_dict
+
+
+@frappe.whitelist()
+def update_banner_image(banner_image):
+    """Save or clear the profile banner image on the current user's LH User record."""
+    lhu_name = frappe.db.get_value(
+        "Localisation Hub User", {"user_id": frappe.session.user}, "name"
+    )
+    if not lhu_name:
+        frappe.throw(frappe._("No Localisation Hub profile found for this user"))
+    frappe.db.set_value("Localisation Hub User", lhu_name, "banner_image", banner_image or "")
+    frappe.db.commit()
+    return {"banner_image": banner_image or ""}
+
+
+@frappe.whitelist()
+def update_lh_user_organisation(national_society, position):
+    """Update the current user's National Society and Position on their LH User record."""
+    lhu_name = frappe.db.get_value(
+        "Localisation Hub User", {"user_id": frappe.session.user}, "name"
+    )
+    if not lhu_name:
+        frappe.throw(frappe._("No Localisation Hub profile found for this user"))
+
+    doc = frappe.get_doc("Localisation Hub User", lhu_name)
+    doc.national_society = national_society or doc.national_society
+    doc.position = position or doc.position
+    doc.save(ignore_permissions=True)
+    frappe.db.commit()
+    return {"national_society": doc.national_society, "position": doc.position}

@@ -8,6 +8,7 @@ import {
   CheckCheck,
   XCircle,
   RefreshCw,
+  Paperclip,
 } from "lucide-react";
 
 interface FeedbackItem {
@@ -21,6 +22,7 @@ interface FeedbackItem {
   submission_date: string;
   reviewed_by: string | null;
   reviewed_on: string | null;
+  attachment: string | null;
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -123,6 +125,7 @@ export default function FeedbackAdmin() {
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Subject</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">From</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Attachment</th>
                     <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
@@ -152,6 +155,21 @@ export default function FeedbackAdmin() {
                             <StatusIcon className="h-3 w-3" />
                             {item.status}
                           </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          {item.attachment ? (
+                            <a
+                              href={item.attachment}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-dash-red font-medium hover:underline"
+                            >
+                              <Paperclip className="h-3 w-3" />
+                              View
+                            </a>
+                          ) : (
+                            <span className="text-xs text-gray-300">—</span>
+                          )}
                         </td>
                         <td className="px-4 py-3 text-right">
                           {item.status !== "Closed" && (

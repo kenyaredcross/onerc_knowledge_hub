@@ -116,97 +116,79 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                 {t('auth:createAccountSubtitle')}
               </p>
 
+              {/* ── Section: Contact Person ── */}
+              <div className="ma-section-label">Contact Person</div>
+
               <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:firstName')}
-                </label>
+                <label className="ma-label">{t('auth:firstName')}</label>
                 <input
                   className="ma-input"
                   type="text"
                   placeholder={t('auth:enterFirstName')}
                   value={signUpData.first_name}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, first_name: e.target.value })
-                  }
+                  onChange={(e) => setSignUpData({ ...signUpData, first_name: e.target.value })}
                   required
                 />
               </div>
               <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:lastName')}
-                </label>
+                <label className="ma-label">{t('auth:lastName')}</label>
                 <input
                   className="ma-input"
                   type="text"
                   placeholder={t('auth:enterLastName')}
                   value={signUpData.last_name}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, last_name: e.target.value })
-                  }
+                  onChange={(e) => setSignUpData({ ...signUpData, last_name: e.target.value })}
                   required
                 />
               </div>
               <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:email')}
-                </label>
+                <label className="ma-label">{t('auth:email')}</label>
                 <input
                   className="ma-input"
                   type="email"
                   placeholder={t('auth:enterEmail')}
                   value={signUpData.preferred_contact_email}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, preferred_contact_email: e.target.value })
-                  }
+                  onChange={(e) => setSignUpData({ ...signUpData, preferred_contact_email: e.target.value })}
                   required
                 />
               </div>
               <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:phoneNumber')}
-                </label>
+                <label className="ma-label">{t('auth:phoneNumber')}</label>
                 <input
                   className="ma-input"
                   type="tel"
                   placeholder={t('auth:enterPhoneNumber')}
                   value={signUpData.phone_number}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, phone_number: e.target.value })
-                  }
+                  onChange={(e) => setSignUpData({ ...signUpData, phone_number: e.target.value })}
                   required
                 />
               </div>
               <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:position')}
-                </label>
+                <label className="ma-label">{t('auth:gender')}</label>
                 <select
                   className="ma-input"
-                  value={signUpData.position}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, position: e.target.value })
-                  }
+                  value={signUpData.gender}
+                  onChange={(e) => setSignUpData({ ...signUpData, gender: e.target.value })}
                   required
-                  disabled={loadingDesignations}
                 >
-                  <option value="">{t('auth:selectPosition')}</option>
-                  {designations?.message?.map((designation: any) => (
-                    <option key={designation.name} value={designation.name}>
-                      {designation.name}
-                    </option>
-                  ))}
+                  <option value="">{t('auth:selectGender')}</option>
+                  <option value="Male">{t('auth:male')}</option>
+                  <option value="Female">{t('auth:female')}</option>
+                  <option value="Other">{t('auth:other')}</option>
+                  <option value="Prefer not to say">{t('auth:preferNotToSay')}</option>
                 </select>
               </div>
+
+              {/* ── Section: Organisation ── */}
+              <div className="ma-section-label ma-section-label--full">Organisation</div>
+              <p className="ma-section-hint">The National Society or organisation you are representing</p>
+
               <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:nationalSociety')}
-                </label>
+                <label className="ma-label">{t('auth:nationalSociety')}</label>
                 <select
                   className="ma-input"
                   value={signUpData.national_society}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, national_society: e.target.value })
-                  }
+                  onChange={(e) => setSignUpData({ ...signUpData, national_society: e.target.value })}
                   required
                   disabled={loadingSocieties}
                 >
@@ -221,15 +203,28 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                 </select>
               </div>
               <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:primaryLanguage')}
-                </label>
+                <label className="ma-label">{t('auth:position')}</label>
+                <select
+                  className="ma-input"
+                  value={signUpData.position}
+                  onChange={(e) => setSignUpData({ ...signUpData, position: e.target.value })}
+                  required
+                  disabled={loadingDesignations}
+                >
+                  <option value="">{t('auth:selectPosition')}</option>
+                  {designations?.message?.map((designation: any) => (
+                    <option key={designation.name} value={designation.name}>
+                      {designation.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="ma-field">
+                <label className="ma-label">{t('auth:primaryLanguage')}</label>
                 <select
                   className="ma-input"
                   value={signUpData.primary_language}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, primary_language: e.target.value })
-                  }
+                  onChange={(e) => setSignUpData({ ...signUpData, primary_language: e.target.value })}
                   required
                   disabled={loadingLanguages}
                 >
@@ -239,25 +234,6 @@ export default function Auth({ onSignIn, onSignUp }: AuthProps = {}) {
                       {lang.language_name || lang.name}
                     </option>
                   ))}
-                </select>
-              </div>
-              <div className="ma-field">
-                <label className="ma-label">
-                  {t('auth:gender')}
-                </label>
-                <select
-                  className="ma-input"
-                  value={signUpData.gender}
-                  onChange={(e) =>
-                    setSignUpData({ ...signUpData, gender: e.target.value })
-                  }
-                  required
-                >
-                  <option value="">{t('auth:selectGender')}</option>
-                  <option value="Male">{t('auth:male')}</option>
-                  <option value="Female">{t('auth:female')}</option>
-                  <option value="Other">{t('auth:other')}</option>
-                  <option value="Prefer not to say">{t('auth:preferNotToSay')}</option>
                 </select>
               </div>
 
@@ -529,6 +505,34 @@ const css = `
   /* Full width subtitle for signup form */
   .ma-a .ma-sub {
     max-width: 100%;
+  }
+
+  .ma-section-label {
+    grid-column: 1 / -1;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ma-ink);
+    padding: 14px 0 6px;
+    border-top: 1px solid var(--ma-rule);
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ma-section-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--ma-rule);
+  }
+  .ma-section-hint {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    color: var(--ma-ink-soft);
+    margin: 0 0 10px;
+    line-height: 1.5;
   }
 
   .ma-field { position: relative; margin-bottom: 18px; }

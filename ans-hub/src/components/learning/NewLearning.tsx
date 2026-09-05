@@ -169,6 +169,7 @@ export default function NewLearning() {
                   label="Pillar"
                   value={form.pillar}
                   onChange={(val) => updateField("pillar", val)}
+                  quickAdd={[{ fieldname: "pillar", label: "Pillar Name", required: true }]}
                   {...linkFieldClasses}
                 />
               </div>
@@ -180,6 +181,7 @@ export default function NewLearning() {
                   label="Category"
                   value={form.category}
                   onChange={(val) => updateField("category", val)}
+                  quickAdd={[{ fieldname: "category_name", label: "Category Name", required: true }]}
                   {...linkFieldClasses}
                 />
               </div>
