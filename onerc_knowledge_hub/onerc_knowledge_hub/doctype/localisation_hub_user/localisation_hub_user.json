@@ -32,6 +32,7 @@
   "is_steering_group",
   "section_break_gkas",
   "bio",
+  "banner_image",
   "section_break_txta",
   "phone_number",
   "company_email",
@@ -211,6 +212,11 @@
    "fieldname": "bio",
    "fieldtype": "Small Text",
    "label": "Bio"
+  },
+  {
+   "fieldname": "banner_image",
+   "fieldtype": "Attach",
+   "label": "Banner Image"
   },
   {
    "fieldname": "salutation",

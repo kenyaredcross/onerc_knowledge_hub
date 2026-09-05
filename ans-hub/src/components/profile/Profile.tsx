@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import {
   User,
@@ -15,13 +15,16 @@ import {
   Users,
   Award,
   Shield,
+  Camera,
+  X,
 } from "lucide-react";
-import { useFrappeUpdateDoc } from "frappe-react-sdk";
+import { useFrappeFileUpload, useFrappeGetCall, useFrappePostCall, useFrappeUpdateDoc } from "frappe-react-sdk";
 import toast from "react-hot-toast";
 
 export default function Profile() {
   const { userData, isLoading: userLoading } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingOrg, setIsEditingOrg] = useState(false);
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -32,7 +35,32 @@ export default function Profile() {
     bio: "",
   });
 
+  const [orgData, setOrgData] = useState({
+    national_society: "",
+    position: "",
+  });
+
+  const [bannerUrl, setBannerUrl] = useState<string>("");
+  const [bannerUploading, setBannerUploading] = useState(false);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
+  const { upload: uploadFile } = useFrappeFileUpload();
+
   const { updateDoc, loading: updateLoading } = useFrappeUpdateDoc();
+  const { call: updateOrgCall, loading: orgLoading } = useFrappePostCall(
+    "onerc_knowledge_hub.api.user.update_lh_user_organisation"
+  );
+  const { call: updateBannerCall } = useFrappePostCall(
+    "onerc_knowledge_hub.api.user.update_banner_image"
+  );
+
+  const { data: societiesData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.register.get_national_societies"
+  );
+  const { data: designationsData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.register.get_designations"
+  );
+  const nationalSocieties: any[] = societiesData?.message || [];
+  const designations: any[] = designationsData?.message || [];
 
   // Initialize form data when userData is available
   useEffect(() => {
@@ -45,6 +73,14 @@ export default function Profile() {
         location: userData.location || "",
         bio: userData.bio || "",
       });
+      const lhu = (userData as any).lh_user;
+      if (lhu) {
+        setOrgData({
+          national_society: lhu.national_society || "",
+          position: lhu.position || "",
+        });
+        setBannerUrl(lhu.banner_image || "");
+      }
     }
   }, [userData]);
 
@@ -55,6 +91,45 @@ export default function Profile() {
       setIsEditing(false);
     } catch (error: any) {
       toast.error(error.message || "Failed to update profile");
+    }
+  };
+
+  const handleSaveOrg = async () => {
+    try {
+      await updateOrgCall(orgData);
+      toast.success("Organisation details updated!");
+      setIsEditingOrg(false);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to update organisation details");
+    }
+  };
+
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setBannerUploading(true);
+    try {
+      const res = await uploadFile(file, { isPrivate: false, folder: "Home" });
+      if (res?.file_url) {
+        await updateBannerCall({ banner_image: res.file_url });
+        setBannerUrl(res.file_url);
+        toast.success("Banner updated!");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to upload banner");
+    } finally {
+      setBannerUploading(false);
+      if (bannerInputRef.current) bannerInputRef.current.value = "";
+    }
+  };
+
+  const handleBannerRemove = async () => {
+    try {
+      await updateBannerCall({ banner_image: "" });
+      setBannerUrl("");
+      toast.success("Banner removed");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to remove banner");
     }
   };
 
@@ -94,14 +169,49 @@ export default function Profile() {
 
       {/* Profile Card */}
       <div className="bg-white border border-gray-300 shadow-sm overflow-hidden">
-        {/* Profile Header */}
-        <div className="px-8 py-16 relative overflow-hidden" style={{
-          backgroundImage: 'url(/assets/onerc_knowledge_hub/profile-cover.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}>
-          {/* Dark shadow overlay */}
+        {/* Profile Header / Banner */}
+        <div
+          className="px-8 py-16 relative overflow-hidden"
+          style={{
+            backgroundImage: `url(${bannerUrl || '/assets/onerc_knowledge_hub/profile-cover.jpeg'})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Dark overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/45 to-black/55" />
+
+          {/* Banner controls — always visible */}
+          <div className="absolute top-4 right-4 z-20 flex gap-2">
+            <button
+              type="button"
+              onClick={() => bannerInputRef.current?.click()}
+              disabled={bannerUploading}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-black/60 hover:bg-black/80 text-white text-xs font-semibold rounded-lg backdrop-blur-sm transition-colors disabled:opacity-50"
+            >
+              {bannerUploading
+                ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                : <Camera className="h-3.5 w-3.5" />}
+              {bannerUploading ? "Uploading…" : bannerUrl ? "Replace banner" : "Upload banner"}
+            </button>
+            {bannerUrl && (
+              <button
+                type="button"
+                onClick={handleBannerRemove}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-black/60 hover:bg-red-600/80 text-white text-xs font-semibold rounded-lg backdrop-blur-sm transition-colors"
+              >
+                <X className="h-3.5 w-3.5" />
+                Remove
+              </button>
+            )}
+          </div>
+          <input
+            ref={bannerInputRef}
+            type="file"
+            accept=".png,.jpg,.jpeg,.webp"
+            className="hidden"
+            onChange={handleBannerUpload}
+          />
 
           <div className="relative z-10 flex items-center gap-6">
             <div className="flex h-28 w-28 items-center justify-center bg-white text-blue-600 font-display text-4xl font-bold shadow-xl">
@@ -135,6 +245,95 @@ export default function Profile() {
 
         {/* Profile Information */}
         <div className="p-8 space-y-8">
+
+          {/* Organisation Section — always visible */}
+          <div className="space-y-6">
+            <div className="border-b border-gray-300 pb-4 flex items-center justify-between">
+              <h3 className="font-display text-xl font-bold text-gray-900 flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-blue-600" />
+                Organisation
+              </h3>
+              {lhUser && (!isEditingOrg ? (
+                <button
+                  onClick={() => setIsEditingOrg(true)}
+                  className="px-4 py-1.5 bg-blue-600 text-white text-xs font-display font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Edit
+                </button>
+              ) : (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setIsEditingOrg(false); setOrgData({ national_society: lhUser.national_society || "", position: lhUser.position || "" }); }}
+                    disabled={orgLoading}
+                    className="px-4 py-1.5 bg-gray-300 text-gray-900 text-xs font-display font-semibold hover:bg-gray-400 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveOrg}
+                    disabled={orgLoading}
+                    className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 text-white text-xs font-display font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  >
+                    {orgLoading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Save className="h-3 w-3" />}
+                    Save
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* National Society */}
+              <div>
+                <label className="block text-xs font-display font-semibold text-gray-600 uppercase tracking-wider mb-2">
+                  National Society
+                </label>
+                {isEditingOrg ? (
+                  <select
+                    value={orgData.national_society}
+                    onChange={(e) => setOrgData({ ...orgData, national_society: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:border-blue-600 font-display bg-white text-sm"
+                  >
+                    <option value="">Select National Society…</option>
+                    {nationalSocieties.map((s: any) => (
+                      <option key={s.name} value={s.name}>{s.national_society_name}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border border-gray-300">
+                    <Building2 className="h-4 w-4 text-blue-600 shrink-0" />
+                    <span className="font-display font-medium text-gray-900">
+                      {lhUser?.national_society_name || lhUser?.national_society || orgData.national_society || "Not set"}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Position */}
+              <div>
+                <label className="block text-xs font-display font-semibold text-gray-600 uppercase tracking-wider mb-2">
+                  Position / Role
+                </label>
+                {isEditingOrg ? (
+                  <select
+                    value={orgData.position}
+                    onChange={(e) => setOrgData({ ...orgData, position: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 focus:outline-none focus:border-blue-600 font-display bg-white text-sm"
+                  >
+                    <option value="">Select Position…</option>
+                    {designations.map((d: any) => (
+                      <option key={d.name} value={d.name}>{d.name}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="flex items-center gap-3 px-4 py-3 bg-gray-50 border border-gray-300">
+                    <Briefcase className="h-4 w-4 text-blue-600 shrink-0" />
+                    <span className="font-display font-medium text-gray-900">{lhUser?.position || orgData.position || "Not set"}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
           {/* Localisation Hub User Details */}
           {lhUser && (
             <div className="space-y-6">
@@ -154,7 +353,7 @@ export default function Profile() {
                     </label>
                     <div className="flex items-center gap-2">
                       <Building2 className="h-4 w-4 text-blue-600" />
-                      <span className="font-display font-medium text-gray-900">{lhUser.national_society}</span>
+                      <span className="font-display font-medium text-gray-900">{lhUser.national_society_name || lhUser.national_society}</span>
                     </div>
                   </div>
                 )}

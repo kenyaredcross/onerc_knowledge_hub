@@ -5,9 +5,10 @@ import {
   MessageSquarePlus,
   CheckCircle2,
   RefreshCw,
-  ChevronDown,
   Send,
 } from "lucide-react";
+import { FileUploadField } from "../fields/FileUploadField";
+import { LinkField } from "../fields/LinkField";
 
 interface FeedbackType {
   name: string;
@@ -17,6 +18,7 @@ interface FeedbackType {
 
 export default function FeedbackSubmit() {
   const [form, setForm] = useState({ feedback_type: "", subject: "", message: "" });
+  const [attachment, setAttachment] = useState<string>("");
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,13 +34,24 @@ export default function FeedbackSubmit() {
     if (!form.feedback_type || !form.message.trim()) return;
     setIsSubmitting(true);
     try {
-      await submitFeedback({ feedback_type: form.feedback_type, subject: form.subject, message: form.message });
+      await submitFeedback({
+        feedback_type: form.feedback_type,
+        subject: form.subject,
+        message: form.message,
+        ...(attachment ? { attachment } : {}),
+      });
       setSubmitted(true);
     } catch (err: any) {
       toast.error(err?.message || "Failed to submit feedback");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleReset = () => {
+    setSubmitted(false);
+    setForm({ feedback_type: "", subject: "", message: "" });
+    setAttachment("");
   };
 
   if (submitted) {
@@ -54,7 +67,7 @@ export default function FeedbackSubmit() {
               Your submission has been received. Our team will review it and get back to you if needed.
             </p>
             <button
-              onClick={() => { setSubmitted(false); setForm({ feedback_type: "", subject: "", message: "" }); }}
+              onClick={handleReset}
               className="px-5 py-2.5 bg-dash-red text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
             >
               Submit Another
@@ -90,23 +103,20 @@ export default function FeedbackSubmit() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="mb-2 block text-sm font-bold text-gray-800">
-                  Feedback Type <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    required
-                    value={form.feedback_type}
-                    onChange={(e) => setForm((f) => ({ ...f, feedback_type: e.target.value }))}
-                    className="h-12 w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 px-4 pr-10 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
-                  >
-                    <option value="">Select a type…</option>
-                    {feedbackTypes.map((ft) => (
-                      <option key={ft.name} value={ft.name}>{ft.title}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                </div>
+                <LinkField
+                  doctype="Feedback Type"
+                  label="Feedback Type"
+                  required
+                  value={form.feedback_type}
+                  onChange={(val) => setForm((f) => ({ ...f, feedback_type: val }))}
+                  quickAdd={[
+                    { fieldname: "title", label: "Title", required: true },
+                    { fieldname: "description", label: "Description" },
+                  ]}
+                  buttonClassName="rounded-xl border-gray-200 bg-gray-50 h-12"
+                  dropdownClassName="rounded-xl"
+                  activeOptionClassName="bg-dash-red/10 text-dash-red"
+                />
                 {form.feedback_type && (
                   <p className="mt-1.5 text-xs text-gray-500">
                     {feedbackTypes.find((ft) => ft.name === form.feedback_type)?.description}
@@ -137,6 +147,18 @@ export default function FeedbackSubmit() {
                   placeholder="Share your thoughts, suggestions, or report an issue…"
                   className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10 resize-none"
                 />
+              </div>
+
+              <div>
+                <FileUploadField
+                  label="Attachment (optional)"
+                  value={attachment}
+                  accept=".png,.jpg,.jpeg,.gif,.webp,.pdf"
+                  onChange={(url) => setAttachment(url ?? "")}
+                />
+                <p className="mt-1 text-xs text-gray-400 ml-1">
+                  Attach a screenshot or file to help illustrate the issue
+                </p>
               </div>
 
               <button
