@@ -109,10 +109,6 @@ export default function FeedbackSubmit() {
                   required
                   value={form.feedback_type}
                   onChange={(val) => setForm((f) => ({ ...f, feedback_type: val }))}
-                  quickAdd={[
-                    { fieldname: "title", label: "Title", required: true },
-                    { fieldname: "description", label: "Description" },
-                  ]}
                   buttonClassName="rounded-xl border-gray-200 bg-gray-50 h-12"
                   dropdownClassName="rounded-xl"
                   activeOptionClassName="bg-dash-red/10 text-dash-red"

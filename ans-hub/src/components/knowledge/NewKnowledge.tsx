@@ -138,7 +138,6 @@ export default function NewKnowledge() {
                   required
                   value={form.category}
                   onChange={(val) => updateField("category", val)}
-                  quickAdd={[{ fieldname: "category_name", label: "Category Name", required: true }]}
                   {...linkFieldClasses}
                 />
               </div>
