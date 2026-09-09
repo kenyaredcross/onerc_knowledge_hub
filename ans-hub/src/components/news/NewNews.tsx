@@ -363,7 +363,6 @@ export default function NewNews() {
                     value={form.article_type}
                     onChange={(val) => updateField("article_type", val)}
                     required
-                    quickAdd={[{ fieldname: "type_name", label: "Type Name", required: true }]}
                     {...linkFieldClasses}
                   />
                 </div>
@@ -375,7 +374,6 @@ export default function NewNews() {
                     value={form.category}
                     onChange={(val) => updateField("category", val)}
                     required
-                    quickAdd={[{ fieldname: "category_name", label: "Category Name", required: true }]}
                     {...linkFieldClasses}
                   />
                 </div>
@@ -386,7 +384,6 @@ export default function NewNews() {
                     label="Pillar"
                     value={form.pillar}
                     onChange={(val) => updateField("pillar", val)}
-                    quickAdd={[{ fieldname: "pillar", label: "Pillar Name", required: true }]}
                     {...linkFieldClasses}
                   />
                 </div>
