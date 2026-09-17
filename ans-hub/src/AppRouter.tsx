@@ -35,6 +35,7 @@ import Profile from "./components/profile/Profile.tsx";
 import UsersManagement from "./components/users/UsersManagement.tsx";
 import FeedbackSubmit from "./components/feedback/FeedbackSubmit.tsx";
 import FeedbackAdmin from "./components/feedback/FeedbackAdmin.tsx";
+import EventFeedback from "./components/feedback/EventFeedback.tsx";
 
 const AppRouter = () => {
   return (
@@ -48,6 +49,7 @@ const AppRouter = () => {
         <Route path="/set-password" element={<SetPassword />} />
         <Route path="/pending-approval" element={<PendingApprovalPage />} />
         <Route path="/403" element={<ErrorPage403 />} />
+        <Route path="/event-feedback" element={<EventFeedback />} />
 
         {/* Dashboard routes (with sidebar layout) - Protected */}
         <Route element={<ProtectedRoute />}>

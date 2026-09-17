@@ -1,0 +1,177 @@
+{
+ "autoname": "format:EVF-{YYYY}-{#####}",
+ "creation": "2026-09-17 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "submitted_on",
+  "is_anonymous",
+  "section_identity",
+  "respondent_name",
+  "col_identity",
+  "email",
+  "organisation",
+  "section_content",
+  "q1_content_relevance",
+  "q2_most_valuable_session",
+  "q3_topics_not_covered",
+  "section_delivery",
+  "q4_speaker_quality",
+  "q5_technical_experience",
+  "q6_mindset_change",
+  "section_outcomes",
+  "q7_concrete_action",
+  "q8_followup_interest",
+  "q9_likelihood_recommend",
+  "section_reflection",
+  "q10_krcs_did_well",
+  "q11_suggestions"
+ ],
+ "fields": [
+  {
+   "fieldname": "submitted_on",
+   "fieldtype": "Datetime",
+   "label": "Submitted On",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_anonymous",
+   "fieldtype": "Check",
+   "label": "Submit Anonymously"
+  },
+  {
+   "depends_on": "eval:!doc.is_anonymous",
+   "fieldname": "section_identity",
+   "fieldtype": "Section Break",
+   "label": "Your Details"
+  },
+  {
+   "depends_on": "eval:!doc.is_anonymous",
+   "fieldname": "respondent_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "col_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:!doc.is_anonymous",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "depends_on": "eval:!doc.is_anonymous",
+   "fieldname": "organisation",
+   "fieldtype": "Data",
+   "label": "Organisation"
+  },
+  {
+   "fieldname": "section_content",
+   "fieldtype": "Section Break",
+   "label": "Content & Sessions"
+  },
+  {
+   "fieldname": "q1_content_relevance",
+   "fieldtype": "Int",
+   "label": "Q1: How relevant was the event content to your organisation’s digital transformation journey? (1–5)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "q2_most_valuable_session",
+   "fieldtype": "Long Text",
+   "label": "Q2: Which session or activity did you find most valuable, and why?"
+  },
+  {
+   "fieldname": "q3_topics_not_covered",
+   "fieldtype": "Long Text",
+   "label": "Q3: Were there topics or discussions you expected but didn’t find covered?"
+  },
+  {
+   "fieldname": "section_delivery",
+   "fieldtype": "Section Break",
+   "label": "Delivery & Experience"
+  },
+  {
+   "fieldname": "q4_speaker_quality",
+   "fieldtype": "Int",
+   "label": "Q4: How would you rate the quality and clarity of speakers and facilitators? (1–5)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "q5_technical_experience",
+   "fieldtype": "Int",
+   "label": "Q5: How was your technical experience? (audio, visuals, connectivity, Mentimeter) (1–5)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "q6_mindset_change",
+   "fieldtype": "Select",
+   "label": "Q6: Did the event change how you think about digital transformation in your NS?",
+   "options": "\nYes significantly\nSomewhat\nNo change",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_outcomes",
+   "fieldtype": "Section Break",
+   "label": "Outcomes & Next Steps"
+  },
+  {
+   "fieldname": "q7_concrete_action",
+   "fieldtype": "Long Text",
+   "label": "Q7: What is one concrete action or commitment you are taking away from this event?"
+  },
+  {
+   "fieldname": "q8_followup_interest",
+   "fieldtype": "Select",
+   "label": "Q8: Would your organisation be interested in a follow-up engagement with KRCS on digital transformation?",
+   "options": "\nYes\nMaybe, later\nNo"
+  },
+  {
+   "fieldname": "q9_likelihood_recommend",
+   "fieldtype": "Int",
+   "label": "Q9: How likely are you to recommend this event to a colleague? (1–5)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_reflection",
+   "fieldtype": "Section Break",
+   "label": "Open Reflection"
+  },
+  {
+   "fieldname": "q10_krcs_did_well",
+   "fieldtype": "Long Text",
+   "label": "Q10: What did KRCS do well in organising and delivering this event?"
+  },
+  {
+   "fieldname": "q11_suggestions",
+   "fieldtype": "Long Text",
+   "label": "Q11: What suggestions do you have for future events?"
+  }
+ ],
+ "modified": "2026-09-17 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "Event Feedback",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "submitted_on",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
