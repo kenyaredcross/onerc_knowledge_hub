@@ -307,6 +307,9 @@ export default function EventsIndex() {
                         >
                           {e.medium}
                         </span>
+                        <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-gray-200 text-gray-600 border border-gray-300">
+                          {t('events:ended')}
+                        </span>
                       </div>
                       <h3 className="text-lg font-bold text-gray-900 group-hover:text-dash-red transition-colors mb-2">
                         {e.title}
