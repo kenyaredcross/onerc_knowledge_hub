@@ -47,7 +47,6 @@ export default function EventsIndex() {
   const { data: pastEventsData, isLoading: pastEventsLoading } = useFrappeGetCall(
     "onerc_knowledge_hub.api.events.get_past_events",
     {},
-    showPastEvents ? undefined : { enabled: false } // Only fetch when needed
   );
 
   const { featuredEvent, upcomingEvents } = useMemo(() => {
@@ -68,7 +67,12 @@ export default function EventsIndex() {
     return text.substring(0, limit) + "...";
   };
 
-  if (isLoading) {
+  // When there are no upcoming events, default the view to Past Events
+  // so visitors still see the events that already happened.
+  const hasUpcoming = !!featuredEvent || upcomingEvents.length > 0;
+  const effectiveShowPast = showPastEvents || !hasUpcoming;
+
+  if (isLoading || pastEventsLoading) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-dash-red" />
@@ -76,7 +80,8 @@ export default function EventsIndex() {
     );
   }
 
-  if (!featuredEvent) {
+  // Only bail out when there are no events at all (upcoming or past).
+  if (!hasUpcoming && pastEvents.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-20 text-center">
         <p className="text-gray-500">{t('events:noUpcomingEvents')}</p>
@@ -114,6 +119,7 @@ export default function EventsIndex() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
+        {featuredEvent && (
         <div className="mb-12">
           <div className="flex items-center gap-2 mb-4">
             <Star className="h-3.5 w-3.5 text-dash-red" />
@@ -237,18 +243,20 @@ export default function EventsIndex() {
             </div>
           </div>
         </div>
+        )}
 
         <div className="space-y-6">
           {/* Toggle between Upcoming and Past Events */}
           <div className="flex items-center justify-between pb-3 border-b border-gray-100">
             <h2 className="text-xl font-bold text-gray-900">
-              {showPastEvents ? "Past Events" : "Upcoming Schedule"}
+              {effectiveShowPast ? "Past Events" : "Upcoming Schedule"}
             </h2>
             <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setShowPastEvents(false)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  !showPastEvents
+                disabled={!hasUpcoming}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed ${
+                  !effectiveShowPast
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
@@ -258,7 +266,7 @@ export default function EventsIndex() {
               <button
                 onClick={() => setShowPastEvents(true)}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                  showPastEvents
+                  effectiveShowPast
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-600 hover:text-gray-900"
                 }`}
@@ -269,13 +277,9 @@ export default function EventsIndex() {
           </div>
 
           {/* Events List */}
-          {showPastEvents ? (
+          {effectiveShowPast ? (
             // Past Events
-            pastEventsLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-6 w-6 animate-spin text-dash-red" />
-              </div>
-            ) : pastEvents.length > 0 ? (
+            pastEvents.length > 0 ? (
               <div className="grid gap-4">
                 {pastEvents.map((e: any) => (
                   <Link
@@ -306,6 +310,9 @@ export default function EventsIndex() {
                           className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${formatBadge[e.medium] || "bg-gray-100 text-gray-700"}`}
                         >
                           {e.medium}
+                        </span>
+                        <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-gray-200 text-gray-600 border border-gray-300">
+                          {t('events:ended')}
                         </span>
                       </div>
                       <h3 className="text-lg font-bold text-gray-900 group-hover:text-dash-red transition-colors mb-2">
