@@ -11,7 +11,7 @@ def after_install():
 
 
 def create_custom_roles():
-	"""Create LH Admin, LH User, LH Manager and LH FS Manager roles if they don't exist"""
+	"""Create LH Admin, LH User, LH Manager, LH FS Manager and Delegate Manager roles if they don't exist"""
 
 	roles = [
 		{
@@ -33,6 +33,13 @@ def create_custom_roles():
 			# Grants access to the Financial Sustainability assessment dashboard
 			# (/fs-dashboard) and the FS Assessment doctypes.
 			"role_name": "LH FS Manager",
+			"desk_access": 1,
+			"disabled": 0,
+		},
+		{
+			# The only role that can read Delegate Registration records, which hold
+			# sensitive passport/travel data submitted via /delegate-registration.
+			"role_name": "Delegate Manager",
 			"desk_access": 1,
 			"disabled": 0,
 		},

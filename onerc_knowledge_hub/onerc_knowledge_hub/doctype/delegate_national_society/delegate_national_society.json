@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:society_name",
+ "creation": "2026-07-24 09:00:00.000000",
+ "description": "Reference list of organisations a delegate can register under. Deliberately separate from the \"National Society\" doctype, which holds the Localisation Hub's own member profiles.",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "society_name",
+  "abbreviation",
+  "country",
+  "column_break_cfg",
+  "organisation_type",
+  "display_order",
+  "is_active"
+ ],
+ "fields": [
+  {
+   "description": "Shown to delegates exactly as typed, e.g. \"Kenya Red Cross\".",
+   "fieldname": "society_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "abbreviation",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Abbreviation"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "column_break_cfg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "National Society",
+   "fieldname": "organisation_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Type",
+   "options": "National Society\nIFRC\nICRC\nOther",
+   "reqd": 1
+  },
+  {
+   "default": "10",
+   "description": "Lower numbers are listed first on the registration form. IFRC and ICRC are pinned above the societies, \"Other\" sits last.",
+   "fieldname": "display_order",
+   "fieldtype": "Int",
+   "label": "Display Order"
+  },
+  {
+   "default": "1",
+   "description": "Uncheck to hide from the registration form without deleting existing registrations.",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Active"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-24 09:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "Delegate National Society",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Delegate Manager"
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "display_order",
+ "sort_order": "ASC",
+ "states": [],
+ "track_changes": 1
+}
