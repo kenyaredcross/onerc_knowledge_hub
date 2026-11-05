@@ -178,6 +178,50 @@ def submit_registration(payload):
 	return {"name": doc.name, "boma_requested": boma_requested}
 
 
+@frappe.whitelist(allow_guest=True)
+def get_registration_form_data():
+	"""Config + reference lists for the public registration form (SPA).
+
+	Mirrors the Jinja context built in `www/delegate_registration.py::get_context`
+	so the React page at `/ans-hub/register` renders the same form. Date/time
+	formatting is left to the client.
+	"""
+	settings = _settings()
+	show_sessions = bool(settings.get("show_sessions"))
+
+	sessions = []
+	if show_sessions:
+		sessions = frappe.get_all(
+			"Summit Session",
+			filters={"is_published": 1},
+			fields=[
+				"name",
+				"session_title",
+				"session_date",
+				"start_time",
+				"end_time",
+				"venue",
+				"description",
+			],
+			order_by="display_order asc, session_date asc, start_time asc",
+		)
+
+	return {
+		"event_title": (settings.get("event_title") or "").strip()
+		or "Localisation Alliance for Financial Sustainability - 2026",
+		"boma_hotel_url": (settings.get("boma_hotel_url") or "").strip(),
+		"show_sessions": show_sessions,
+		"national_societies": frappe.get_all(
+			"Delegate National Society",
+			filters={"is_active": 1},
+			fields=["name", "abbreviation"],
+			order_by="display_order asc, name asc",
+		),
+		"countries": frappe.get_all("Country", pluck="name", order_by="name asc"),
+		"sessions": sessions,
+	}
+
+
 def _clean_session_ids(raw):
 	"""Return the subset of submitted session ids that actually exist, de-duplicated."""
 	if not isinstance(raw, list):

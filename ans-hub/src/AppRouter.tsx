@@ -36,6 +36,7 @@ import UsersManagement from "./components/users/UsersManagement.tsx";
 import FeedbackSubmit from "./components/feedback/FeedbackSubmit.tsx";
 import FeedbackAdmin from "./components/feedback/FeedbackAdmin.tsx";
 import EventFeedback from "./components/feedback/EventFeedback.tsx";
+import DelegateRegister from "./components/register/DelegateRegister.tsx";
 
 const AppRouter = () => {
   return (
@@ -50,6 +51,10 @@ const AppRouter = () => {
         <Route path="/pending-approval" element={<PendingApprovalPage />} />
         <Route path="/403" element={<ErrorPage403 />} />
         <Route path="/event-feedback" element={<EventFeedback />} />
+        <Route
+          path="/localisation-alliance-2026"
+          element={<DelegateRegister />}
+        />
 
         {/* Dashboard routes (with sidebar layout) - Protected */}
         <Route element={<ProtectedRoute />}>
