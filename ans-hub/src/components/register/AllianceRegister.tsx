@@ -5,7 +5,8 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 
 // Public (guest) registration for the Localisation Alliance for Financial
 // Sustainability - 2026 event. Served inside the SPA at
-// /ans-hub/localisation-alliance-2026. Captures just the essentials.
+// /ans-hub/localisation-alliance-2026. Writes to its own Alliance Registration
+// doctype — separate from the richer Delegate Registration flow.
 
 const EVENT_NAME = "Localisation Alliance for Financial Sustainability - 2026";
 
@@ -22,7 +23,7 @@ const inputCls =
 const labelCls = "mb-2 block text-sm font-bold text-gray-800";
 const req = <span className="text-dash-red">*</span>;
 
-export default function DelegateRegister() {
+export default function AllianceRegister() {
   const [form, setForm] = useState<RegForm>(emptyForm);
   const [submitted, setSubmitted] = useState<{ name: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,7 +42,7 @@ export default function DelegateRegister() {
   }, []);
 
   const { call: submitRegistration } = useFrappePostCall(
-    "onerc_knowledge_hub.api.registration.submit_registration"
+    "onerc_knowledge_hub.api.alliance_registration.submit_registration"
   );
 
   const set = <K extends keyof RegForm>(key: K, value: RegForm[K]) =>

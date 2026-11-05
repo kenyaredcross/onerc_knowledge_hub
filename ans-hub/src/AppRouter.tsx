@@ -36,7 +36,7 @@ import UsersManagement from "./components/users/UsersManagement.tsx";
 import FeedbackSubmit from "./components/feedback/FeedbackSubmit.tsx";
 import FeedbackAdmin from "./components/feedback/FeedbackAdmin.tsx";
 import EventFeedback from "./components/feedback/EventFeedback.tsx";
-import DelegateRegister from "./components/register/DelegateRegister.tsx";
+import AllianceRegister from "./components/register/AllianceRegister.tsx";
 
 const AppRouter = () => {
   return (
@@ -53,7 +53,7 @@ const AppRouter = () => {
         <Route path="/event-feedback" element={<EventFeedback />} />
         <Route
           path="/localisation-alliance-2026"
-          element={<DelegateRegister />}
+          element={<AllianceRegister />}
         />
 
         {/* Dashboard routes (with sidebar layout) - Protected */}
