@@ -37,8 +37,8 @@ def create_custom_roles():
 			"disabled": 0,
 		},
 		{
-			# The only role that can read Delegate Registration records, which hold
-			# sensitive passport/travel data submitted via /delegate-registration.
+			# The role that can read Delegate Registration records (Localisation
+			# Alliance event registrations submitted via the public form).
 			"role_name": "Delegate Manager",
 			"desk_access": 1,
 			"disabled": 0,
