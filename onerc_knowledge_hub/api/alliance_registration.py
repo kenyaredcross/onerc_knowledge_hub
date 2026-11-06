@@ -17,6 +17,22 @@ from frappe.utils import validate_email_address
 
 
 @frappe.whitelist(allow_guest=True)
+def get_registration_info():
+	"""Public-facing event details for the registration page.
+
+	The agenda PDF, dates and venue are editable in `Alliance Registration
+	Settings` so organisers can update them without a code change.
+	"""
+	settings = frappe.get_cached_doc("Alliance Registration Settings")
+	return {
+		"agenda_url": settings.get("agenda") or None,
+		"event_dates": (settings.get("event_dates") or "").strip() or "9th & 10th November 2026",
+		"venue": (settings.get("venue") or "").strip()
+		or "Ndovu Hall, Boma Hotel - Nairobi, Kenya",
+	}
+
+
+@frappe.whitelist(allow_guest=True)
 def submit_registration(payload):
 	"""Create an Alliance Registration from a public (guest) submission."""
 	data = payload if isinstance(payload, dict) else json.loads(payload or "{}")
