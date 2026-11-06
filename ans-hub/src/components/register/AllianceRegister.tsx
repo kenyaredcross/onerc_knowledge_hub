@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFrappeGetCall, useFrappePostCall } from "frappe-react-sdk";
 import toast from "react-hot-toast";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CalendarDays, CheckCircle2, Download, Loader2, MapPin } from "lucide-react";
 
 // Public (guest) registration for the Localisation Alliance for Financial
 // Sustainability - 2026 event. Served inside the SPA at
@@ -32,6 +32,16 @@ export default function AllianceRegister() {
     "onerc_core.api.organization.get_organization_settings",
     {}
   );
+
+  const { data: infoData } = useFrappeGetCall(
+    "onerc_knowledge_hub.api.alliance_registration.get_registration_info",
+    {}
+  );
+
+  const info = infoData?.message || {};
+  const eventDates = info.event_dates || "9th & 10th November 2026";
+  const venue = info.venue || "Ndovu Hall, Boma Hotel - Nairobi, Kenya";
+  const agendaUrl: string | null = info.agenda_url || null;
 
   const org = orgData?.message || {};
   const logo = org.logo || "/assets/onerc_knowledge_hub/ans-hub/logo.jpg";
@@ -116,6 +126,38 @@ export default function AllianceRegister() {
               {EVENT_NAME}
             </h1>
           </div>
+        </div>
+
+        {/* Event details */}
+        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
+          <div className="flex items-start gap-3">
+            <CalendarDays className="h-5 w-5 shrink-0 text-dash-red" />
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                Dates
+              </p>
+              <p className="text-sm font-semibold text-gray-900">{eventDates}</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-3">
+            <MapPin className="h-5 w-5 shrink-0 text-dash-red" />
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-wider text-gray-400">
+                Venue
+              </p>
+              <p className="text-sm font-semibold text-gray-900">{venue}</p>
+            </div>
+          </div>
+          {agendaUrl && (
+            <a
+              href={agendaUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-dash-red px-4 py-2.5 text-sm font-bold text-dash-red transition-colors hover:bg-dash-red hover:text-white"
+            >
+              <Download className="h-4 w-4" /> Download Agenda
+            </a>
+          )}
         </div>
 
         <form
