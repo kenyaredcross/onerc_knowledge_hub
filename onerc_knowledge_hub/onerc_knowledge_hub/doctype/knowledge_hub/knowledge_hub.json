@@ -13,6 +13,11 @@
   "column_break_top",
   "resource_type",
   "tools_subcategory",
+  "section_presentation",
+  "presented_at_event",
+  "column_break_presentation",
+  "presentation_date",
+  "presenter",
   "section_overview",
   "summary",
   "description",
@@ -72,7 +77,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Resource type",
-   "options": "\nPublication\nReport\nTools & Templates\nUser Manual",
+   "options": "\nPublication\nReport\nPresentation\nTools & Templates\nUser Manual",
    "reqd": 1
   },
   {
@@ -81,6 +86,37 @@
    "fieldtype": "Select",
    "label": "Tools Subcategory",
    "options": "\nStrategy Templates\nInstitutional Policy Templates\nTools & Frameworks\nProposal & Resource Mobilisation Templates"
+  },
+  {
+   "depends_on": "eval:doc.resource_type==\"Presentation\"",
+   "fieldname": "section_presentation",
+   "fieldtype": "Section Break",
+   "label": "Presentation"
+  },
+  {
+   "depends_on": "eval:doc.resource_type==\"Presentation\"",
+   "description": "The event where these slides were presented, e.g. Localisation Alliance Leadership Conference",
+   "fieldname": "presented_at_event",
+   "fieldtype": "Data",
+   "label": "Presented At"
+  },
+  {
+   "depends_on": "eval:doc.resource_type==\"Presentation\"",
+   "fieldname": "column_break_presentation",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.resource_type==\"Presentation\"",
+   "fieldname": "presentation_date",
+   "fieldtype": "Date",
+   "label": "Presentation Date"
+  },
+  {
+   "depends_on": "eval:doc.resource_type==\"Presentation\"",
+   "description": "Who delivered the presentation",
+   "fieldname": "presenter",
+   "fieldtype": "Data",
+   "label": "Presenter"
   },
   {
    "fieldname": "section_overview",
@@ -242,6 +278,43 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "if_owner": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH User",
    "share": 1,
    "write": 1
   }

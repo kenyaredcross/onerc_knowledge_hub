@@ -4,10 +4,16 @@
 import frappe
 
 
+# Roles every approved hub member needs in order to contribute content
+# (news, events, knowledge resources, gallery albums) from inside the hub UI.
+CONTRIBUTOR_ROLES = ("LH User", "LH Manager")
+
+
 def after_install():
 	"""Create custom roles and seed default content after app installation"""
 	create_custom_roles()
 	create_fs_assessment_questions()
+	grant_contributor_roles_to_all_users()
 
 
 def create_custom_roles():
@@ -66,6 +72,84 @@ def setup_roles():
 	frappe.only_for("System Manager")
 	create_custom_roles()
 	return {"message": "Roles setup completed"}
+
+
+def grant_contributor_roles_to_all_users(roles=None):
+	"""Give every registered hub member the roles needed to contribute content.
+
+	The hub was launched with authoring limited to a handful of administrators.
+	Members are expected to upload and share their own events, news, stories,
+	knowledge resources and gallery albums, so every enabled System User that is
+	not a built-in account is granted the contributor roles.
+
+	Idempotent: users who already hold a role are left untouched. Returns a
+	summary so it can be reported back from the UI or a bench command.
+	"""
+	roles = list(roles or CONTRIBUTOR_ROLES)
+
+	# Never hand out a role that does not exist yet (fresh site, partial install).
+	roles = [r for r in roles if frappe.db.exists("Role", r)]
+	if not roles:
+		return {"granted": 0, "users_updated": 0, "skipped": 0, "roles": []}
+
+	# Deliberately not filtered by user_type: Frappe demotes a user with no
+	# desk-access role to "Website User", which is exactly the state the members
+	# who need these roles are in. Every enabled account that is not a built-in
+	# one is a registered hub member. Granting a desk-access role promotes them
+	# back to System User on save.
+	users = frappe.get_all(
+		"User",
+		filters={
+			"enabled": 1,
+			"name": ["not in", ["Administrator", "Guest"]],
+		},
+		pluck="name",
+	)
+
+	granted = 0
+	users_updated = 0
+	skipped = 0
+
+	for user_name in users:
+		missing = [
+			role
+			for role in roles
+			if not frappe.db.exists("Has Role", {"parent": user_name, "role": role})
+		]
+
+		if not missing:
+			skipped += 1
+			continue
+
+		user = frappe.get_doc("User", user_name)
+		for role in missing:
+			user.append("roles", {"role": role})
+		user.save(ignore_permissions=True)
+
+		granted += len(missing)
+		users_updated += 1
+
+	frappe.db.commit()
+
+	return {
+		"granted": granted,
+		"users_updated": users_updated,
+		"skipped": skipped,
+		"roles": roles,
+	}
+
+
+@frappe.whitelist()
+def setup_contributor_access():
+	"""Create the hub roles and grant contributor access to every registered user.
+
+	Safe to re-run. Callable from Desk or via
+	`bench --site <site> execute onerc_knowledge_hub.install.setup_contributor_access`.
+	"""
+	frappe.only_for(["LH Admin", "System Manager"])
+	create_custom_roles()
+	result = grant_contributor_roles_to_all_users()
+	return result
 
 
 @frappe.whitelist()

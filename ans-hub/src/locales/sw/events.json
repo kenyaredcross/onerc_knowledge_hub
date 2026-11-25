@@ -19,5 +19,21 @@
   "newEvent": "Tukio Jipya",
   "upcomingEvents": "Matukio Yanayokuja",
   "showPastEvents": "Onyesha Matukio Yaliyopita",
-  "ended": "Limekamilika"
+  "ended": "Limekamilika",
+  "submitEvent": "Wasilisha tukio",
+  "submitEventSubtitle": "Shiriki mtandao wa mtandaoni, mabadilishano ya wenzako au kongamano na Muungano",
+  "createEvent": "Tengeneza tukio",
+  "creatingEvent": "Inawasilisha tukio...",
+  "eventsUnavailable": "Uwasilishaji wa matukio haupatikani",
+  "myEvents": "Matukio uliyowasilisha",
+  "noMyEvents": "Bado hujawasilisha tukio lolote",
+  "pendingReview": "Inasubiri ukaguzi",
+  "live": "Hewani",
+  "publish": "Chapisha",
+  "unpublish": "Ondoa kwenye uchapishaji",
+  "pendingReviewNotice": "Tukio lako limewasilishwa na linasubiri msimamizi wa hub alichapishe.",
+  "publishImmediately": "Chapisha tukio hili mara moja",
+  "publishImmediatelyHint": "Acha bila kuchagua ili kulihifadhi kwa ukaguzi kwanza.",
+  "titleRequired": "Jina la tukio linahitajika",
+  "optional": "si lazima"
 }

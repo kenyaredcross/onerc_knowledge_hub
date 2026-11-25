@@ -58,5 +58,11 @@
   "submissionError": "Hitilafu ya Uwasilishaji",
   "finalReview": "Ukaguzi wa Mwisho",
   "finalReviewMessage": "Hakikisha sehemu zote zinazohitajika zilizowekwa alama ya * zimejazwa.",
-  "resource": "Rasilimali"
+  "resource": "Rasilimali",
+  "presentation": "Wasilisho",
+  "presentedAt": "Liliwasilishwa katika",
+  "presentationDate": "Tarehe ya wasilisho",
+  "presenter": "Mwasilishaji",
+  "slideDeck": "Slaidi za wasilisho",
+  "allowedSlideTypes": "Inaruhusiwa: PPTX, PPT, PDF, ODP, KEY"
 }

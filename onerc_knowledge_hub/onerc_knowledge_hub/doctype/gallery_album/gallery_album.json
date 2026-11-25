@@ -1,0 +1,235 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ALB-{YYYY}-{####}",
+ "creation": "2026-11-24 09:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "album_title",
+  "album_date",
+  "column_break_top",
+  "category",
+  "pillar",
+  "section_overview",
+  "description",
+  "section_event",
+  "event_name",
+  "location",
+  "column_break_event",
+  "national_society",
+  "event_route",
+  "section_cover",
+  "cover_image",
+  "section_photos",
+  "photos",
+  "section_status",
+  "is_published",
+  "uploaded_by",
+  "column_break_status",
+  "photo_count",
+  "view_count"
+ ],
+ "fields": [
+  {
+   "fieldname": "album_title",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_list_view": 1,
+   "label": "Album Title",
+   "reqd": 1
+  },
+  {
+   "description": "The date the event took place",
+   "fieldname": "album_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Event Date"
+  },
+  {
+   "fieldname": "column_break_top",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Category"
+  },
+  {
+   "fieldname": "pillar",
+   "fieldtype": "Link",
+   "label": "Pillar",
+   "options": "Localization Pillar"
+  },
+  {
+   "fieldname": "section_overview",
+   "fieldtype": "Section Break",
+   "label": "Overview"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_event",
+   "fieldtype": "Section Break",
+   "label": "Event"
+  },
+  {
+   "description": "Name of the event these photos come from, e.g. IoME Peer Learning Event",
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Event Name"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "fieldname": "column_break_event",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "national_society",
+   "fieldtype": "Link",
+   "label": "National Society",
+   "options": "National Society"
+  },
+  {
+   "description": "Optional route of a matching event page, used to link the album to that event",
+   "fieldname": "event_route",
+   "fieldtype": "Data",
+   "label": "Event Route"
+  },
+  {
+   "fieldname": "section_cover",
+   "fieldtype": "Section Break",
+   "label": "Cover"
+  },
+  {
+   "description": "Leave empty to use the first photo in the album",
+   "fieldname": "cover_image",
+   "fieldtype": "Attach Image",
+   "label": "Cover Image"
+  },
+  {
+   "fieldname": "section_photos",
+   "fieldtype": "Section Break",
+   "label": "Photos"
+  },
+  {
+   "fieldname": "photos",
+   "fieldtype": "Table",
+   "label": "Photos",
+   "options": "Gallery Photo"
+  },
+  {
+   "fieldname": "section_status",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Published"
+  },
+  {
+   "fieldname": "uploaded_by",
+   "fieldtype": "Link",
+   "label": "Uploaded By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_status",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "photo_count",
+   "fieldtype": "Int",
+   "label": "Photo Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "view_count",
+   "fieldtype": "Int",
+   "label": "View Count",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "image_field": "cover_image",
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-11-24 09:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Onerc Knowledge Hub",
+ "name": "Gallery Album",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "if_owner": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "LH User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "search_fields": "event_name,album_date",
+ "show_title_field_in_link": 1,
+ "sort_field": "album_date",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "album_title",
+ "track_changes": 1
+}

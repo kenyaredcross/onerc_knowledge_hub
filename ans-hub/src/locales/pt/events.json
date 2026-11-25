@@ -19,5 +19,21 @@
   "newEvent": "Novo Evento",
   "upcomingEvents": "Eventos Próximos",
   "showPastEvents": "Mostrar Eventos Passados",
-  "ended": "Encerrado"
+  "ended": "Encerrado",
+  "submitEvent": "Submeter um evento",
+  "submitEventSubtitle": "Partilhe um webinar, intercâmbio entre pares ou conferência com a Aliança",
+  "createEvent": "Criar evento",
+  "creatingEvent": "A submeter evento...",
+  "eventsUnavailable": "A submissão de eventos está indisponível",
+  "myEvents": "Eventos que submeteu",
+  "noMyEvents": "Ainda não submeteu nenhum evento",
+  "pendingReview": "Aguarda revisão",
+  "live": "Publicado",
+  "publish": "Publicar",
+  "unpublish": "Despublicar",
+  "pendingReviewNotice": "O seu evento foi submetido e aguarda publicação por um gestor do hub.",
+  "publishImmediately": "Publicar este evento imediatamente",
+  "publishImmediatelyHint": "Deixe desativado para guardar primeiro para revisão.",
+  "titleRequired": "O título do evento é obrigatório",
+  "optional": "opcional"
 }

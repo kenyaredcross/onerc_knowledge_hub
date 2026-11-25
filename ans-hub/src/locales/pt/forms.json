@@ -58,5 +58,11 @@
   "submissionError": "Erro de Submissão",
   "finalReview": "Revisão Final",
   "finalReviewMessage": "Certifique-se de que todos os campos obrigatórios marcados com * estão preenchidos.",
-  "resource": "Recurso"
+  "resource": "Recurso",
+  "presentation": "Apresentação",
+  "presentedAt": "Apresentado em",
+  "presentationDate": "Data da apresentação",
+  "presenter": "Apresentador",
+  "slideDeck": "Diapositivos",
+  "allowedSlideTypes": "Permitido: PPTX, PPT, PDF, ODP, KEY"
 }

@@ -14,5 +14,15 @@
   "noUpcomingEvents": "Aucun événement à venir",
   "noFeaturedResources": "Aucune ressource en vedette disponible",
   "checkBackLater": "Revenez plus tard pour les ressources de connaissances",
-  "resource": "Ressource"
+  "resource": "Ressource",
+  "newHere": "Nouveau ici ?",
+  "introVideoTitle": "Bienvenue sur le Hub de localisation",
+  "introVideoDescription": "Une courte visite du hub : les quatre piliers, le contenu de chaque section et la façon de partager vos propres événements, récits et ressources.",
+  "introVideoComingSoon": "Vidéo d'introduction à venir",
+  "introVideoComingSoonHint": "Un administrateur peut l'ajouter dans les paramètres du hub.",
+  "waysToContribute": "Comment contribuer",
+  "contributeNews": "Publiez des actualités et récits de votre Société nationale",
+  "contributeEvents": "Partagez un webinaire, un échange entre pairs ou une conférence",
+  "contributeKnowledge": "Téléversez des rapports, des boîtes à outils et des diaporamas",
+  "contributeGallery": "Créez un album photo à partir d'un événement"
 }

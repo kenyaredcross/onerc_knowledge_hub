@@ -50,8 +50,10 @@ export default {
 				"dash-border": "#e5e7eb",
 				"dash-card": "#ffffff",
 				/* ── Pillar tokens ── */
+				/* Leadership & Governance is purple per the agreed four-pillar colour coding.
+				   Keep this in sync with --pillar-leadership in src/index.css. */
 				"pillar-leadership": {
-					DEFAULT: "oklch(0.35 0.08 257)",
+					DEFAULT: "oklch(0.45 0.18 300)",
 					foreground: "oklch(0.98 0 0)",
 				},
 				"pillar-branch": {

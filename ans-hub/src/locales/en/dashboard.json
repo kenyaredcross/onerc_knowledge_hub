@@ -14,5 +14,15 @@
   "noUpcomingEvents": "No upcoming events",
   "noFeaturedResources": "No featured resources available",
   "checkBackLater": "Check back later for knowledge resources",
-  "resource": "Resource"
+  "resource": "Resource",
+  "newHere": "New here?",
+  "introVideoTitle": "Welcome to the Localisation Hub",
+  "introVideoDescription": "A short tour of the hub: the four pillars, what you will find in each section, and how to share your own events, stories and resources.",
+  "introVideoComingSoon": "Introductory video coming soon",
+  "introVideoComingSoonHint": "An administrator can add it in Localization Hub Settings.",
+  "waysToContribute": "Ways to contribute",
+  "contributeNews": "Post news and stories from your National Society",
+  "contributeEvents": "Share a webinar, peer exchange or conference",
+  "contributeKnowledge": "Upload reports, toolkits and presentation slides",
+  "contributeGallery": "Create a photo album from an event"
 }

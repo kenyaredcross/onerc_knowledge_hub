@@ -19,5 +19,21 @@
   "newEvent": "New Event",
   "upcomingEvents": "Upcoming Events",
   "showPastEvents": "Show Past Events",
-  "ended": "Ended"
+  "ended": "Ended",
+  "submitEvent": "Submit an event",
+  "submitEventSubtitle": "Share a webinar, peer exchange or conference with the Alliance",
+  "createEvent": "Create event",
+  "creatingEvent": "Submitting event...",
+  "eventsUnavailable": "Event submission is unavailable",
+  "myEvents": "Events you submitted",
+  "noMyEvents": "You have not submitted any events yet",
+  "pendingReview": "Pending review",
+  "live": "Live",
+  "publish": "Publish",
+  "unpublish": "Unpublish",
+  "pendingReviewNotice": "Your event was submitted and is waiting for a hub manager to publish it.",
+  "publishImmediately": "Publish this event immediately",
+  "publishImmediatelyHint": "Leave this off to save it for review first.",
+  "titleRequired": "An event title is required",
+  "optional": "optional"
 }

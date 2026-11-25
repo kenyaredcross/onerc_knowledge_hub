@@ -14,5 +14,15 @@
   "noUpcomingEvents": "Hakuna matukio yanayokuja",
   "noFeaturedResources": "Hakuna rasilimali maalum zinazopatikana",
   "checkBackLater": "Rudi tena baadaye kwa rasilimali za maarifa",
-  "resource": "Rasilimali"
+  "resource": "Rasilimali",
+  "newHere": "Ni mgeni hapa?",
+  "introVideoTitle": "Karibu kwenye Kituo cha Ujanibishaji",
+  "introVideoDescription": "Mwongozo mfupi wa kituo: nguzo nne, unachokipata katika kila sehemu, na jinsi ya kushiriki matukio, hadithi na nyenzo zako.",
+  "introVideoComingSoon": "Video ya utangulizi inakuja hivi karibuni",
+  "introVideoComingSoonHint": "Msimamizi anaweza kuiongeza kwenye mipangilio ya kituo.",
+  "waysToContribute": "Njia za kushiriki",
+  "contributeNews": "Chapisha habari na hadithi kutoka Chama chako cha Kitaifa",
+  "contributeEvents": "Shiriki mtandao wa mtandaoni, mabadilishano ya wenzako au kongamano",
+  "contributeKnowledge": "Weka ripoti, zana na slaidi za mawasilisho",
+  "contributeGallery": "Tengeneza albamu ya picha kutoka tukio"
 }

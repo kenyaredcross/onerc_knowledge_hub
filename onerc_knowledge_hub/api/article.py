@@ -135,6 +135,8 @@ def get_articles_filtered(include_drafts=0):
 	return published
 
 
+CONTRIBUTOR_ROLES = ("LH User", "LH Manager", "LH Admin", "System Manager")
+
 ARTICLE_EDITABLE_FIELDS = [
 	"title", "subtitle", "article_type", "category", "pillar", "location",
 	"summary", "body", "cover_image", "source_name", "source_url",
@@ -189,5 +191,56 @@ def publish_article(name):
 	doc.status = "Published"
 	doc.save(ignore_permissions=True)
 	doc.submit()
+
+	return {"name": doc.name, "status": doc.status}
+
+
+def can_contribute_articles(user=None):
+	"""True when the user may create news and stories."""
+	roles = frappe.get_roles(user or frappe.session.user)
+	return any(role in roles for role in CONTRIBUTOR_ROLES)
+
+
+@frappe.whitelist()
+def create_article(fields=None, **args):
+	"""Create a draft Article from the hub UI.
+
+	The Article doctype lives in another app and only grants create permission to
+	System Manager, so members could not post news from the hub. Creation runs
+	here instead: the caller's contributor role is checked, the payload is
+	limited to the editable fields, and authorship is forced to the session user
+	so nobody can post under someone else's name.
+	"""
+	import json
+
+	if frappe.session.user == "Guest" or not can_contribute_articles():
+		frappe.throw(
+			frappe._("You need contributor access to post news and stories"),
+			frappe.PermissionError,
+		)
+
+	data = fields if fields is not None else args
+	if isinstance(data, str):
+		data = json.loads(data or "{}")
+
+	data = frappe._dict(data or {})
+	for key in ("cmd", "csrf_token", "doctype", "name"):
+		data.pop(key, None)
+
+	if not (data.get("title") or "").strip():
+		frappe.throw(frappe._("Article title is required"))
+
+	doc = frappe.new_doc("Article")
+	for field in ARTICLE_EDITABLE_FIELDS:
+		value = data.get(field)
+		if field in data and value not in (None, ""):
+			doc.set(field, value)
+
+	# Articles are published through publish_article, which applies its own
+	# checks, so a new document always starts as a draft.
+	doc.status = "Draft"
+	doc.author = frappe.session.user
+
+	doc.insert(ignore_permissions=True)
 
 	return {"name": doc.name, "status": doc.status}

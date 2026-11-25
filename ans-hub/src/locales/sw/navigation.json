@@ -3,6 +3,7 @@
   "newsStories": "Habari na Hadithi",
   "events": "Matukio",
   "knowledgeHub": "Kituo cha Maarifa",
+  "gallery": "Matunzio",
   "learningHub": "Kituo cha Kujifunza",
   "nationalSocieties": "Jumuiya za Kitaifa",
   "pillars": "Nguzo",
@@ -18,5 +19,6 @@
   "feedbackAdmin": "Mawasilisho ya Maoni",
   "faqs": "Maswali Yanayoulizwa Mara kwa Mara",
   "desk": "Dawati",
-  "hub": "Kituo"
+  "hub": "Kituo",
+  "galleryAlbum": "Albamu ya Picha"
 }

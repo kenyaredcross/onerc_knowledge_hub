@@ -218,6 +218,7 @@ export default function NewsIndex() {
   // Category to color mapping
   const categoryColorMap: Record<string, string> = {
     "Leadership": "bg-pillar-leadership",
+    "Leadership & Governance": "bg-pillar-leadership",
     "Branch Development": "bg-pillar-branch",
     "Resource Mobilisation": "bg-pillar-resource",
     "Finance Development": "bg-pillar-finance",

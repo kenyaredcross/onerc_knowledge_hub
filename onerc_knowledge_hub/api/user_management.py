@@ -119,8 +119,13 @@ def approve_user(localisation_hub_user, send_email=True):
 
 	user.insert(ignore_permissions=True)
 
-	# Add default role (customize as needed)
-	user.add_roles("Localisation Hub User Role")
+	# Newly approved members get contributor access so they can upload and share
+	# content (news, events, knowledge resources, gallery albums) straight away.
+	from onerc_knowledge_hub.install import CONTRIBUTOR_ROLES
+
+	roles_to_add = [r for r in CONTRIBUTOR_ROLES if frappe.db.exists("Role", r)]
+	if roles_to_add:
+		user.add_roles(*roles_to_add)
 
 	# Update Localisation Hub User
 	lhu.status = "Approved"

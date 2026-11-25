@@ -3,6 +3,7 @@
   "newsStories": "News & Stories",
   "events": "Events",
   "knowledgeHub": "Knowledge Hub",
+  "gallery": "Gallery",
   "learningHub": "Learning Hub",
   "nationalSocieties": "National Societies",
   "pillars": "Pillars",
@@ -18,5 +19,6 @@
   "feedbackAdmin": "Feedback Submissions",
   "faqs": "FAQs",
   "desk": "Desk",
-  "hub": "Hub"
+  "hub": "Hub",
+  "galleryAlbum": "Gallery Album"
 }

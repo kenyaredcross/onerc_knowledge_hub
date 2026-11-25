@@ -4,6 +4,7 @@ import {
   Download,
   FileText,
   Folder,
+  Presentation,
   Grid3X3,
   List,
   Loader2,
@@ -33,6 +34,9 @@ interface KnowledgeEntry {
   view_count: number;
   is_highlighted?: boolean;
   route?: string;
+  presented_at_event?: string | null;
+  presentation_date?: string | null;
+  presenter?: string | null;
 }
 
 const getResourceIcon = (type: string) => {
@@ -41,6 +45,8 @@ const getResourceIcon = (type: string) => {
       return BookOpen;
     case "Report":
       return FileText;
+    case "Presentation":
+      return Presentation;
     case "Tools & Templates":
       return Folder;
     case "User Manual":
@@ -56,6 +62,8 @@ const getResourceColor = (type: string) => {
       return "text-blue-600 bg-blue-50";
     case "Report":
       return "text-emerald-600 bg-emerald-50";
+    case "Presentation":
+      return "text-amber-600 bg-amber-50";
     case "Tools & Templates":
       return "text-purple-600 bg-purple-50";
     case "User Manual":
@@ -91,7 +99,13 @@ export default function Knowledge() {
 
   // Get folder types for filtering
   const folderTypes = useMemo(() => {
-    const types = ["Publication", "Report", "Tools & Templates", "User Manual"];
+    const types = [
+      "Publication",
+      "Report",
+      "Presentation",
+      "Tools & Templates",
+      "User Manual",
+    ];
     return types.map((type) => ({
       name: type,
       count: entries.filter((e) => e.resource_type === type).length,
@@ -250,6 +264,12 @@ export default function Knowledge() {
                           <p className="truncate text-xs text-gray-500">
                             {entry.resource_type}
                           </p>
+                          {entry.resource_type === "Presentation" &&
+                            entry.presented_at_event && (
+                              <p className="truncate text-xs text-amber-700">
+                                {entry.presented_at_event}
+                              </p>
+                            )}
                         </div>
                       </div>
                       <div className="col-span-2 flex items-center text-sm text-gray-600">
