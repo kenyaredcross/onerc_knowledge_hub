@@ -12,8 +12,11 @@ import json
 import frappe
 from frappe import _
 
-CONTRIBUTOR_ROLES = ("LH User", "LH Manager", "LH Admin", "System Manager")
-MANAGER_ROLES = ("LH Manager", "LH Admin", "System Manager")
+# Creating an album is a manager-and-above action.
+ALBUM_CREATOR_ROLES = ("LH Manager", "LH Admin", "System Manager")
+
+# Managing somebody else's album stays with the administrators.
+ALBUM_ADMIN_ROLES = ("LH Admin", "System Manager")
 
 ALBUM_LIST_FIELDS = [
 	"name",
@@ -61,19 +64,19 @@ def _roles(user=None):
 def is_manager(user=None):
 	"""True when the user may manage every album, not only their own."""
 	roles = _roles(user)
-	return any(role in roles for role in MANAGER_ROLES)
+	return any(role in roles for role in ALBUM_ADMIN_ROLES)
 
 
 def can_contribute(user=None):
 	"""True when the user may create albums and upload photos."""
 	roles = _roles(user)
-	return any(role in roles for role in CONTRIBUTOR_ROLES)
+	return any(role in roles for role in ALBUM_CREATOR_ROLES)
 
 
 def _require_contributor():
 	if frappe.session.user == "Guest" or not can_contribute():
 		frappe.throw(
-			_("You need contributor access to add gallery content"),
+			_("Only hub managers and administrators can add gallery albums"),
 			frappe.PermissionError,
 		)
 
@@ -83,6 +86,7 @@ def _load_album_for_write(album):
 	_require_contributor()
 
 	doc = frappe.get_doc("Gallery Album", album)
+
 
 	if not is_manager() and doc.owner != frappe.session.user:
 		frappe.throw(_("You can only change albums you created"), frappe.PermissionError)
@@ -135,7 +139,7 @@ def get_albums(include_unpublished=0, category=None, event_name=None):
 		ignore_permissions=True,
 	)
 
-	if frappe.utils.cint(include_unpublished) and can_contribute():
+	if frappe.utils.cint(include_unpublished) and (can_contribute() or is_manager()):
 		draft_filters = {**filters, "is_published": 0}
 		if not is_manager():
 			draft_filters["owner"] = frappe.session.user

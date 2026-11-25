@@ -12,10 +12,16 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { formatAlbumDate, type GalleryAlbum } from "../../lib/gallery";
+import {
+  hasAnyRole,
+  MANAGER_ROLES,
+  useRoles,
+} from "../auth/RoleRoute";
 
 export default function GalleryIndex() {
   const { t } = useTranslation(["gallery", "common"]);
   const [eventFilter, setEventFilter] = useState<string>("all");
+  const canCreateAlbum = hasAnyRole(useRoles(), MANAGER_ROLES);
 
   const { data, isLoading } = useFrappeGetCall<{ message: GalleryAlbum[] }>(
     "onerc_knowledge_hub.api.gallery.get_albums",
@@ -78,13 +84,15 @@ export default function GalleryIndex() {
                 </p>
               )}
             </div>
-            <Link
-              to="/create/album"
-              className="inline-flex items-center gap-2 self-start rounded bg-dash-red px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-dash-red/90"
-            >
-              <Plus className="h-4 w-4" />
-              {t("gallery:newAlbum")}
-            </Link>
+            {canCreateAlbum && (
+              <Link
+                to="/create/album"
+                className="inline-flex items-center gap-2 self-start rounded bg-dash-red px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-dash-red/90"
+              >
+                <Plus className="h-4 w-4" />
+                {t("gallery:newAlbum")}
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -128,13 +136,15 @@ export default function GalleryIndex() {
             <p className="mx-auto mt-1 max-w-sm text-sm text-gray-500">
               {t("gallery:noAlbumsHint")}
             </p>
-            <Link
-              to="/create/album"
-              className="mt-6 inline-flex items-center gap-2 rounded bg-dash-red px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-dash-red/90"
-            >
-              <Plus className="h-4 w-4" />
-              {t("gallery:newAlbum")}
-            </Link>
+            {canCreateAlbum && (
+              <Link
+                to="/create/album"
+                className="mt-6 inline-flex items-center gap-2 rounded bg-dash-red px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-dash-red/90"
+              >
+                <Plus className="h-4 w-4" />
+                {t("gallery:newAlbum")}
+              </Link>
+            )}
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
