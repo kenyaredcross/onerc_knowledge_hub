@@ -9,7 +9,6 @@
   "album_title",
   "album_date",
   "column_break_top",
-  "category",
   "pillar",
   "section_overview",
   "description",
@@ -49,12 +48,6 @@
   {
    "fieldname": "column_break_top",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "category",
-   "fieldtype": "Link",
-   "label": "Category",
-   "options": "Category"
   },
   {
    "fieldname": "pillar",

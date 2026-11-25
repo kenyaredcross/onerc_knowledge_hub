@@ -49,7 +49,7 @@
   "toolsFrameworks": "Tools & Frameworks",
   "proposalResourceMobilisationTemplates": "Proposal & Resource Mobilisation Templates",
   "contentAccess": "Content & Access",
-  "allowedFileTypes": "Only PDF, PNG, JPG, JPEG files allowed.",
+  "allowedFileTypes": "Allowed: PDF, Word, PowerPoint, Excel and images.",
   "impactReporting": "Impact Reporting",
   "reportImpactQuestion": "Do you want to report Impact?",
   "yes": "Yes",
@@ -63,6 +63,5 @@
   "presentedAt": "Presented at",
   "presentationDate": "Presentation date",
   "presenter": "Presenter",
-  "slideDeck": "Slide deck",
-  "allowedSlideTypes": "Allowed: PPTX, PPT, PDF, ODP, KEY"
+  "slideDeck": "Slide deck"
 }

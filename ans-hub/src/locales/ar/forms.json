@@ -49,7 +49,7 @@
   "toolsFrameworks": "الأدوات والأطر",
   "proposalResourceMobilisationTemplates": "قوالب المقترحات وتعبئة الموارد",
   "contentAccess": "المحتوى والوصول",
-  "allowedFileTypes": "يُسمح فقط بملفات PDF و PNG و JPG و JPEG.",
+  "allowedFileTypes": "المسموح: PDF وWord وPowerPoint وExcel والصور.",
   "impactReporting": "التقارير عن الأثر",
   "reportImpactQuestion": "هل تريد الإبلاغ عن الأثر؟",
   "yes": "نعم",
@@ -63,6 +63,5 @@
   "presentedAt": "قُدِّم في",
   "presentationDate": "تاريخ العرض",
   "presenter": "مُقدِّم العرض",
-  "slideDeck": "ملف العرض التقديمي",
-  "allowedSlideTypes": "المسموح: PPTX وPPT وPDF وODP وKEY"
+  "slideDeck": "ملف العرض التقديمي"
 }

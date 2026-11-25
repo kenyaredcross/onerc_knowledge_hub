@@ -17,12 +17,27 @@ import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
 import { RichTextEditor } from "../fields/RichTextEditor";
 import { useTranslation } from 'react-i18next';
 
-const DEFAULT_ATTACHMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg";
-
-// Slide decks are uploaded in their native format, not just as PDF exports.
-const ATTACHMENT_ACCEPT: Record<string, string> = {
-  Presentation: ".pptx,.ppt,.pdf,.odp,.key",
-};
+/* Resources are contributed in whatever format they were authored in, so Word
+   documents, slide decks and spreadsheets are accepted alongside PDFs, not only
+   PDF exports of them. One list for every resource type: restricting it per type
+   only blocks a report that happens to arrive as a deck, or the other way round. */
+const ATTACHMENT_ACCEPT = [
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".odt",
+  ".ppt",
+  ".pptx",
+  ".odp",
+  ".key",
+  ".xls",
+  ".xlsx",
+  ".csv",
+  ".ods",
+  ".png",
+  ".jpg",
+  ".jpeg",
+].join(",");
 
 export default function NewKnowledge() {
   const { t } = useTranslation(['forms', 'common']);
@@ -308,13 +323,11 @@ export default function NewKnowledge() {
                   }
                   value={form.file_attachment}
                   doctype="Knowledge Hub"
-                  accept={ATTACHMENT_ACCEPT[form.resource_type] ?? DEFAULT_ATTACHMENT_ACCEPT}
+                  accept={ATTACHMENT_ACCEPT}
                   onChange={(url) => updateField("file_attachment", url ?? "")}
                 />
                 <p className="text-[11px] text-gray-500 ml-2 mt-1">
-                  {form.resource_type === "Presentation"
-                    ? t('forms:allowedSlideTypes')
-                    : t('forms:allowedFileTypes')}
+                  {t('forms:allowedFileTypes')}
                 </p>
               </div>
               <div>

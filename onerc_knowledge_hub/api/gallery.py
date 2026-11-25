@@ -22,7 +22,6 @@ ALBUM_LIST_FIELDS = [
 	"name",
 	"album_title",
 	"album_date",
-	"category",
 	"pillar",
 	"description",
 	"event_name",
@@ -42,7 +41,6 @@ ALBUM_LIST_FIELDS = [
 ALBUM_EDITABLE_FIELDS = (
 	"album_title",
 	"album_date",
-	"category",
 	"pillar",
 	"description",
 	"event_name",
@@ -118,7 +116,7 @@ def _parse_photos(photos):
 # Reads
 # --------------------------------------------------------------------------- #
 @frappe.whitelist()
-def get_albums(include_unpublished=0, category=None, event_name=None):
+def get_albums(include_unpublished=0, event_name=None):
 	"""List albums, newest event first.
 
 	Unpublished albums are hidden unless the caller asks for them and may see
@@ -126,8 +124,6 @@ def get_albums(include_unpublished=0, category=None, event_name=None):
 	"""
 	filters = {}
 
-	if category:
-		filters["category"] = category
 	if event_name:
 		filters["event_name"] = event_name
 
@@ -244,24 +240,23 @@ def get_album(name):
 
 @frappe.whitelist()
 def get_album_filters():
-	"""Categories and event names that actually have published albums."""
+	"""Event names that actually have published albums.
+
+	Albums are grouped by the event they came from, not by category.
+	"""
 	albums = frappe.get_all(
 		"Gallery Album",
 		filters={"is_published": 1},
-		fields=["category", "event_name"],
+		fields=["event_name"],
 		ignore_permissions=True,
 	)
 
-	categories = {}
 	events = {}
 	for album in albums:
-		if album.category:
-			categories[album.category] = categories.get(album.category, 0) + 1
 		if album.event_name:
 			events[album.event_name] = events.get(album.event_name, 0) + 1
 
 	return {
-		"categories": [{"name": k, "count": v} for k, v in sorted(categories.items())],
 		"events": [{"name": k, "count": v} for k, v in sorted(events.items())],
 	}
 

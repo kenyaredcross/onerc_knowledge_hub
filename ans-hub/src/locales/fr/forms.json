@@ -49,7 +49,7 @@
   "toolsFrameworks": "Outils et Cadres",
   "proposalResourceMobilisationTemplates": "Modèles de Proposition et de Mobilisation de Ressources",
   "contentAccess": "Contenu et Accès",
-  "allowedFileTypes": "Seuls les fichiers PDF, PNG, JPG, JPEG sont autorisés.",
+  "allowedFileTypes": "Formats acceptés : PDF, Word, PowerPoint, Excel et images.",
   "impactReporting": "Rapport d'Impact",
   "reportImpactQuestion": "Souhaitez-vous signaler un impact?",
   "yes": "Oui",
@@ -63,6 +63,5 @@
   "presentedAt": "Présenté lors de",
   "presentationDate": "Date de la présentation",
   "presenter": "Intervenant",
-  "slideDeck": "Diaporama",
-  "allowedSlideTypes": "Formats acceptés : PPTX, PPT, PDF, ODP, KEY"
+  "slideDeck": "Diaporama"
 }

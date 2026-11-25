@@ -49,7 +49,7 @@
   "toolsFrameworks": "Zana na Mifumo",
   "proposalResourceMobilisationTemplates": "Violezo vya Mapendekezo na Uhamasishaji wa Rasilimali",
   "contentAccess": "Maudhui na Ufikiaji",
-  "allowedFileTypes": "Faili za PDF, PNG, JPG, JPEG tu zinakubaliwa.",
+  "allowedFileTypes": "Inaruhusiwa: PDF, Word, PowerPoint, Excel na picha.",
   "impactReporting": "Kuripoti Athari",
   "reportImpactQuestion": "Je, unataka kuripoti Athari?",
   "yes": "Ndiyo",
@@ -63,6 +63,5 @@
   "presentedAt": "Liliwasilishwa katika",
   "presentationDate": "Tarehe ya wasilisho",
   "presenter": "Mwasilishaji",
-  "slideDeck": "Slaidi za wasilisho",
-  "allowedSlideTypes": "Inaruhusiwa: PPTX, PPT, PDF, ODP, KEY"
+  "slideDeck": "Slaidi za wasilisho"
 }

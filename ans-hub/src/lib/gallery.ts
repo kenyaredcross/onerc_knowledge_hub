@@ -2,7 +2,6 @@ export type GalleryAlbum = {
   name: string;
   album_title: string;
   album_date: string | null;
-  category: string | null;
   pillar: string | null;
   description: string | null;
   event_name: string | null;

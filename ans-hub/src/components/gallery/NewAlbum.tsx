@@ -28,7 +28,6 @@ export default function NewAlbum() {
     album_date: "",
     location: "",
     description: "",
-    category: "",
     national_society: "",
     cover_image: "",
     is_published: 1,
@@ -200,16 +199,6 @@ export default function NewAlbum() {
                   onChange={(e) => updateField("location", e.target.value)}
                   placeholder="Nairobi, Kenya"
                   className={inputClass}
-                />
-              </div>
-
-              <div>
-                <LinkField
-                  doctype="Category"
-                  label={t("forms:category")}
-                  value={form.category}
-                  onChange={(val) => updateField("category", val)}
-                  {...linkFieldClasses}
                 />
               </div>
 
