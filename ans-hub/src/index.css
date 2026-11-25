@@ -36,6 +36,8 @@
     --pillar-resource-foreground: oklch(0.98 0 0);
     --pillar-finance: oklch(0.5 0.14 155);
     --pillar-finance-foreground: oklch(0.98 0 0);
+    --pillar-default: oklch(0.35 0.08 257);
+    --pillar-default-foreground: oklch(0.98 0 0);
 
     --gradient-hero: linear-gradient(135deg, oklch(0.18 0.06 257) 0%, oklch(0.221 0.067 257) 55%, oklch(0.45 0.2 27) 100%);
     --gradient-earth: linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.96 0.01 250) 100%);

@@ -152,7 +152,7 @@ export default function Home() {
       category: resource.category || resource.resource_type,
       file_type: resource.resource_type,
       published_date: resource.published_date,
-      pillar: resource.category?.toLowerCase() || 'blue',
+      pillar: resource.category?.toLowerCase() || 'default',
     }));
   }, [knowledgeData]);
 
@@ -243,12 +243,12 @@ export default function Home() {
                   >
                     <div className="flex">
                       {/* Color bar */}
-                      <div className={`w-2 ${pillarColor[n.color || 'blue']}`}></div>
+                      <div className={`w-2 ${pillarColor[n.color] ?? pillarColor.default}`}></div>
 
                       {/* Content */}
                       <div className="flex-1 p-6">
                         <div className="flex items-start justify-between gap-4 mb-3">
-                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${pillarColor[n.color || 'blue']}`}>
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${pillarColor[n.color] ?? pillarColor.default}`}>
                             {n.tag || 'Update'}
                           </span>
                           <div className="flex items-center gap-4 text-xs text-gray-500">
@@ -370,7 +370,7 @@ export default function Home() {
                   className="bg-white rounded border border-gray-200 p-5 shadow-sm hover:shadow-md transition-all cursor-pointer"
                 >
                   <div className="flex items-start gap-3 mb-4">
-                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded ${pillarColor[pub.pillar || 'blue']}`}>
+                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded ${pillarColor[pub.pillar] ?? pillarColor.default}`}>
                       <BookOpen className="h-6 w-6 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">

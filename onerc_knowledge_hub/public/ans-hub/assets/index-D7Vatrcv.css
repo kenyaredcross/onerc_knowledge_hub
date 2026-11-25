@@ -532,6 +532,8 @@ video {
     --pillar-resource-foreground: oklch(0.98 0 0);
     --pillar-finance: oklch(0.5 0.14 155);
     --pillar-finance-foreground: oklch(0.98 0 0);
+    --pillar-default: oklch(0.35 0.08 257);
+    --pillar-default-foreground: oklch(0.98 0 0);
 
     --gradient-hero: linear-gradient(135deg, oklch(0.18 0.06 257) 0%, oklch(0.221 0.067 257) 55%, oklch(0.45 0.2 27) 100%);
     --gradient-earth: linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.96 0.01 250) 100%);
@@ -2286,6 +2288,9 @@ video {
 .bg-pillar-branch {
   background-color: oklch(0.605 0.232 27);
 }
+.bg-pillar-default {
+  background-color: oklch(0.35 0.08 257);
+}
 .bg-pillar-finance {
   background-color: oklch(0.5 0.14 155);
 }
@@ -3071,6 +3076,9 @@ video {
   color: rgb(194 65 12 / var(--tw-text-opacity, 1));
 }
 .text-pillar-branch-foreground {
+  color: oklch(0.98 0 0);
+}
+.text-pillar-default-foreground {
   color: oklch(0.98 0 0);
 }
 .text-pillar-finance-foreground {

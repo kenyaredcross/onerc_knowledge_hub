@@ -156,6 +156,8 @@ export const pillarColor: Record<string, string> = {
   branch: "bg-pillar-branch text-pillar-branch-foreground",
   resource: "bg-pillar-resource text-pillar-resource-foreground",
   finance: "bg-pillar-finance text-pillar-finance-foreground",
+  // Used for content with no pillar; never a real pillar's colour.
+  default: "bg-pillar-default text-pillar-default-foreground",
 };
 
 export type Publication = {
