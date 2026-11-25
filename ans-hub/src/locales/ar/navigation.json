@@ -3,6 +3,7 @@
   "newsStories": "الأخبار والقصص",
   "events": "الفعاليات",
   "knowledgeHub": "مركز المعرفة",
+  "gallery": "معرض الصور",
   "learningHub": "مركز التعلم",
   "nationalSocieties": "الجمعيات الوطنية",
   "pillars": "المحاور",
@@ -18,5 +19,6 @@
   "feedbackAdmin": "تقديمات التغذية الراجعة",
   "faqs": "الأسئلة الشائعة",
   "desk": "المكتب",
-  "hub": "المركز"
+  "hub": "المركز",
+  "galleryAlbum": "ألبوم صور"
 }

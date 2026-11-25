@@ -5,7 +5,15 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "terms_and_conditions"
+  "terms_and_conditions",
+  "section_intro_video",
+  "show_intro_video",
+  "intro_video_title",
+  "intro_video_description",
+  "column_break_intro_video",
+  "intro_video_url",
+  "intro_video_file",
+  "intro_video_poster"
  ],
  "fields": [
   {
@@ -13,6 +21,56 @@
    "fieldtype": "Link",
    "label": "Terms and Conditions",
    "options": "Terms and Conditions"
+  },
+  {
+   "fieldname": "section_intro_video",
+   "fieldtype": "Section Break",
+   "label": "Introductory Video"
+  },
+  {
+   "default": "1",
+   "fieldname": "show_intro_video",
+   "fieldtype": "Check",
+   "label": "Show introductory video on the Overview page"
+  },
+  {
+   "default": "Welcome to the Localisation Hub",
+   "depends_on": "show_intro_video",
+   "fieldname": "intro_video_title",
+   "fieldtype": "Data",
+   "label": "Video Title"
+  },
+  {
+   "depends_on": "show_intro_video",
+   "description": "A short line telling new members what the video covers",
+   "fieldname": "intro_video_description",
+   "fieldtype": "Small Text",
+   "label": "Video Description"
+  },
+  {
+   "fieldname": "column_break_intro_video",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "show_intro_video",
+   "description": "A YouTube or Vimeo link, or a direct link to a video file. Takes precedence over an uploaded file.",
+   "fieldname": "intro_video_url",
+   "fieldtype": "Data",
+   "label": "Video URL"
+  },
+  {
+   "depends_on": "show_intro_video",
+   "description": "Upload an MP4 or WebM to serve the video from this site",
+   "fieldname": "intro_video_file",
+   "fieldtype": "Attach",
+   "label": "Video File"
+  },
+  {
+   "depends_on": "show_intro_video",
+   "description": "Still image shown before the video plays",
+   "fieldname": "intro_video_poster",
+   "fieldtype": "Attach Image",
+   "label": "Video Poster Image"
   }
  ],
  "grid_page_length": 50,

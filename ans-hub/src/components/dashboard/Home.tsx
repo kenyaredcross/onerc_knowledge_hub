@@ -11,6 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { pillarColor } from "../../lib/site-data";
+import IntroVideo from "./IntroVideo";
 import { UserContext } from "../../contexts/UserContext";
 import { useTranslation } from 'react-i18next';
 
@@ -175,6 +176,9 @@ export default function Home() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-8">
+        {/* Orientation: introductory video and the ways to contribute */}
+        <IntroVideo />
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           {isLoading ? (

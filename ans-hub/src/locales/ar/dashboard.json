@@ -14,5 +14,15 @@
   "noUpcomingEvents": "لا توجد فعاليات قادمة",
   "noFeaturedResources": "لا توجد موارد مميزة متاحة",
   "checkBackLater": "تحقق مرة أخرى لاحقًا للحصول على موارد معرفية",
-  "resource": "مورد"
+  "resource": "مورد",
+  "newHere": "هل أنت جديد هنا؟",
+  "introVideoTitle": "مرحبًا بك في منصة التوطين",
+  "introVideoDescription": "جولة قصيرة في المنصة: الركائز الأربع، وما تجده في كل قسم، وكيف تشارك أحداثك وقصصك وموادك.",
+  "introVideoComingSoon": "الفيديو التعريفي قريبًا",
+  "introVideoComingSoonHint": "يمكن لأحد المسؤولين إضافته من إعدادات المنصة.",
+  "waysToContribute": "طرق المشاركة",
+  "contributeNews": "انشر الأخبار والقصص من جمعيتك الوطنية",
+  "contributeEvents": "شارك ندوة أو تبادلًا بين النظراء أو مؤتمرًا",
+  "contributeKnowledge": "حمّل التقارير وحِزم الأدوات وملفات العروض التقديمية",
+  "contributeGallery": "أنشئ ألبوم صور من حدث ما"
 }

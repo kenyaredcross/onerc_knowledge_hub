@@ -58,5 +58,11 @@
   "submissionError": "Submission Error",
   "finalReview": "Final Review",
   "finalReviewMessage": "Ensure all required fields marked with * are filled.",
-  "resource": "Resource"
+  "resource": "Resource",
+  "presentation": "Presentation",
+  "presentedAt": "Presented at",
+  "presentationDate": "Presentation date",
+  "presenter": "Presenter",
+  "slideDeck": "Slide deck",
+  "allowedSlideTypes": "Allowed: PPTX, PPT, PDF, ODP, KEY"
 }

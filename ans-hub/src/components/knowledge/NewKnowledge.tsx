@@ -17,6 +17,13 @@ import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
 import { RichTextEditor } from "../fields/RichTextEditor";
 import { useTranslation } from 'react-i18next';
 
+const DEFAULT_ATTACHMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg";
+
+// Slide decks are uploaded in their native format, not just as PDF exports.
+const ATTACHMENT_ACCEPT: Record<string, string> = {
+  Presentation: ".pptx,.ppt,.pdf,.odp,.key",
+};
+
 export default function NewKnowledge() {
   const { t } = useTranslation(['forms', 'common']);
   const navigate = useNavigate();
@@ -27,12 +34,14 @@ export default function NewKnowledge() {
     language: "",
     resource_type: "",
     tools_subcategory: "",
+    presented_at_event: "",
+    presentation_date: "",
+    presenter: "",
     summary: "",
     description: "",
     file_attachment: "",
     external_url: "",
     contributing_ns: [],
-    uploaded_by: "Administrator",
     report_impact: "Yes",
     metric_type: "",
     status: "Draft",
@@ -166,6 +175,7 @@ export default function NewKnowledge() {
                   <option value="">{t('forms:selectType')}</option>
                   <option value="Publication">{t('forms:publication')}</option>
                   <option value="Report">{t('forms:report')}</option>
+                  <option value="Presentation">{t('forms:presentation')}</option>
                   <option value="Tools & Templates">{t('forms:toolsTemplates')}</option>
                   <option value="User Manual">{t('forms:userManual')}</option>
                 </select>
@@ -211,6 +221,51 @@ export default function NewKnowledge() {
                 </div>
               )}
 
+              {form.resource_type === "Presentation" && (
+                <>
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">
+                      {t('forms:presentedAt')}
+                    </label>
+                    <input
+                      type="text"
+                      value={form.presented_at_event}
+                      onChange={(e) =>
+                        updateField("presented_at_event", e.target.value)
+                      }
+                      placeholder="Localisation Alliance Leadership Conference"
+                      className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-bold text-gray-800">
+                      {t('forms:presentationDate')}
+                    </label>
+                    <input
+                      type="date"
+                      value={form.presentation_date}
+                      onChange={(e) =>
+                        updateField("presentation_date", e.target.value)
+                      }
+                      className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="mb-2 block text-sm font-bold text-gray-800">
+                      {t('forms:presenter')}
+                    </label>
+                    <input
+                      type="text"
+                      value={form.presenter}
+                      onChange={(e) => updateField("presenter", e.target.value)}
+                      className="h-14 w-full rounded-2xl border border-gray-200 bg-gray-50 px-5 text-sm focus:border-dash-red focus:bg-white focus:outline-none focus:ring-4 focus:ring-dash-red/10"
+                    />
+                  </div>
+                </>
+              )}
+
               <div className="md:col-span-2">
                 <label className="mb-2 block text-sm font-bold text-gray-800">
                   {t('forms:summary')}
@@ -246,14 +301,20 @@ export default function NewKnowledge() {
             <div className="grid gap-6 md:grid-cols-1">
               <div>
                 <FileUploadField
-                  label={t('forms:fileAttachment')}
+                  label={
+                    form.resource_type === "Presentation"
+                      ? t('forms:slideDeck')
+                      : t('forms:fileAttachment')
+                  }
                   value={form.file_attachment}
                   doctype="Knowledge Hub"
-                  accept=".pdf,.png,.jpg,.jpeg"
+                  accept={ATTACHMENT_ACCEPT[form.resource_type] ?? DEFAULT_ATTACHMENT_ACCEPT}
                   onChange={(url) => updateField("file_attachment", url ?? "")}
                 />
                 <p className="text-[11px] text-gray-500 ml-2 mt-1">
-                  {t('forms:allowedFileTypes')}
+                  {form.resource_type === "Presentation"
+                    ? t('forms:allowedSlideTypes')
+                    : t('forms:allowedFileTypes')}
                 </p>
               </div>
               <div>

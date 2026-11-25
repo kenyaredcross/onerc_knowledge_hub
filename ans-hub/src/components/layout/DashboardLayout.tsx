@@ -21,6 +21,7 @@ import {
   ClipboardList,
   FileText,
   MessageSquarePlus,
+  Images,
 } from "lucide-react";
 import { UserContext } from "../../contexts/UserContext";
 import { useFrappeGetCall } from "frappe-react-sdk";
@@ -38,6 +39,7 @@ export default function DashboardLayout() {
     { path: "/news", label: t('navigation:newsStories'), icon: Newspaper },
     { path: "/events", label: t('navigation:events'), icon: Calendar },
     { path: "/knowledge", label: t('navigation:knowledgeHub'), icon: BookOpen },
+    { path: "/gallery", label: t('navigation:gallery'), icon: Images },
     { path: "/learning", label: t('navigation:learningHub'), icon: GraduationCap },
     { path: "/national-societies", label: t('navigation:nationalSocieties'), icon: Globe2 },
     { path: "/pillars", label: t('navigation:pillars'), icon: Layers },
@@ -49,7 +51,8 @@ export default function DashboardLayout() {
     { path: "/create/knowledge", label: t('navigation:knowledge'), icon: BookOpen },
     { path: "/create/learning", label: t('navigation:learning'), icon: GraduationCap },
     { path: "/create/news", label: t('navigation:newsStories'), icon: Newspaper },
-    { path: "/create/event", label: t('navigation:event'), icon: Calendar, adminOnly: true },
+    { path: "/create/event", label: t('navigation:event'), icon: Calendar },
+    { path: "/create/album", label: t('navigation:galleryAlbum'), icon: Images },
   ];
 
   const fsItems = [
@@ -355,7 +358,7 @@ export default function DashboardLayout() {
             {managementItems
               .filter((item: any) => {
                 if (item.adminOnly) return isAdmin;
-                if (item.path === "/users" || item.path.startsWith("/app")) return isAdminOrManager;
+                if (item.path === "/users" || item.path.startsWith("/app")) return isAdmin;
                 return true;
               })
               .map((item) => {

@@ -27,6 +27,9 @@ interface KnowledgeEntry {
   published_date: string | null;
   download_count: number;
   route?: string;
+  presented_at_event?: string | null;
+  presentation_date?: string | null;
+  presenter?: string | null;
 }
 
 const resourceStyles: Record<string, string> = {
@@ -34,6 +37,8 @@ const resourceStyles: Record<string, string> = {
     "bg-blue-50 text-blue-700 border border-blue-200 shadow-blue-100",
   Report:
     "bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-emerald-100",
+  Presentation:
+    "bg-amber-50 text-amber-700 border border-amber-200 shadow-amber-100",
   "Tools & Templates":
     "bg-purple-50 text-purple-700 border border-purple-200 shadow-purple-100",
   "User Manual":
@@ -59,6 +64,8 @@ export default function KnowledgeFiltered() {
         return "Publication";
       case "reports":
         return "Report";
+      case "presentations":
+        return "Presentation";
       case "templates":
         return "Tools & Templates";
       case "manuals":
@@ -74,6 +81,8 @@ export default function KnowledgeFiltered() {
         return "Publications";
       case "reports":
         return "Reports";
+      case "presentations":
+        return "Presentations";
       case "templates":
         return "Tools & Templates";
       case "manuals":

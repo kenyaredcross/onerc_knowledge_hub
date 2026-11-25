@@ -6,3 +6,5 @@
 # Patches added in this section will be executed after doctypes are migrated
 onerc_knowledge_hub.patches.seed_summit_sessions
 onerc_knowledge_hub.patches.seed_delegate_national_societies
+onerc_knowledge_hub.patches.grant_contributor_roles
+onerc_knowledge_hub.patches.enable_intro_video_section

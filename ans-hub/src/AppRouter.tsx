@@ -14,6 +14,9 @@ import EventDetail from "./components/events/EventDetail.tsx";
 import EventsIndex from "./components/events/EventsIndex.tsx";
 import NewEvent from "./components/events/NewEvent.tsx";
 import FAQs from "./components/faqs/FAQs.tsx";
+import AlbumDetail from "./components/gallery/AlbumDetail.tsx";
+import GalleryIndex from "./components/gallery/GalleryIndex.tsx";
+import NewAlbum from "./components/gallery/NewAlbum.tsx";
 import FinancialSustainabilityDashboard from "./components/financial-sustainability/FinancialSustainabilityDashboard.tsx";
 import FSActivities from "./components/financial-sustainability/FSActivities.tsx";
 import FSResponses from "./components/financial-sustainability/FSResponses.tsx";
@@ -78,6 +81,9 @@ const AppRouter = () => {
             <Route path="/events" element={<EventsIndex />} />
             <Route path="/events/:slug" element={<EventDetail />} />
             <Route path="/create/event" element={<NewEvent />} />
+            <Route path="/gallery" element={<GalleryIndex />} />
+            <Route path="/gallery/:name" element={<AlbumDetail />} />
+            <Route path="/create/album" element={<NewAlbum />} />
             <Route path="/knowledge" element={<Knowledge />} />
             <Route path="/knowledge/filter/:type" element={<KnowledgeFiltered />} />
             <Route path="/knowledge/:slug" element={<KnowledgeDetail />} />

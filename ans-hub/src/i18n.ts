@@ -15,6 +15,7 @@ import enEvents from './locales/en/events.json';
 import enNews from './locales/en/news.json';
 import enLearning from './locales/en/learning.json';
 import enSocieties from './locales/en/societies.json';
+import enGallery from './locales/en/gallery.json';
 
 import frCommon from './locales/fr/common.json';
 import frNav from './locales/fr/navigation.json';
@@ -28,6 +29,7 @@ import frEvents from './locales/fr/events.json';
 import frNews from './locales/fr/news.json';
 import frLearning from './locales/fr/learning.json';
 import frSocieties from './locales/fr/societies.json';
+import frGallery from './locales/fr/gallery.json';
 
 import ptCommon from './locales/pt/common.json';
 import ptNav from './locales/pt/navigation.json';
@@ -41,6 +43,7 @@ import ptEvents from './locales/pt/events.json';
 import ptNews from './locales/pt/news.json';
 import ptLearning from './locales/pt/learning.json';
 import ptSocieties from './locales/pt/societies.json';
+import ptGallery from './locales/pt/gallery.json';
 
 import arCommon from './locales/ar/common.json';
 import arNav from './locales/ar/navigation.json';
@@ -54,6 +57,7 @@ import arEvents from './locales/ar/events.json';
 import arNews from './locales/ar/news.json';
 import arLearning from './locales/ar/learning.json';
 import arSocieties from './locales/ar/societies.json';
+import arGallery from './locales/ar/gallery.json';
 
 import swCommon from './locales/sw/common.json';
 import swNav from './locales/sw/navigation.json';
@@ -67,6 +71,7 @@ import swEvents from './locales/sw/events.json';
 import swNews from './locales/sw/news.json';
 import swLearning from './locales/sw/learning.json';
 import swSocieties from './locales/sw/societies.json';
+import swGallery from './locales/sw/gallery.json';
 
 i18n
   .use(LanguageDetector)
@@ -86,6 +91,7 @@ i18n
         news: enNews,
         learning: enLearning,
         societies: enSocieties,
+        gallery: enGallery,
       },
       fr: {
         common: frCommon,
@@ -100,6 +106,7 @@ i18n
         news: frNews,
         learning: frLearning,
         societies: frSocieties,
+        gallery: frGallery,
       },
       pt: {
         common: ptCommon,
@@ -114,6 +121,7 @@ i18n
         news: ptNews,
         learning: ptLearning,
         societies: ptSocieties,
+        gallery: ptGallery,
       },
       ar: {
         common: arCommon,
@@ -128,6 +136,7 @@ i18n
         news: arNews,
         learning: arLearning,
         societies: arSocieties,
+        gallery: arGallery,
       },
       sw: {
         common: swCommon,
@@ -142,11 +151,12 @@ i18n
         news: swNews,
         learning: swLearning,
         societies: swSocieties,
+        gallery: swGallery,
       },
     },
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'navigation', 'auth', 'about', 'forms', 'dashboard', 'faqs', 'knowledge', 'events', 'news', 'learning', 'societies'],
+    ns: ['common', 'navigation', 'auth', 'about', 'forms', 'dashboard', 'faqs', 'knowledge', 'events', 'news', 'learning', 'societies', 'gallery'],
     interpolation: {
       escapeValue: false, // React already escapes
     },

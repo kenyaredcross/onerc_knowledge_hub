@@ -19,5 +19,21 @@
   "newEvent": "فعالية جديدة",
   "upcomingEvents": "الفعاليات القادمة",
   "showPastEvents": "عرض الفعاليات السابقة",
-  "ended": "انتهت"
+  "ended": "انتهت",
+  "submitEvent": "إضافة حدث",
+  "submitEventSubtitle": "شارك ندوة أو تبادلًا بين النظراء أو مؤتمرًا مع التحالف",
+  "createEvent": "إنشاء الحدث",
+  "creatingEvent": "جارٍ إرسال الحدث...",
+  "eventsUnavailable": "إضافة الأحداث غير متاحة",
+  "myEvents": "الأحداث التي أضفتها",
+  "noMyEvents": "لم تقم بإضافة أي حدث بعد",
+  "pendingReview": "في انتظار المراجعة",
+  "live": "منشور",
+  "publish": "نشر",
+  "unpublish": "إلغاء النشر",
+  "pendingReviewNotice": "تم إرسال الحدث وهو في انتظار نشره من قبل أحد مديري المنصة.",
+  "publishImmediately": "نشر هذا الحدث فورًا",
+  "publishImmediatelyHint": "اترك الخيار غير مُحدد لحفظه للمراجعة أولًا.",
+  "titleRequired": "عنوان الحدث مطلوب",
+  "optional": "اختياري"
 }

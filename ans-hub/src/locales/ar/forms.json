@@ -58,5 +58,11 @@
   "submissionError": "خطأ في الإرسال",
   "finalReview": "المراجعة النهائية",
   "finalReviewMessage": "تأكد من تعبئة جميع الحقول المطلوبة المُعلَّمة بـ *.",
-  "resource": "مورد"
+  "resource": "مورد",
+  "presentation": "عرض تقديمي",
+  "presentedAt": "قُدِّم في",
+  "presentationDate": "تاريخ العرض",
+  "presenter": "مُقدِّم العرض",
+  "slideDeck": "ملف العرض التقديمي",
+  "allowedSlideTypes": "المسموح: PPTX وPPT وPDF وODP وKEY"
 }

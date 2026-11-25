@@ -19,5 +19,21 @@
   "newEvent": "Nouvel Événement",
   "upcomingEvents": "Événements à Venir",
   "showPastEvents": "Afficher les Événements Passés",
-  "ended": "Terminé"
+  "ended": "Terminé",
+  "submitEvent": "Proposer un événement",
+  "submitEventSubtitle": "Partagez un webinaire, un échange entre pairs ou une conférence avec l'Alliance",
+  "createEvent": "Créer l'événement",
+  "creatingEvent": "Envoi de l'événement...",
+  "eventsUnavailable": "La proposition d'événements est indisponible",
+  "myEvents": "Événements que vous avez proposés",
+  "noMyEvents": "Vous n'avez encore proposé aucun événement",
+  "pendingReview": "En attente de validation",
+  "live": "En ligne",
+  "publish": "Publier",
+  "unpublish": "Dépublier",
+  "pendingReviewNotice": "Votre événement a été envoyé et attend la publication par un gestionnaire du hub.",
+  "publishImmediately": "Publier cet événement immédiatement",
+  "publishImmediatelyHint": "Laissez décoché pour l'enregistrer d'abord en vue d'une validation.",
+  "titleRequired": "Un titre d'événement est obligatoire",
+  "optional": "facultatif"
 }

@@ -3,6 +3,7 @@
   "newsStories": "Actualités & Récits",
   "events": "Événements",
   "knowledgeHub": "Centre de Connaissances",
+  "gallery": "Galerie",
   "learningHub": "Centre d'Apprentissage",
   "nationalSocieties": "Sociétés Nationales",
   "pillars": "Piliers",
@@ -18,5 +19,6 @@
   "feedbackAdmin": "Soumissions de Feedback",
   "faqs": "FAQ",
   "desk": "Bureau",
-  "hub": "Centre"
+  "hub": "Centre",
+  "galleryAlbum": "Album photo"
 }

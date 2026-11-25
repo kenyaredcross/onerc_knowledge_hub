@@ -93,11 +93,13 @@ export default function NewNews() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Creation goes through the hub API: the Article doctype only grants create
+  // permission to System Manager, so frappe.client.insert fails for members.
   const {
     call: createArticle,
     loading: isSubmitting,
     error,
-  } = useFrappePostCall("frappe.client.insert");
+  } = useFrappePostCall("onerc_knowledge_hub.api.article.create_article");
 
   const {
     call: publishArticle,
@@ -196,7 +198,9 @@ export default function NewNews() {
         savedName = editingName;
       } else {
         // Create new draft
-        const response = await createArticle({ doc });
+        const fields = { ...doc };
+        delete fields.doctype;
+        const response = await createArticle({ fields: JSON.stringify(fields) });
         const createdDoc = response?.message || response;
         savedName = createdDoc?.name;
       }

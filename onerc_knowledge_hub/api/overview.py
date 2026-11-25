@@ -302,3 +302,88 @@ def get_society_statistics():
 	""", as_dict=True)
 
 	return society_stats
+
+
+# --------------------------------------------------------------------------- #
+# Introductory video
+#
+# Shown on the Overview page to orient new members: what the hub is, what is in
+# it, and how to contribute. Managed from Localization Hub Settings so it can be
+# swapped without a deploy.
+# --------------------------------------------------------------------------- #
+
+DEFAULT_INTRO_TITLE = "Welcome to the Localisation Hub"
+DEFAULT_INTRO_DESCRIPTION = (
+	"A short tour of the hub: the four pillars, what you will find in each "
+	"section, and how to share your own events, stories and resources."
+)
+
+
+def build_video_embed(url):
+	"""Work out how a video URL should be played.
+
+	Returns a ``(kind, src)`` pair: ``iframe`` with a privacy-friendly embed URL
+	for YouTube and Vimeo, or ``file`` for anything a <video> tag can play.
+	"""
+	import re
+	from urllib.parse import parse_qs, urlparse
+
+	url = (url or "").strip()
+	if not url:
+		return None, None
+
+	parsed = urlparse(url)
+	host = (parsed.netloc or "").lower().removeprefix("www.")
+
+	if host in ("youtube.com", "m.youtube.com", "youtube-nocookie.com"):
+		if parsed.path.startswith("/embed/"):
+			return "iframe", url
+		if parsed.path.startswith("/shorts/"):
+			video_id = parsed.path.split("/shorts/", 1)[1].split("/")[0]
+			return "iframe", f"https://www.youtube-nocookie.com/embed/{video_id}"
+		video_id = (parse_qs(parsed.query).get("v") or [None])[0]
+		if video_id:
+			return "iframe", f"https://www.youtube-nocookie.com/embed/{video_id}"
+		return "iframe", url
+
+	if host == "youtu.be":
+		video_id = parsed.path.lstrip("/").split("/")[0]
+		if video_id:
+			return "iframe", f"https://www.youtube-nocookie.com/embed/{video_id}"
+
+	if host in ("vimeo.com", "player.vimeo.com"):
+		if "player.vimeo.com" in host:
+			return "iframe", url
+		match = re.search(r"/(\d+)", parsed.path)
+		if match:
+			return "iframe", f"https://player.vimeo.com/video/{match.group(1)}"
+		return "iframe", url
+
+	# Anything else (including /files/... uploads) is played directly.
+	return "file", url
+
+
+@frappe.whitelist()
+def get_intro_video():
+	"""Return the Overview page's introductory video, if one is configured."""
+	settings = frappe.get_cached_doc("Localization Hub Settings")
+
+	if not frappe.utils.cint(settings.get("show_intro_video")):
+		return {"enabled": False}
+
+	source = (settings.get("intro_video_url") or "").strip() or (
+		settings.get("intro_video_file") or ""
+	).strip()
+
+	kind, src = build_video_embed(source)
+
+	return {
+		"enabled": True,
+		"title": settings.get("intro_video_title") or DEFAULT_INTRO_TITLE,
+		"description": settings.get("intro_video_description")
+		or DEFAULT_INTRO_DESCRIPTION,
+		"poster": settings.get("intro_video_poster") or None,
+		"kind": kind,
+		"src": src,
+		"has_video": bool(src),
+	}

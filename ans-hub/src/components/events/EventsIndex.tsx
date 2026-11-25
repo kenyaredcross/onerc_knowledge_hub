@@ -32,9 +32,10 @@ export default function EventsIndex() {
   const [showPastEvents, setShowPastEvents] = useState(false);
   const { userData } = useContext(UserContext);
 
-  // Check if user has admin or manager roles
+  // Every registered member can submit an event; managers publish them.
   const userRoles = (userData as any)?.roles?.map((r: any) => r.role) || [];
   const canCreateEvent =
+    userRoles.includes("LH User") ||
     userRoles.includes("LH Admin") ||
     userRoles.includes("LH Manager") ||
     userRoles.includes("System Manager");
