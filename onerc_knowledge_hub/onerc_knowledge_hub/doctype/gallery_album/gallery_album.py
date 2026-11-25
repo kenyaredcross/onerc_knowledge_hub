@@ -43,4 +43,4 @@ class GalleryAlbum(Document):
 def is_album_manager(user=None):
 	"""True when the user may manage any album, not just their own."""
 	roles = frappe.get_roles(user or frappe.session.user)
-	return any(role in roles for role in ("LH Admin", "LH Manager", "System Manager"))
+	return any(role in roles for role in ("LH Admin", "System Manager"))

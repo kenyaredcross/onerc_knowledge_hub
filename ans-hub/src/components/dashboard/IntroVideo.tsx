@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { hasAnyRole, MANAGER_ROLES, useRoles } from "../auth/RoleRoute";
 
 type IntroVideoData = {
   enabled: boolean;
@@ -27,6 +28,7 @@ type IntroVideoData = {
  */
 export default function IntroVideo() {
   const { t } = useTranslation(["dashboard", "navigation", "gallery"]);
+  const canCreateAlbum = hasAnyRole(useRoles(), MANAGER_ROLES);
 
   const { data } = useFrappeGetCall<{ message: IntroVideoData }>(
     "onerc_knowledge_hub.api.overview.get_intro_video",
@@ -55,12 +57,17 @@ export default function IntroVideo() {
       description: t("dashboard:contributeKnowledge"),
       icon: BookOpen,
     },
-    {
-      to: "/create/album",
-      label: t("navigation:gallery"),
-      description: t("dashboard:contributeGallery"),
-      icon: Images,
-    },
+    // Adding an album is manager-and-above, so do not offer it to everyone.
+    ...(canCreateAlbum
+      ? [
+          {
+            to: "/create/album",
+            label: t("navigation:gallery"),
+            description: t("dashboard:contributeGallery"),
+            icon: Images,
+          },
+        ]
+      : []),
   ];
 
   return (

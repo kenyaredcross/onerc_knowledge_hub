@@ -55,8 +55,10 @@ const PILLAR_MAP: Record<string, string> = {
 };
 
 function getPillarColorKey(pillarName: string | null): string {
-  if (!pillarName) return "leadership";
-  return PILLAR_MAP[pillarName] || "leadership";
+  // Anything outside the four pillars gets the neutral colour, so unlabelled
+  // resources are not shown in a pillar's colour.
+  if (!pillarName) return "default";
+  return PILLAR_MAP[pillarName] || "default";
 }
 
 // ── Skeleton ────────────────────────────────────────────────────────────────

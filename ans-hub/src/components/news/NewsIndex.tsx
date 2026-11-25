@@ -229,7 +229,7 @@ export default function NewsIndex() {
     if (!categoriesData?.message) return [];
     return categoriesData.message.map(cat => ({
       name: cat.category_name || cat.name,
-      color: categoryColorMap[cat.category_name || cat.name] || "bg-pillar-leadership",
+      color: categoryColorMap[cat.category_name || cat.name] || "bg-pillar-default",
       count: news.filter(n => n.tag === (cat.category_name || cat.name)).length
     }));
   }, [categoriesData, news]);
@@ -382,7 +382,7 @@ export default function NewsIndex() {
                           />
                         ) : (
                           <>
-                            <div className={`absolute inset-0 ${pillarColor[story.color]}`} />
+                            <div className={`absolute inset-0 ${pillarColor[story.color] ?? pillarColor.default}`} />
                             <div
                               className="absolute inset-0 opacity-10"
                               style={{
@@ -398,7 +398,7 @@ export default function NewsIndex() {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                         <div className="absolute bottom-0 left-0 right-0 p-4">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className={`px-2 py-1 rounded text-xs font-medium text-white ${pillarColor[story.color]}`}>
+                            <span className={`px-2 py-1 rounded text-xs font-medium text-white ${pillarColor[story.color] ?? pillarColor.default}`}>
                               {story.tag}
                             </span>
                             <span className="flex items-center gap-1 text-xs text-white">
@@ -588,7 +588,7 @@ export default function NewsIndex() {
                   {/* Post Header */}
                   <div className="p-4 pb-3">
                     <div className="flex items-start gap-3">
-                      <div className={`h-12 w-12 rounded shrink-0 ${pillarColor[n.color]} flex items-center justify-center text-white font-bold text-lg`}>
+                      <div className={`h-12 w-12 rounded shrink-0 ${pillarColor[n.color] ?? pillarColor.default} flex items-center justify-center text-white font-bold text-lg`}>
                         {n.tag.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -631,7 +631,7 @@ export default function NewsIndex() {
                         />
                       ) : (
                         <>
-                          <div className={`absolute inset-0 ${pillarColor[n.color]}`} />
+                          <div className={`absolute inset-0 ${pillarColor[n.color] ?? pillarColor.default}`} />
                           <div
                             className="absolute inset-0 opacity-10"
                             style={{
@@ -741,7 +741,7 @@ export default function NewsIndex() {
                     className="block p-3 rounded border border-gray-200 hover:border-dash-red/30 hover:bg-gray-50 transition-all"
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`h-10 w-10 shrink-0 rounded ${pillarColor[n.color]} flex items-center justify-center text-white font-bold text-sm`}>
+                      <div className={`h-10 w-10 shrink-0 rounded ${pillarColor[n.color] ?? pillarColor.default} flex items-center justify-center text-white font-bold text-sm`}>
                         {n.tag.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">

@@ -4,6 +4,11 @@ import AboutPage from "./components/about/About.tsx";
 import ForgotPassword from "./components/auth/ForgotPassword.tsx";
 import LoginForm from "./components/auth/Login.tsx";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute.tsx";
+import {
+  ADMIN_ROLES,
+  MANAGER_ROLES,
+  RoleRoute,
+} from "./components/auth/RoleRoute.tsx";
 import ResetPassword from "./components/auth/ResetPassword.tsx";
 import SetPassword from "./components/auth/SetPassword.tsx";
 import Connect from "./components/connect/Connect.tsx";
@@ -83,7 +88,9 @@ const AppRouter = () => {
             <Route path="/create/event" element={<NewEvent />} />
             <Route path="/gallery" element={<GalleryIndex />} />
             <Route path="/gallery/:name" element={<AlbumDetail />} />
-            <Route path="/create/album" element={<NewAlbum />} />
+            <Route element={<RoleRoute allow={MANAGER_ROLES} />}>
+              <Route path="/create/album" element={<NewAlbum />} />
+            </Route>
             <Route path="/knowledge" element={<Knowledge />} />
             <Route path="/knowledge/filter/:type" element={<KnowledgeFiltered />} />
             <Route path="/knowledge/:slug" element={<KnowledgeDetail />} />
@@ -100,9 +107,12 @@ const AppRouter = () => {
             />
             <Route path="/pillars" element={<Pillars />} />
             <Route path="/connect" element={<Connect />} />
-            <Route path="/users" element={<UsersManagement />} />
             <Route path="/feedback" element={<FeedbackSubmit />} />
-            <Route path="/feedback/admin" element={<FeedbackAdmin />} />
+            {/* Members' personal data and feedback: reviewers only */}
+            <Route element={<RoleRoute allow={ADMIN_ROLES} />}>
+              <Route path="/users" element={<UsersManagement />} />
+              <Route path="/feedback/admin" element={<FeedbackAdmin />} />
+            </Route>
             <Route path="/faqs" element={<FAQs />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<ErrorPage404 />} />

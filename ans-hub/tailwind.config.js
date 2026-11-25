@@ -68,6 +68,13 @@ export default {
 					DEFAULT: "oklch(0.5 0.14 155)",
 					foreground: "oklch(0.98 0 0)",
 				},
+				/* Neutral fallback for content with no pillar, or a category that
+				   maps to none. Must not be a pillar colour, or uncategorised
+				   content gets painted as that pillar. */
+				"pillar-default": {
+					DEFAULT: "oklch(0.35 0.08 257)",
+					foreground: "oklch(0.98 0 0)",
+				},
 			},
 			fontFamily: {
 				display: ["Google Sans Flex", "system-ui", "sans-serif"],

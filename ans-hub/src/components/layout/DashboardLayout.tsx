@@ -52,7 +52,7 @@ export default function DashboardLayout() {
     { path: "/create/learning", label: t('navigation:learning'), icon: GraduationCap },
     { path: "/create/news", label: t('navigation:newsStories'), icon: Newspaper },
     { path: "/create/event", label: t('navigation:event'), icon: Calendar },
-    { path: "/create/album", label: t('navigation:galleryAlbum'), icon: Images },
+    { path: "/create/album", label: t('navigation:galleryAlbum'), icon: Images, managerOnly: true },
   ];
 
   const fsItems = [
@@ -311,7 +311,8 @@ export default function DashboardLayout() {
               </div>
             )}
             {createItems
-              .filter((item: any) => !item.adminOnly || isAdminOrManager)
+              .filter((item: any) => !item.adminOnly || isAdmin)
+              .filter((item: any) => !item.managerOnly || isAdminOrManager)
               .map((item) => {
               const active = isActive(item);
               return (

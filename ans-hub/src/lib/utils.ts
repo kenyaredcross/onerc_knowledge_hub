@@ -26,16 +26,19 @@ export function formatArticleDate(datetime: string | Date): string {
  * @returns Color identifier for pillarColor mapping
  */
 export function getCategoryColor(category: string | null | undefined): string {
-  if (!category) return "leadership";
+  if (!category) return "default";
 
   const mapping: Record<string, string> = {
     "Leadership": "leadership",
+    "Leadership & Governance": "leadership",
     "Branch Development": "branch",
     "Resource Mobilisation": "resource",
     "Finance Development": "finance",
   };
 
-  return mapping[category] || "leadership";
+  // Categories outside the four pillars get the neutral colour. Defaulting to a
+  // pillar here would paint every uncategorised article in that pillar's colour.
+  return mapping[category] || "default";
 }
 
 /**
