@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FileUploadField } from "../fields/FileUploadField";
 import { LinkField } from "../fields/LinkField";
+import { withCsrfRetry } from "../../lib/csrf";
 
 type EventField = {
   fieldname: string;
@@ -120,10 +121,12 @@ export default function NewEvent() {
     }
 
     try {
-      const response = await createEvent({
-        ...values,
-        is_published: canPublish && publishNow ? 1 : 0,
-      });
+      const response = await withCsrfRetry(() =>
+        createEvent({
+          ...values,
+          is_published: canPublish && publishNow ? 1 : 0,
+        }),
+      );
       const created = response?.message;
       await refreshMyEvents();
 

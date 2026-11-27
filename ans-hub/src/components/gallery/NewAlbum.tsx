@@ -16,6 +16,7 @@ import {
   MultiImageUploadField,
   type UploadedPhoto,
 } from "../fields/MultiImageUploadField";
+import { withCsrfRetry } from "../../lib/csrf";
 import { formatAlbumDate, type GalleryAlbum } from "../../lib/gallery";
 
 export default function NewAlbum() {
@@ -73,10 +74,12 @@ export default function NewAlbum() {
     }
 
     try {
-      const response = await createAlbum({
-        ...form,
-        photos: JSON.stringify(photos),
-      });
+      const response = await withCsrfRetry(() =>
+        createAlbum({
+          ...form,
+          photos: JSON.stringify(photos),
+        }),
+      );
       const created = response?.message;
       await mutate();
       if (created?.name) {

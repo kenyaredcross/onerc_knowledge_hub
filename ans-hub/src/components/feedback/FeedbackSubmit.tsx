@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { FileUploadField } from "../fields/FileUploadField";
 import { LinkField } from "../fields/LinkField";
+import { withCsrfRetry } from "../../lib/csrf";
 
 interface FeedbackType {
   name: string;
@@ -34,12 +35,14 @@ export default function FeedbackSubmit() {
     if (!form.feedback_type || !form.message.trim()) return;
     setIsSubmitting(true);
     try {
-      await submitFeedback({
-        feedback_type: form.feedback_type,
-        subject: form.subject,
-        message: form.message,
-        ...(attachment ? { attachment } : {}),
-      });
+      await withCsrfRetry(() =>
+        submitFeedback({
+          feedback_type: form.feedback_type,
+          subject: form.subject,
+          message: form.message,
+          ...(attachment ? { attachment } : {}),
+        }),
+      );
       setSubmitted(true);
     } catch (err: any) {
       toast.error(err?.message || "Failed to submit feedback");

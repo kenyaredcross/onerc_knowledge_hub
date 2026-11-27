@@ -22,6 +22,7 @@ import { Link } from "react-router-dom";
 import { FileUploadField } from "../fields/FileUploadField";
 import { LinkField } from "../fields/LinkField";
 import { type Article } from "../../lib/utils";
+import { withCsrfRetry } from "../../lib/csrf";
 import { UserContext } from "../../contexts/UserContext";
 import { useTranslation } from 'react-i18next';
 
@@ -194,13 +195,17 @@ export default function NewNews() {
         // Use backend save_article to avoid system-field conflicts
         const fields = { ...doc };
         delete fields.doctype;
-        await saveArticle({ name: editingName, fields: JSON.stringify(fields) });
+        await withCsrfRetry(() =>
+          saveArticle({ name: editingName, fields: JSON.stringify(fields) }),
+        );
         savedName = editingName;
       } else {
         // Create new draft
         const fields = { ...doc };
         delete fields.doctype;
-        const response = await createArticle({ fields: JSON.stringify(fields) });
+        const response = await withCsrfRetry(() =>
+          createArticle({ fields: JSON.stringify(fields) }),
+        );
         const createdDoc = response?.message || response;
         savedName = createdDoc?.name;
       }

@@ -1,3 +1,4 @@
+import { withCsrfRetry } from "../../lib/csrf";
 import { cn } from "../../lib/utils";
 import { useFrappeFileUpload } from "frappe-react-sdk";
 import { AlertCircle, ImagePlus, Loader2, X } from "lucide-react";
@@ -87,7 +88,9 @@ export const MultiImageUploadField = ({
 
       try {
         reset();
-        const res = await upload(file, { isPrivate: false, folder });
+        const res = await withCsrfRetry(() =>
+          upload(file, { isPrivate: false, folder }),
+        );
         if (res?.file_url) {
           uploaded.push({ image: res.file_url, caption: "", credit: "" });
         } else {

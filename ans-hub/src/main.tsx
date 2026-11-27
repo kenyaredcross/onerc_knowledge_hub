@@ -4,6 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import AppRouter from "./AppRouter";
+import { installCsrfRefresh } from "./lib/csrf";
 import "./index.css";
 
 declare global {
@@ -37,6 +38,10 @@ const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Failed to find the root element");
 }
+
+// A tab left open across a fresh sign-in holds a CSRF token the new session
+// does not recognise, which only shows up when somebody saves. Keep it current.
+installCsrfRefresh();
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>

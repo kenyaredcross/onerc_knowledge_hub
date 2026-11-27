@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { withCsrfRetry } from "../../lib/csrf";
 import { useFrappeFileUpload } from "frappe-react-sdk";
 import {
   AlertCircle,
@@ -84,7 +85,7 @@ export const FileUploadField = ({
       }
       if (fieldname) fileArgs.fieldname = fieldname;
 
-      const res = await upload(file, fileArgs);
+      const res = await withCsrfRetry(() => upload(file, fileArgs));
       if (res?.file_url) {
         setUploadState("success");
         onChange(res.file_url, res);

@@ -13,6 +13,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FileUploadField } from "../fields/FileUploadField";
 import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
+import { withCsrfRetry } from "../../lib/csrf";
 import { useTranslation } from 'react-i18next';
 
 export default function NewLearning() {
@@ -88,7 +89,9 @@ export default function NewLearning() {
       }
 
       console.log("Submitting doc:", doc);
-      const response = await createLearningResource({ doc });
+      const response = await withCsrfRetry(() =>
+        createLearningResource({ doc }),
+      );
       console.log("Response:", response);
 
       // Navigate back to learning hub after successful creation

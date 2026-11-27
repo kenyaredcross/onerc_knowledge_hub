@@ -19,6 +19,7 @@ import {
   MultiImageUploadField,
   type UploadedPhoto,
 } from "../fields/MultiImageUploadField";
+import { withCsrfRetry } from "../../lib/csrf";
 import {
   formatAlbumDate,
   type AlbumDetailData,
@@ -97,7 +98,9 @@ export default function AlbumDetail() {
     if (!album || pendingPhotos.length === 0) return;
     setActionError(null);
     try {
-      await addPhotos({ album: album.name, photos: JSON.stringify(pendingPhotos) });
+      await withCsrfRetry(() =>
+        addPhotos({ album: album.name, photos: JSON.stringify(pendingPhotos) }),
+      );
       setPendingPhotos([]);
       setShowUpload(false);
       await mutate();
@@ -110,7 +113,9 @@ export default function AlbumDetail() {
     if (!album) return;
     setActionError(null);
     try {
-      await removePhoto({ album: album.name, photo: photo.name });
+      await withCsrfRetry(() =>
+        removePhoto({ album: album.name, photo: photo.name }),
+      );
       closeLightbox();
       await mutate();
     } catch (err: any) {
@@ -122,7 +127,7 @@ export default function AlbumDetail() {
     if (!album) return;
     setActionError(null);
     try {
-      await deleteAlbum({ name: album.name });
+      await withCsrfRetry(() => deleteAlbum({ name: album.name }));
       navigate("/gallery");
     } catch (err: any) {
       setActionError(err?.message || "Could not delete the album.");

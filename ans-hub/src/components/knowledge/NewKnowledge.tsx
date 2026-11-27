@@ -15,6 +15,7 @@ import { FileUploadField } from "../fields/FileUploadField";
 import { LinkField } from "../fields/LinkField";
 import { MultiSelectLinkField } from "../fields/MultiSelectLinkField";
 import { RichTextEditor } from "../fields/RichTextEditor";
+import { withCsrfRetry } from "../../lib/csrf";
 import { useTranslation } from 'react-i18next';
 
 /* Resources are contributed in whatever format they were authored in, so Word
@@ -79,7 +80,9 @@ export default function NewKnowledge() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await createKnowledgeHub({ ...form });
+      const response = await withCsrfRetry(() =>
+        createKnowledgeHub({ ...form }),
+      );
       const createdDoc = response?.message;
       if (createdDoc?.name) {
         navigate(`/knowledge/${createdDoc.name}`);
